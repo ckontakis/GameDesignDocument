@@ -4,15 +4,32 @@
     <meta charset="UTF-8">
     <title>Χαρακτηριστικά για τα Στοιχεία Παιχνιδιού</title>
 </head>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <body>
-<h1 style="text-align: center">Συμπληρώσετε τα στοιχεία του παιχνιδιού</h1>
+<div class="w3-container w3-blue" style="text-align: center; margin-top: 8%; margin-left: 13%; margin-right: 13%">
+    <h3 style="text-align: center">Συμπληρώστε τα χαρακτηριστικά για τα στοιχεία του παιχνιδιού</h3>
+</div>
 
-<form style="text-align: center; margin-top: 100px">
-    <label style="font-size: large" for="story">Ιστορια Παιχνιδιού</label><br>
-    <input type="text" id="story" name="story"><br>
-    <label style="font-size: large" for="characters">Χαρακτήρες</label><br>
-    <input type="text" id="characters" name="characters"><br>
-    <input type="submit" value="Submit">
+<form class="w3-container w3-border w3-hover-shadow w3-padding-16" style="text-align: center; margin-left: 13%; margin-right: 13%" >
+    <label for="story">Περιγράψτε την ιστορία του παιχνιδιού</label>
+    <input class="w3-input w3-border w3-margin-top" type="text" id="story" name="story"><br>
+
+    <label for="characters">Προσθέστε χαρακτήρες του παιχνιδιού</label>
+    <button class="w3-button w3-circle w3-border w3-border-blue w3-hover-blue w3-margin-left" id="characters" type="button" name="characters">+</button><br><br>
+
+    <label for="locations">Προσθέστε τοποθεσίες του παιχνιδιού</label>
+    <button class="w3-button w3-circle w3-border w3-border-blue w3-hover-blue w3-margin-left" id="locations" type="button" name="locations">+</button><br><br>
+
+    <label for="objects">Προσθέστε αντικείμενα που υπάρχουν στο παιχνίδι</label>
+    <button class="w3-button w3-circle w3-border w3-border-blue w3-hover-blue w3-margin-left" id="objects" type="button" name="objects">+</button><br><br>
+
+    <label for="dialogs">Προσθέστε διαλόγους ανάμεσα στους χαρακτήρες του παιχνιδιού</label>
+    <button class="w3-button w3-circle w3-border w3-border-blue w3-hover-blue w3-margin-left" id="dialogs" type="button" name="dialogs">+</button><br><br>
+
+    <label for="scenes">Προσθέστε σκηνές που υπάρχουν στο παιχνίδι</label>
+    <button class="w3-button w3-circle w3-border w3-border-blue w3-hover-blue w3-margin-left" id="scenes" type="button" name="scenes">+</button><br><br>
+
+    <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue" type="submit" value="Submit">
 </form>
 </body>
 </html>

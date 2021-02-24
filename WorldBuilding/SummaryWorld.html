@@ -4,15 +4,27 @@
     <meta charset="UTF-8">
     <title>Χαρακτηριστικά για την Περίληψη Παιχνιδιού</title>
 </head>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <body>
-<h1 style="text-align: center">Συμπληρώστε τα χαρακτηριστικά για την περίληψη του παιχνιδιού</h1>
 
-<form style="text-align: center; margin-top: 100px;">
-    <label style="font-size: large" for="genre">Είδος παιχνιδιού</label><br>
-    <input type="text" id="genre" name="genre"><br>
-    <label style="font-size: large" for="targetAudience">Σε ποιους απευθύνεται το παιχνίδι</label><br>
-    <input type="text" id="targetAudience" name="targetAudience"><br>
-    <input type="submit" value="Submit">
+<div class="w3-container w3-blue" style="text-align: center; margin-top: 8%; margin-left: 13%; margin-right: 13%">
+    <h3 style="text-align: center">Συμπληρώστε τα χαρακτηριστικά για την περίληψη του παιχνιδιού</h3>
+</div>
+
+<form class="w3-container w3-border w3-hover-shadow w3-padding-16" style="text-align: center; margin-left: 13%; margin-right: 13%" >
+    <label for="genre">Είδος παιχνιδιού</label>
+    <input class="w3-input w3-border w3-margin-top" type="text" id="genre" name="genre"><br>
+
+    <label for="targetAudience">Σε ποιους απευθύνεται το παιχνίδι</label>
+    <input class="w3-input w3-border w3-margin-top" type="text" id="targetAudience" name="targetAudience"><br>
+
+    <label for="targetSystem">Σε ποια συστήματα απευθύνεται το παιχνίδι</label>
+    <input class="w3-input w3-border w3-margin-top" type="text" id="targetSystem" name="targetSystem"><br>
+
+    <label for="settingGame">Περιγράψτε το setting του παιχνιδιού</label>
+    <input class="w3-input w3-border w3-margin-top" type="text" id="settingGame" name="settingGame"><br>
+
+    <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue" type="submit" value="Submit">
 </form>
 </body>
 </html>
