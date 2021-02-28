@@ -5,6 +5,7 @@
     <title>Χαρακτηριστικά για την Περίληψη Παιχνιδιού</title>
 </head>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="/main.css">
 <body>
 
 <div class="w3-container w3-blue" style="text-align: center; margin-top: 8%; margin-left: 13%; margin-right: 13%">
@@ -12,19 +13,22 @@
 </div>
 
 <form class="w3-container w3-border w3-hover-shadow w3-padding-16" style="text-align: center; margin-left: 13%; margin-right: 13%" >
-    <label for="genre">Είδος παιχνιδιού</label>
-    <input class="w3-input w3-border w3-margin-top" type="text" id="genre" name="genre"><br>
+    <label for="genre">Περιγράψτε το είδος του παιχνιδιού</label>
+    <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="genre" name="genre"></textarea><br>
 
-    <label for="targetAudience">Σε ποιους απευθύνεται το παιχνίδι</label>
-    <input class="w3-input w3-border w3-margin-top" type="text" id="targetAudience" name="targetAudience"><br>
+    <label for="targetAudience">Περιγράψτε σε ποιους απευθύνεται το παιχνίδι</label>
+    <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="targetAudience" name="targetAudience"></textarea><br>
 
-    <label for="targetSystem">Σε ποια συστήματα απευθύνεται το παιχνίδι</label>
-    <input class="w3-input w3-border w3-margin-top" type="text" id="targetSystem" name="targetSystem"><br>
+    <label for="targetSystem">Περιγράψτε σε ποια συστήματα απευθύνεται το παιχνίδι</label>
+    <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="targetSystem" name="targetSystem"></textarea><br>
 
     <label for="settingGame">Περιγράψτε το setting του παιχνιδιού</label>
-    <input class="w3-input w3-border w3-margin-top" type="text" id="settingGame" name="settingGame"><br>
+    <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="settingGame" name="settingGame"></textarea><br>
 
-    <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue" type="submit" value="Submit">
+    <label for="programmingLang">Αναφέρετε τα λογισμικά και τις γλώσσες προγραμματισμού που θα χρησιμοποιηθούν για την κατασκευή του παιχνιδιού</label>
+    <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="programmingLang" name="programmingLang"></textarea><br>
+
+    <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue" type="submit" value="Υποβολή">
 </form>
 </body>
 </html>

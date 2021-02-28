@@ -5,19 +5,31 @@
     <title>Χαρακτηριστικά για τα Assets</title>
 </head>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/main.css">
 <body>
 <div class="w3-container w3-blue" style="text-align: center; margin-top: 8%; margin-left: 13%; margin-right: 13%">
     <h3 style="text-align: center">Συμπληρώστε τα assets</h3>
 </div>
 
 <form class="w3-container w3-border w3-hover-shadow w3-padding-16" style="text-align: center; margin-left: 13%; margin-right: 13%" >
-    <label for="music">Περιγράψτε το είδος μουσικής που θα έχει το παιχνίδι</label>
+    <label for="music">Περιγράψτε το είδος μουσικής που έχει το παιχνίδι</label>
     <input class="w3-input w3-border w3-margin-top" type="text" id="music" name="music"><br>
 
     <label for="music-track">Προσθέστε μουσική που υπάρχει στο παιχνίδι</label>
-    <button class="w3-button w3-circle w3-border w3-border-blue w3-hover-blue w3-margin-left" id="music-track" type="button" name="music-track">+</button><br><br>
 
-    <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue" type="submit" value="Submit">
+    <button onclick="document.getElementById('music-modal').style.display='block'" class="w3-button w3-circle w3-border
+    w3-border-blue w3-hover-blue w3-margin-left" id="music-track" type="button" name="music-track"><i class="fa fa-plus"></i></button><br>
+
+    <div id="music-modal" class="w3-modal">
+        <div class="w3-modal-content">
+            <div class="w3-container">
+                <span onclick="document.getElementById('music-modal').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+            </div>
+        </div>
+    </div>
+
+    <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue" type="submit" value="Υποβολή">
 </form>
 </body>
 </html>
