@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="el">
 <head>
     <meta charset="UTF-8">
     <title>Χαρακτηριστικά για τα Assets</title>
+    <link rel="icon" href="../Icons/favicon.ico">
 </head>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -19,12 +20,14 @@
     <label for="music-track">Προσθέστε μουσική που υπάρχει στο παιχνίδι</label>
 
     <button onclick="document.getElementById('music-modal').style.display='block'" class="w3-button w3-circle w3-border
-    w3-border-blue w3-hover-blue w3-margin-left" id="music-track" type="button" name="music-track"><i class="fa fa-plus"></i></button><br>
+    w3-border-blue w3-hover-blue w3-margin-left" id="music-track" type="button" name="music-track"><i class="fa fa-plus"></i></button><br><br>
 
     <div id="music-modal" class="w3-modal">
         <div class="w3-modal-content">
             <div class="w3-container">
                 <span onclick="document.getElementById('music-modal').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+                <h3 style="text-align: center">Προσθέστε μουσική</h3><br>
+
             </div>
         </div>
     </div>
