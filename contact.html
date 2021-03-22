@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Επικοινωνία</title>
-    <link rel="icon" href="Icons/favicon.ico">
+    <link rel="icon" href="Images/favicon-new.ico">
 </head>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="main.css">
+<link rel="stylesheet" href="css/main.css">
 <body>
     <div class="w3-bar w3-blue w3-border">
         <a href="index.html" class="w3-bar-item w3-button">Αρχική σελίδα</a>
-        <a href="contact.html" class="w3-bar-item w3-button">Επικοινωνία</a>
+        <a href="write.html" class="w3-bar-item w3-button">Εγγραφή GDD</a>
+        <a href="contact.html" class="w3-bar-item w3-button w3-indigo"><b>Επικοινωνία</b></a>
         <a href="#" class="w3-bar-item w3-button">Συχνές ερωτήσεις</a>
         <a href="register.html" class="w3-bar-item w3-button w3-teal w3-right">Εγγραφή</a>
-        <a href="#" class="w3-bar-item w3-button w3-teal w3-right w3-border-right w3-border-left">Είσοδος</a>
+        <a href="login.html" class="w3-bar-item w3-button w3-teal w3-right">Είσοδος</a>
     </div>
 
     <div class="w3-card w3-border" style="text-align: center; margin-top: 8%; margin-left: 20%; margin-right: 20%">
@@ -30,6 +31,9 @@
 
             <label for="email">Email</label>
             <input class="w3-input w3-border w3-margin-top" id="email" type="email" required><br>
+
+            <label for="message">Μήνυμα</label>
+            <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="3" type="text" id="message" name="message" required></textarea><br>
 
             <input class="w3-button w3-green" type="submit" value="Υποβολή">
         </form>
