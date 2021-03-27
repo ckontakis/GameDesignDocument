@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="el">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Χαρακτηριστικά για τα Στοιχεία Παιχνιδιού</title>
+    <title>Characteristics for Game Elements</title>
     <link rel="icon" href="../Images/favicon-new.ico">
 </head>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -11,14 +11,14 @@
 <body>
 
 <div class="w3-container w3-blue" style="text-align: center; margin-top: 8%; margin-left: 13%; margin-right: 13%">
-    <h3 style="text-align: center">Συμπληρώστε τα χαρακτηριστικά για τα στοιχεία του παιχνιδιού</h3>
+    <h3 style="text-align: center">Fill the characteristics for game elements</h3>
 </div>
 
 <form class="w3-container w3-border w3-hover-shadow w3-padding-16" style="text-align: center; margin-left: 13%; margin-right: 13%">
-    <label for="story">Περιγράψτε την ιστορία του παιχνιδιού</label>
+    <label for="story">Describe the story of the game</label>
     <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="story" name="story"></textarea><br>
 
-    <label for="characters">Προσθέστε χαρακτήρες του παιχνιδιού</label>
+    <label for="characters">Add characters of the game</label>
     <button onclick="document.getElementById('characters-modal').style.display='block'" class="w3-button w3-circle w3-border
     w3-border-blue w3-hover-blue w3-margin-left" id="characters" type="button" name="characters"><i class="fa fa-plus"></i></button><br><br>
 
@@ -26,24 +26,24 @@
         <div class="w3-modal-content w3-animate-zoom">
             <div class="w3-container">
                 <span onclick="document.getElementById('characters-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
-                <h3 style="text-align: center">Προσθέστε έναν χαρακτήρα</h3><br>
+                <h3 style="text-align: center">Add a character</h3><br>
 
-                <label for="imgChar"class="w3-margin-top" id="labelImChar" name="labelImChar">Επιλέξτε μία φωτογραφία του χαρακτήρα</label><br>
+                <label for="imgChar"class="w3-margin-top" id="labelImChar" name="labelImChar">Choose an image of the character</label><br>
                 <input type="file" id="imgChar" class="w3-margin-top" name="imgChar" accept="image/*"><br><br>
 
-                <label for="charAdd" class="w3-margin-top">Πληκτρολογήστε το όνομα του χαρακτήρα</label>
+                <label for="charAdd" class="w3-margin-top">Write the name of the character</label>
                 <input class="w3-input w3-border w3-margin-top" type="text" id="charAdd" name="charAdd" required><br>
 
-                <label for="charDescription">Περιγράψτε τον χαρακτήρα</label>
+                <label for="charDescription">Describe the character</label>
                 <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="3" type="text" id="charDescription" name="charDescription"></textarea><br>
                 <div class="w3-container w3-padding-16">
-                    <button class="w3-button w3-green" id="saveCharacter" type="submit" name="saveCharacter">Αποθήκευση</button>
+                    <button class="w3-button w3-green" id="saveCharacter" type="submit" name="saveCharacter">Save</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <label for="objects">Προσθέστε αντικείμενα που υπάρχουν στο παιχνίδι</label>
+    <label for="objects">Add objects that are in the game</label>
     <button onclick="document.getElementById('objects-modal').style.display='block'" class="w3-button w3-circle w3-border
     w3-border-blue w3-hover-blue w3-margin-left" id="objects" type="button" name="characters"><i class="fa fa-plus"></i></button><br><br>
 
@@ -51,28 +51,28 @@
         <div class="w3-modal-content w3-animate-zoom">
             <div class="w3-container">
                 <span onclick="document.getElementById('objects-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
-                <h3 style="text-align: center">Προσθέστε ένα αντικείμενο</h3><br>
+                <h3 style="text-align: center">Add an object</h3><br>
 
-                <label for="imgObject"class="w3-margin-top" id="labelImObj" name="labelImObj">Επιλέξτε μία φωτογραφία του αντικειμένου</label><br>
+                <label for="imgObject"class="w3-margin-top" id="labelImObj" name="labelImObj">Choose an image of the object</label><br>
                 <input type="file" id="imgObject" class="w3-margin-top" name="imgObject" accept="image/*"><br><br>
 
-                <label for="objName" class="w3-margin-top">Πληκτρολογήστε το όνομα του αντικειμένου</label>
+                <label for="objName" class="w3-margin-top">Write the name of the object</label>
                 <input class="w3-input w3-border w3-margin-top" type="text" id="objName" name="objName" required><br>
 
-                <label for="typeOfObj" class="w3-margin-top">Πληκτρολογήστε τον τύπο του αντικειμένου</label>
-                <input class="w3-input w3-border w3-margin-top" type="text" id="typeOfObj" name="typeOfObj" placeholder="π.χ τραπέζι, αμάξι, όπλο" required><br>
+                <label for="typeOfObj" class="w3-margin-top">Write the type of the object</label>
+                <input class="w3-input w3-border w3-margin-top" type="text" id="typeOfObj" name="typeOfObj" placeholder="e.g table, car, gun" required><br>
 
-                <label for="objDescription">Περιγράψτε το αντικείμενο</label>
+                <label for="objDescription">Describe the object</label>
                 <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="3" type="text" id="objDescription" name="objDescription"></textarea><br>
 
                 <div class="w3-container w3-padding-16">
-                    <button class="w3-button w3-green" id="saveObject" type="submit" name="saveObject">Αποθήκευση</button>
+                    <button class="w3-button w3-green" id="saveObject" type="submit" name="saveObject">Save</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <label for="locations">Προσθέστε τοποθεσίες του παιχνιδιού</label>
+    <label for="locations">Add locations of the game</label>
     <button onclick="document.getElementById('locations-modal').style.display='block'" class="w3-button w3-circle w3-border
     w3-border-blue w3-hover-blue w3-margin-left" id="locations" type="button" name="locations"><i class="fa fa-plus"></i></button><br><br>
 
@@ -80,65 +80,65 @@
         <div class="w3-modal-content w3-animate-zoom">
             <div class="w3-container">
                 <span onclick="document.getElementById('locations-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
-                <h3 style="text-align: center">Προσθέστε μία τοποθεσία</h3><br>
+                <h3 style="text-align: center">Add a location</h3><br>
 
-                <label for="imgLocation"class="w3-margin-top" id="labelImLoc" name="labelImLoc">Επιλέξτε μία φωτογραφία της τοποθεσίας</label><br>
+                <label for="imgLocation"class="w3-margin-top" id="labelImLoc" name="labelImLoc">Choose an image of the location</label><br>
                 <input type="file" id="imgLocation" class="w3-margin-top" name="imgLocation" accept="image/*"><br><br>
 
-                <label for="locName" class="w3-margin-top">Πληκτρολογήστε το όνομα της τοποθεσίας</label>
+                <label for="locName" class="w3-margin-top">Write the name of the location</label>
                 <input class="w3-input w3-border w3-margin-top" type="text" id="locName" name="locName" required><br>
 
-                <label for="locDescription">Περιγράψτε την τοποθεσία</label>
+                <label for="locDescription">Describe the location</label>
                 <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="3" type="text" id="locDescription" name="locDescription"></textarea><br>
 
-                <label>Προσθέστε τα αντικείμενα που υπάρχουν στη τοποθεσία</label>
+                <label>Add objects that are at the location</label>
                 <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableObjects">
                     <tr>
-                        <th>Αντικείμενα</th>
-                        <th>Προσθήκη</th>
+                        <th>Objects</th>
+                        <th>Add</th>
                     </tr>
                     <tr>
-                        <td>Αντικείμενο 1</td>
+                        <td>Object 1</td>
                         <td><button class="w3-button w3-green w3-circle" id="obj1" type="button" name="btnAddObj"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
-                        <td>Αντικείμενο 2</td>
+                        <td>Object 2</td>
                         <td><button class="w3-button w3-green w3-circle" id="obj2" type="button" name="btnAddObj"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
-                        <td>Αντικείμενο 3</td>
+                        <td>Object 3</td>
                         <td><button class="w3-button w3-green w3-circle" id="obj3" type="button" name="btnAddObj"><i class="fa fa-plus"></i></button></td>
                     </tr>
                 </table><br>
 
-                <label>Προσθέστε τους χαρακτήρες που υπάρχουν στη τοποθεσία</label>
+                <label>Add characters that are at the location</label>
                 <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableCharacters">
                     <tr>
-                        <th>Χαρακτήρες</th>
-                        <th>Προσθήκη</th>
+                        <th>Characters</th>
+                        <th>Add</th>
                     </tr>
                     <tr>
-                        <td>Χαρακτήρας 1</td>
+                        <td>Character 1</td>
                         <td><button class="w3-button w3-green w3-circle" id="char1" type="button" name="btnAddChar"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
-                        <td>Χαρακτήρας 2</td>
+                        <td>Character 2</td>
                         <td><button class="w3-button w3-green w3-circle" id="char2" type="button" name="btnAddChar"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
-                        <td>Χαρακτήρας 3</td>
+                        <td>Character 3</td>
                         <td><button class="w3-button w3-green w3-circle" id="char3" type="button" name="btnAddChar"><i class="fa fa-plus"></i></button></td>
                     </tr>
                 </table>
 
                 <div class="w3-container w3-padding-16">
-                    <button class="w3-button w3-green" id="saveLocation" type="submit" name="saveLocation">Αποθήκευση</button>
+                    <button class="w3-button w3-green" id="saveLocation" type="submit" name="saveLocation">Save</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <label for="dialogs">Προσθέστε διαλόγους ανάμεσα στους χαρακτήρες του παιχνιδιού</label>
+    <label for="dialogs">Add dialogs between characters of the game</label>
     <button onclick="document.getElementById('dialogs-modal').style.display='block'" class="w3-button w3-circle w3-border
     w3-border-blue w3-hover-blue w3-margin-left" id="dialogs" type="button" name="dialogs"><i class="fa fa-plus"></i></button><br><br>
 
@@ -146,47 +146,47 @@
         <div class="w3-modal-content w3-animate-zoom">
             <div class="w3-container">
                 <span onclick="document.getElementById('dialogs-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
-                <h3 style="text-align: center">Προσθέστε έναν διάλογο</h3><br>
+                <h3 style="text-align: center">Add a dialog</h3><br>
 
-                <label>Επιλέξτε τον χαρακτήρα που θα απευθυνθεί στους άλλους χαρακτήρες</label>
+                <label>Choose a character that talks to others</label>
                 <select class="w3-select w3-border w3-margin-top" id="selectFromChar" name="selectFromChar" required>
-                    <option value="" disabled selected>Επιλέξτε έναν χαρακτήρα</option>
-                    <option value="1">Χαρακτήρας 1</option>
-                    <option value="2">Χαρακτήρας 2</option>
-                    <option value="3">Χαρακτήρας 3</option>
+                    <option value="" disabled selected>Choose a character</option>
+                    <option value="1">Character 1</option>
+                    <option value="2">Character 2</option>
+                    <option value="3">Character 3</option>
                 </select><br><br>
 
-                <label>Επιλέξτε τον/τους χαρακτήρες που απευθύνεται ο παραπάνω χαρακτήρας</label>
+                <label>Choose a character or more that the character above talks to</label>
                 <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableCharacters-dialogs">
                     <tr>
-                        <th>Χαρακτήρες</th>
-                        <th>Προσθήκη</th>
+                        <th>Characters</th>
+                        <th>Add</th>
                     </tr>
                     <tr>
-                        <td>Χαρακτήρας 1</td>
+                        <td>Character 1</td>
                         <td><button class="w3-button w3-green w3-circle" id="char1-dialogs" type="button" name="btnAddChar"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
-                        <td>Χαρακτήρας 2</td>
+                        <td>Character 2</td>
                         <td><button class="w3-button w3-green w3-circle" id="char2-dialogs" type="button" name="btnAddChar"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
-                        <td>Χαρακτήρας 3</td>
+                        <td>Character 3</td>
                         <td><button class="w3-button w3-green w3-circle" id="char3-dialogs" type="button" name="btnAddChar"><i class="fa fa-plus"></i></button></td>
                     </tr>
                 </table><br>
 
-                <label for="objDescription">Γράψτε τον διάλογο</label>
+                <label for="objDescription">Write the dialog</label>
                 <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="3" type="text" id="dialogText" name="dialogText" required></textarea><br>
 
                 <div class="w3-container w3-padding-16">
-                    <button class="w3-button w3-green" id="saveDialog" type="submit" name="saveDialog">Αποθήκευση</button>
+                    <button class="w3-button w3-green" id="saveDialog" type="submit" name="saveDialog">Save</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <label for="scenes">Προσθέστε σκηνές που υπάρχουν στο παιχνίδι</label>
+    <label for="scenes">Add scenes of the game</label>
     <button onclick="document.getElementById('scenes-modal').style.display='block'" class="w3-button w3-circle w3-border
     w3-border-blue w3-hover-blue w3-margin-left" id="scenes" type="button" name="scenes"><i class="fa fa-plus"></i></button><br><br>
 
@@ -194,81 +194,81 @@
         <div class="w3-modal-content w3-animate-zoom">
             <div class="w3-container">
                 <span onclick="document.getElementById('scenes-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
-                <h3 style="text-align: center">Προσθέστε μία σκηνή</h3><br>
+                <h3 style="text-align: center">Add a scene</h3><br>
 
-                <label for="sceneName" class="w3-margin-top">Πληκτρολογήστε το όνομα της σκηνής</label>
+                <label for="sceneName" class="w3-margin-top">Write the name of the scene</label>
                 <input class="w3-input w3-border w3-margin-top" type="text" id="sceneName" name="sceneName" required><br>
 
-                <label for="sceneDescription">Περιγράψτε την σκηνή</label>
+                <label for="sceneDescription">Describe the scene</label>
                 <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="3" type="text" id="sceneDescription" name="sceneDescription"></textarea><br>
 
-                <label>Προσθέστε τους χαρακτήρες που συμμετέχουν στην σκηνή</label>
+                <label>Add characters that take part in the scene</label>
                 <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableCharacters-scenes">
                     <tr>
-                        <th>Χαρακτήρες</th>
-                        <th>Προσθήκη</th>
+                        <th>Characters</th>
+                        <th>Add</th>
                     </tr>
                     <tr>
-                        <td>Χαρακτήρας 1</td>
+                        <td>Character 1</td>
                         <td><button class="w3-button w3-green w3-circle" id="char1-scene" type="button" name="btnAddChar"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
-                        <td>Χαρακτήρας 2</td>
+                        <td>Character 2</td>
                         <td><button class="w3-button w3-green w3-circle" id="char2-scene" type="button" name="btnAddChar"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
-                        <td>Χαρακτήρας 3</td>
+                        <td>Character 3</td>
                         <td><button class="w3-button w3-green w3-circle" id="char3-scene" type="button" name="btnAddChar"><i class="fa fa-plus"></i></button></td>
                     </tr>
                 </table><br>
 
-                <label>Προσθέστε τις τοποθεσίες που υπάρχουν στην σκηνή</label>
+                <label>Add locations of the scene</label>
                 <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableLocations-scenes">
                     <tr>
-                        <th>Τοποθεσίες</th>
-                        <th>Προσθήκη</th>
+                        <th>Locations</th>
+                        <th>Add</th>
                     </tr>
                     <tr>
-                        <td>Τοποθεσία 1</td>
+                        <td>Location 1</td>
                         <td><button class="w3-button w3-green w3-circle" id="loc1-scene" type="button" name="btnAddLoc"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
-                        <td>Τοποθεσία 2</td>
+                        <td>Location 2</td>
                         <td><button class="w3-button w3-green w3-circle" id="loc2-scene" type="button" name="btnAddLoc"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
-                        <td>Τοποθεσία 3</td>
+                        <td>Location 3</td>
                         <td><button class="w3-button w3-green w3-circle" id="loc3-scene" type="button" name="btnAddLoc"><i class="fa fa-plus"></i></button></td>
                     </tr>
                 </table><br>
 
-                <label>Προσθέστε τα αντικείμενα που υπάρχουν στην σκηνή</label>
+                <label>Add objects of the scene</label>
                 <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableObjects-scenes">
                     <tr>
-                        <th>Αντικείμενα</th>
-                        <th>Προσθήκη</th>
+                        <th>Object</th>
+                        <th>Add</th>
                     </tr>
                     <tr>
-                        <td>Αντικείμενο 1</td>
+                        <td>Object 1</td>
                         <td><button class="w3-button w3-green w3-circle" id="obj1-scene" type="button" name="btnAddObj"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
-                        <td>Αντικείμενο 2</td>
+                        <td>Object 2</td>
                         <td><button class="w3-button w3-green w3-circle" id="obj2-scene" type="button" name="btnAddObj"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
-                        <td>Αντικείμενο 3</td>
+                        <td>Object 3</td>
                         <td><button class="w3-button w3-green w3-circle" id="obj3-scene" type="button" name="btnAddObj"><i class="fa fa-plus"></i></button></td>
                     </tr>
                 </table><br>
                 <div class="w3-container w3-padding-16">
-                    <button class="w3-button w3-green" id="saveScene" type="submit" name="saveScene">Αποθήκευση</button>
+                    <button class="w3-button w3-green" id="saveScene" type="submit" name="saveScene">Save</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue" type="submit" value="Υποβολή">
+    <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue" type="submit" value="Submit">
 </form>
 </body>
 </html>

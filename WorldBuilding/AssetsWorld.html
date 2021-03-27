@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="el">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Χαρακτηριστικά για τα Assets</title>
+    <title>Characteristics for Assets</title>
     <link rel="icon" href="../Images/favicon-new.ico">
 </head>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -10,15 +10,15 @@
 <link rel="stylesheet" href="/css/main.css">
 <body>
 <div class="w3-container w3-blue" style="text-align: center; margin-top: 8%; margin-left: 13%; margin-right: 13%">
-    <h3 style="text-align: center">Συμπληρώστε τα assets</h3>
+    <h3 style="text-align: center">Fill the assets</h3>
 </div>
 
 <form class="w3-container w3-border w3-hover-shadow w3-padding-16" style="text-align: center; margin-left: 13%; margin-right: 13%" >
-    <label for="musicDescription">Περιγράψτε την μουσική που έχει το παιχνίδι</label>
+    <label for="musicDescription">Describe the music of the game</label>
     <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="musicDescription" name="musicDescription"></textarea><br>
 
 
-    <label for="musicType">Προσθέστε ένα είδος μουσικής του παιχνιδιού</label>
+    <label for="musicType">Add a kind of music that the game has</label>
 
     <button onclick="document.getElementById('music-modal').style.display='block'" class="w3-button w3-circle w3-border
     w3-border-blue w3-hover-blue w3-margin-left" id="musicType" type="button" name="musicType"><i class="fa fa-plus"></i></button><br><br>
@@ -27,22 +27,22 @@
         <div class="w3-modal-content">
             <div class="w3-container">
                 <span onclick="document.getElementById('music-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
-                <h3 style="text-align: center">Προσθέστε ένα είδος μουσικής</h3><br>
+                <h3 style="text-align: center">Add a kind of music</h3><br>
 
-                <label for="musicTypeName">Όνομα είδους μουσικής</label>
+                <label for="musicTypeName">Name of music kind</label>
                 <input class="w3-input w3-border w3-margin-top" type="text" id="musicTypeName" name="musicTypeName" required><br>
 
-                <label for="charTypeDescription">Περιγράψτε τον λόγο για τον οποίο επιλέξατε να χρησιμοποιήσετε αυτό το είδος μουσικής στο παιχνίδι</label>
+                <label for="charTypeDescription">Describe the reason why you chose to use this kind of music in the game</label>
                 <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="3" type="text" id="charTypeDescription" name="charTypeDescription"></textarea><br>
 
                 <div class="w3-container w3-padding-16">
-                    <button class="w3-button w3-green" id="saveMusicType" type="submit" name="saveMusicType">Αποθήκευση</button>
+                    <button class="w3-button w3-green" id="saveMusicType" type="submit" name="saveMusicType">Save</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <label for="musicTrack">Προσθέστε ένα κομμάτι μουσικής που παίζει στο παιχνίδι</label>
+    <label for="musicTrack">Add a track of music that plays in the game</label>
 
     <button onclick="document.getElementById('musicTrack-modal').style.display='block'" class="w3-button w3-circle w3-border
     w3-border-blue w3-hover-blue w3-margin-left" id="musicTrack" type="button" name="musicTrack"><i class="fa fa-plus"></i></button><br><br>
@@ -51,44 +51,44 @@
         <div class="w3-modal-content">
             <div class="w3-container">
                 <span onclick="document.getElementById('musicTrack-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
-                <h3 style="text-align: center">Προσθέστε ένα κομμάτι μουσικής</h3><br>
+                <h3 style="text-align: center">Add a music track</h3><br>
 
-                <label for="musicTrackName">Όνομα του κομματιού</label>
+                <label for="musicTrackName">Name of track</label>
                 <input class="w3-input w3-border w3-margin-top" type="text" id="musicTrackName" name="musicTrackName" required><br>
 
-                <label>Επιλέξτε το/τα είδος/η μουσικής που ανήκει το κομμάτι</label>
+                <label>Choose a kind or more that the track belongs</label>
                 <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="musicTypeObjects">
                     <tr>
-                        <th>Είδη μουσικής</th>
-                        <th>Προσθήκη</th>
+                        <th>Kind of music</th>
+                        <th>Add</th>
                     </tr>
                     <tr>
-                        <td>Είδος 1</td>
+                        <td>Kind 1</td>
                         <td><button class="w3-button w3-green w3-circle" id="obj1" type="button" name="btnAddMuc"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
-                        <td>Είδος 2</td>
+                        <td>Kind 2</td>
                         <td><button class="w3-button w3-green w3-circle" id="obj2" type="button" name="btnAddMuc"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
-                        <td>Είδος 3</td>
+                        <td>Kind 3</td>
                         <td><button class="w3-button w3-green w3-circle" id="obj3" type="button" name="btnAddMuc"><i class="fa fa-plus"></i></button></td>
                     </tr>
                 </table><br>
 
-                <label for="musicTrackMaker">Δημιουργοί του κομματιού</label>
+                <label for="musicTrackMaker">Creators of track</label>
                 <input class="w3-input w3-border w3-margin-top" type="text" id="musicTrackMaker" name="musicTrackMaker"><br>
 
 
                 <div class="w3-container w3-padding-16">
-                    <button class="w3-button w3-green" id="saveMusicTrack" type="submit" name="saveMusicTrack">Αποθήκευση</button>
+                    <button class="w3-button w3-green" id="saveMusicTrack" type="submit" name="saveMusicTrack">Save</button>
                 </div>
             </div>
         </div>
     </div>
 
 
-    <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue" type="submit" value="Υποβολή">
+    <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue" type="submit" value="Submit">
 </form>
 </body>
 </html>
