@@ -4,24 +4,134 @@
     <meta charset="UTF-8">
     <title>Characteristics for the summary of game</title>
     <link rel="icon" href="../Images/favicon-new.ico">
+    <script src="../Javascript/WorldBuilding.js"></script>
 </head>
 <link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<style>
+    .transmission{
+        transition-duration: 0.3s;
+    }
+</style>
+
 <body>
 
 <div class="w3-container w3-blue" style="text-align: center; margin-top: 8%; margin-left: 13%; margin-right: 13%">
     <h3 style="text-align: center">Fill the characteristics for the summary of the game</h3>
 </div>
 
-<form class="w3-container w3-border w3-hover-shadow w3-padding-16" style="text-align: center; margin-left: 13%; margin-right: 13%">
-    <label for="genre">Describe the genre of the game</label>
-    <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="genre" name="genre"></textarea><br>
+<form class="w3-container w3-border w3-hover-shadow w3-padding-16" style="text-align: center; margin-left: 13%; margin-right: 13%; margin-bottom: 1%;">
 
-    <label for="targetAudience">Describe the target group of the game</label>
-    <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="targetAudience" name="targetAudience"></textarea><br>
+    <label for="nameGame">Type the name of the game</label>
+    <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="1" type="text" id="nameGame" name="nameGame"></textarea><br>
 
-    <label for="targetSystem">Describe the target systems of the game</label>
-    <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="targetSystem" name="targetSystem"></textarea><br>
+    <div class="w3-container">
+        <div class="w3-container">
+            <button class="w3-button w3-border w3-border-blue w3-hover-blue w3-round transmission" type="button" id="chooseButton"
+                   onclick="showAndHide('checkGenre','fontChoose')">Choose one or more genres <i id="fontChoose" class="fa fa-plus"></i></button>
+        </div>
+        <div class="w3-container w3-left-align w3-animate-opacity" id="checkGenre" style="margin-left: 41%; margin-top: 1%; display: none;">
+            <input id="sandbox" class="w3-check" type="checkbox">
+            <label for="sandbox">Sandbox</label><br>
+
+            <input id="rts" class="w3-check" type="checkbox">
+            <label for="rts">Real-time strategy</label><br>
+
+            <input id="fps" class="w3-check" type="checkbox">
+            <label for="fps">Shooter</label><br>
+
+            <input id="moba" class="w3-check" type="checkbox">
+            <label for="moba">Multiplayer online battle arena</label><br>
+
+            <input id="rpg" class="w3-check" type="checkbox">
+            <label for="rpg">Role-playing</label><br>
+
+            <input id="simsports" class="w3-check" type="checkbox">
+            <label for="simsports">Simulation and sports</label><br>
+
+            <input id="puzzleparty" class="w3-check" type="checkbox">
+            <label for="puzzleparty">Puzzlers and party games</label><br>
+
+            <input id="action" class="w3-check" type="checkbox">
+            <label for="action">Action-adventure</label><br>
+
+            <input id="survhor" class="w3-check" type="checkbox">
+            <label for="survhor">Survival and horror</label><br>
+
+            <input id="plat" class="w3-check" type="checkbox">
+            <label for="plat">Platformer</label><br>
+
+            <input id="other" class="w3-check" type="checkbox" onclick="showFunction('otherGen')">
+            <label for="other">Other</label>
+            <input id="otherGen" style="visibility: hidden" type="text" placeholder="Write a genre...">
+        </div>
+    </div><br>
+
+    <div class="w3-container">
+        <div class="w3-container">
+            <button class="w3-button w3-border w3-border-blue w3-hover-blue w3-round transmission" type="button" id="chooseButtonAge"
+                   onclick="showAndHide('checkAgeGroup','fontChooseAge')">Choose one or more age target groups
+                <i id="fontChooseAge" class="fa fa-plus"></i></button>
+        </div>
+        <div class="w3-container w3-left-align w3-animate-opacity" id="checkAgeGroup" style="margin-left: 41%; margin-top: 1%; display: none;">
+            <input id="three-plus" class="w3-check" type="checkbox">
+            <label for="three-plus">3+</label><br>
+
+            <input id="eight-plus" class="w3-check" type="checkbox">
+            <label for="eight-plus">8+</label><br>
+
+            <input id="twelve-plus" class="w3-check" type="checkbox">
+            <label for="twelve-plus">12+</label><br>
+
+            <input id="sixteen-plus" class="w3-check" type="checkbox">
+            <label for="sixteen-plus">16+</label><br>
+
+            <input id="eighteen-plus" class="w3-check" type="checkbox">
+            <label for="eighteen-plus">18+</label><br>
+        </div>
+    </div><br>
+
+    <div class="w3-container">
+        <div class="w3-container">
+            <button class="w3-button w3-border w3-border-blue w3-hover-blue w3-round transmission" type="button" id="chooseButtonSystem"
+                    onclick="showAndHide('checkSystem','fontChooseSystem')">Choose one or more target systems
+                <i id="fontChooseSystem" class="fa fa-plus"></i></button>
+        </div>
+        <div class="w3-container w3-left-align w3-animate-opacity" id="checkSystem" style="margin-left: 41%; margin-top: 1%; display: none;">
+            <input id="pc" class="w3-check" type="checkbox">
+            <label for="pc">PC</label><br>
+
+            <input id="ps5" class="w3-check" type="checkbox">
+            <label for="ps5">PlayStation 5</label><br>
+
+            <input id="ps4" class="w3-check" type="checkbox">
+            <label for="ps4">PlayStation 4</label><br>
+
+            <input id="xbox" class="w3-check" type="checkbox">
+            <label for="xbox">Xbox Series X/S</label><br>
+
+            <input id="xboxOne" class="w3-check" type="checkbox">
+            <label for="xboxOne">Xbox One</label><br>
+
+            <input id="nintendoSwitch" class="w3-check" type="checkbox">
+            <label for="nintendoSwitch">Nintendo Switch</label><br>
+
+            <input id="nintendo3ds" class="w3-check" type="checkbox">
+            <label for="nintendo3ds">Nintendo 3DS</label><br>
+
+            <input id="playVita" class="w3-check" type="checkbox">
+            <label for="playVita">PlayStation Vita</label><br>
+
+            <input id="wii" class="w3-check" type="checkbox">
+            <label for="wii">Wii U</label><br>
+
+            <input id="otherSystem" class="w3-check" type="checkbox" onclick="showFunction('otherSys')">
+            <label for="otherSystem">Other</label>
+            <input id="otherSys" style="visibility: hidden" type="text" placeholder="Write a system...">
+        </div>
+    </div><br>
 
     <label for="settingGame">Describe the setting of the game</label>
     <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="settingGame" name="settingGame"></textarea><br>
@@ -29,7 +139,7 @@
     <label for="programmingLang">Write which software and programming languages were used to make the game</label>
     <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="programmingLang" name="programmingLang"></textarea><br>
 
-    <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue" type="submit" value="Submit">
+    <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue transmission" type="button" value="Submit">
 </form>
 </body>
 </html>

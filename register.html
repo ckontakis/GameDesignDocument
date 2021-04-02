@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <title>Register</title>
     <link rel="icon" href="Images/favicon-new.ico">
+
+    <script src="Javascript/WorldBuilding.js"></script>
 </head>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="css/main.css">
 <body>
-    <div class="w3-bar w3-blue w3-border">
+    <div class="w3-bar w3-blue">
         <a href="index.html" class="w3-bar-item w3-button">Start Page</a>
         <a href="write.html" class="w3-bar-item w3-button">Write GDD</a>
         <a href="contact.html" class="w3-bar-item w3-button">Contact</a>
@@ -31,20 +33,10 @@
 
             <input class="w3-input w3-border w3-margin-top" id="password" type="password" placeholder="Password" required>
 
-            <input id="labelShow" class="w3-check w3-margin-top" type="checkbox" onclick="myFunction()">
+            <input id="labelShow" class="w3-check w3-margin-top" type="checkbox" onclick="showPassword()">
             <label for="labelShow">Show password</label><br><br>
-            <script>
-                function myFunction() {
-                var x = document.getElementById("password");
-                if (x.type === "password") {
-                    x.type = "text";
-                } else {
-                    x.type = "password";
-                }
-            }
-            </script>
 
-            <input class="w3-button w3-green" type="submit" value="Register">
+            <input class="w3-button w3-green" style="transition-duration: 0.3s" type="submit" value="Register">
         </form>
     </div>
 </body>
