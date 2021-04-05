@@ -26,6 +26,9 @@ function showAndHide(el, btnFont){
     }
 }
 
+/*
+Function to show and hide the password.
+ */
 function showPassword() {
     var x = document.getElementById("password");
     if (x.type === "password") {

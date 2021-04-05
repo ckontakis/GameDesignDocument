@@ -3,11 +3,17 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Write GDD</title>
+	<script src="JavaScript/Main.js"></script>
 </head>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="./css/writestyle.css">
-	
+
+<style>
+	.transmission{
+		transition-duration: 0.3s;
+	}
+</style>
+
 <body>
 <div class="w3-bar w3-blue">
 	<a href="index.html" class="w3-bar-item w3-button">Start Page</a>
@@ -18,44 +24,49 @@
 	<a href="login.html" class="w3-bar-item w3-button w3-teal w3-right">Login</a>
 </div>
 
-<div class="container">
-	<input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue" type="button" value="Δημιουργία νέου εγγράφου σχεδίασης παιχνιδιών"><br><br>
+<div class="container" style="margin-top: 5%; margin-left: 3%; margin-right: 3%;">
+	<input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue transmission" type="button" value="Δημιουργία νέου εγγράφου σχεδίασης παιχνιδιών"><br><br>
 
-	<div class="writtengdd">
-	    <ol>
-		    <li class="existing">Placeholder 1 
-		        <button class="printbtn"><img src="./Images/print.svg" title="Print"></button>
-		        <button class="exportbtn"><img src="./Images/export.svg" title="Export"></button>
-		        <button class="deletebtn"><img src="./Images/delete.svg" title="Delete"></button>
-				<button class="editbtn"><img src="./Images/edit.svg" title="Edit"></button>
-		    </li>
-		    <li class="existing">Placeholder 2
-		        <button class="printbtn"><img src="./Images/print.svg" title="Print"></button>
-		        <button class="exportbtn"><img src="./Images/export.svg" title="Export"></button>
-		        <button class="deletebtn"><img src="./Images/delete.svg" title="Delete"></button>
-				<button class="editbtn"><img src="./Images/edit.svg" title="Edit"></button>
-		    </li>
-		    <li class="existing">Placeholder 3
-		        <button class="printbtn"><img src="./Images/print.svg" title="Print"></button>
-		        <button class="exportbtn"><img src="./Images/export.svg" title="Export"></button>
-		        <button class="deletebtn"><img src="./Images/delete.svg" title="Delete"></button>
-				<button class="editbtn"><img src="./Images/edit.svg" title="Edit"></button>
-		    </li>
-		    <li class="existing">Placeholder 4
-		        <button class="printbtn"><img src="./Images/print.svg" title="Print"></button>
-		        <button class="exportbtn"><img src="./Images/export.svg" title="Export"></button>
-		        <button class="deletebtn"><img src="./Images/delete.svg" title="Delete"></button>
-				<button class="editbtn"><img src="./Images/edit.svg" title="Edit"></button>
-		    </li>
-		    <li class="existing">Placeholder 5
-		        <button class="printbtn"><img src="./Images/print.svg" title="Print"></button>
-		        <button class="exportbtn"><img src="./Images/export.svg" title="Export"></button>
-		        <button class="deletebtn"><img src="./Images/delete.svg" title="Delete"></button>
-				<button class="editbtn"><img src="./Images/edit.svg" title="Edit"></button>
-		    </li>
-	    </ol>
-	</div>
-</div>	
+	<table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableGDD">
+		<tr>
+			<th>Game Design Document</th>
+			<th>Edit</th>
+			<th>Delete</th>
+			<th>Download</th>
+			<th>Print</th>
+		</tr>
+		<tr>
+			<td>GDD 1</td>
+			<td>
+				<div class="w3-dropdown-hover">
+					<button class="w3-button w3-round w3-border w3-border-black transmission" id="edit1" type="button" name="btnEdit1"><i class="fa fa-edit"></i></button>
+					<div class="w3-dropdown-content w3-bar-block">
+						<a href="Mechanics/mechanics.html" class="w3-bar-item w3-button">Mechanics</a>
+						<a href="WorldBuilding/Categories.html" class="w3-bar-item w3-button">World Building</a>
+					</div>
+				</div>
+			</td>
+			<td><button class="w3-button w3-round w3-border w3-border-black transmission" id="remove1" onclick="confirmDelete()" type="button" name="btnRemove1"><i class="fa fa-trash"></i></button></td>
+			<td><button class="w3-button w3-round w3-border w3-border-black transmission" id="down1" type="button" name="down1"><i class="fa fa-download"></i></button></td>
+			<td><button class="w3-button w3-round w3-border w3-border-black transmission" id="print1" type="button" name="print1"><i class="fa fa-print"></i></button></td>
+		</tr>
 
+		<tr>
+			<td>GDD 2</td>
+			<td>
+				<div class="w3-dropdown-hover">
+					<button class="w3-button w3-round w3-border w3-border-black transmission" id="edit2" type="button" name="btnEdit2"><i class="fa fa-edit"></i></button>
+					<div class="w3-dropdown-content w3-bar-block">
+						<a href="Mechanics/mechanics.html" class="w3-bar-item w3-button">Mechanics</a>
+						<a href="WorldBuilding/Categories.html" class="w3-bar-item w3-button">World Building</a>
+					</div>
+				</div>
+			</td>
+			<td><button class="w3-button w3-round w3-border w3-border-black transmission" id="remove2" onclick="confirmDelete()" type="button" name="btnRemove1"><i class="fa fa-trash"></i></button></td>
+			<td><button class="w3-button w3-round w3-border w3-border-black transmission" id="down2" type="button" name="down2"><i class="fa fa-download"></i></button></td>
+			<td><button class="w3-button w3-round w3-border w3-border-black transmission" id="print2" type="button" name="print2"><i class="fa fa-print"></i></button></td>
+		</tr>
+	</table><br>
+</div>
 </body>
 </html>
