@@ -1,3 +1,6 @@
+/*
+Function to confirm if a user wants to delete a document or not.
+ */
 function confirmDelete(){
     let con = confirm('Are you sure you want to delete this game design document?');
 
@@ -8,6 +11,9 @@ function confirmDelete(){
     }
 }
 
+/*
+Function that shows and hides categories from write page.
+ */
 function showCategories(el, fontArrow){
     let x = document.getElementById(el);
     let y = document.getElementById(fontArrow);
