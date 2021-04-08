@@ -8,18 +8,8 @@
 
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <link rel="stylesheet" href="../css/main.css">
 </head>
-
-<style>
-    .transmission{
-        transition-duration: 0.3s;
-    }
-
-    *{
-        white-space: normal !important;
-    }
-</style>
 
 <body>
 
@@ -37,27 +27,27 @@
     </div>
 </div>
 
-<div class="w3-container" style="margin-top:3%; margin-left: 13%; margin-right: 13%;">
+<div class="w3-container pathPosition">
     <a href="../write.html" class="w3-hover-text-blue">Write GDD</a>
     <i class="fa fa-angle-double-right"></i>
     <a href="SummaryWorld.html" class="w3-hover-text-blue">Summary World</a>
 </div>
 
-<div class="w3-container w3-blue" style="text-align: center; margin-top: 3%; margin-left: 13%; margin-right: 13%">
-    <h3 style="text-align: center">Fill the characteristics for the summary of the game</h3>
+<div class="w3-container w3-blue panelInFormWorld">
+    <h3 class="headerPanel">Fill the characteristics for the summary of the game</h3>
 </div>
 
-<form class="w3-container w3-border w3-hover-shadow w3-padding-16" style="text-align: center; margin-left: 13%; margin-right: 13%; margin-bottom: 1%;">
+<form class="w3-container w3-border w3-hover-shadow w3-padding-16 formWorldBuilding">
 
     <label for="nameGame">Type the name of the game</label>
-    <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="1" type="text" id="nameGame" name="nameGame"></textarea><br>
+    <textarea class="w3-input w3-border w3-margin-top" rows="1" type="text" id="nameGame" name="nameGame"></textarea><br>
 
     <div class="w3-container">
         <div class="w3-container">
             <button class="w3-button w3-border w3-border-blue w3-hover-blue w3-round transmission" type="button" id="chooseButton"
                    onclick="showAndHide('checkGenre','fontChoose')">Choose one or more genres <i id="fontChoose" class="fa fa-plus"></i></button>
         </div>
-        <div class="w3-container w3-left-align w3-animate-opacity" id="checkGenre" style="margin-left: 41%; margin-top: 1%; display: none;">
+        <div class="w3-container w3-left-align w3-animate-opacity checkboxesPosition" id="checkGenre">
             <input id="sandbox" class="w3-check" type="checkbox">
             <label for="sandbox">Sandbox</label><br>
 
@@ -100,7 +90,7 @@
                    onclick="showAndHide('checkAgeGroup','fontChooseAge')">Choose one or more age target groups
                 <i id="fontChooseAge" class="fa fa-plus"></i></button>
         </div>
-        <div class="w3-container w3-left-align w3-animate-opacity" id="checkAgeGroup" style="margin-left: 41%; margin-top: 1%; display: none;">
+        <div class="w3-container w3-left-align w3-animate-opacity checkboxesPosition" id="checkAgeGroup">
             <input id="three-plus" class="w3-check" type="checkbox">
             <label for="three-plus">3+</label><br>
 
@@ -124,7 +114,7 @@
                     onclick="showAndHide('checkSystem','fontChooseSystem')">Choose one or more target systems
                 <i id="fontChooseSystem" class="fa fa-plus"></i></button>
         </div>
-        <div class="w3-container w3-left-align w3-animate-opacity" id="checkSystem" style="margin-left: 41%; margin-top: 1%; display: none;">
+        <div class="w3-container w3-left-align w3-animate-opacity checkboxesPosition" id="checkSystem">
             <input id="pc" class="w3-check" type="checkbox">
             <label for="pc">PC</label><br>
 
@@ -159,19 +149,19 @@
     </div><br>
 
     <label for="settingGame">Describe the setting of the game</label>
-    <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="settingGame" name="settingGame"></textarea><br>
+    <textarea class="w3-input w3-border w3-margin-top" rows="2" type="text" id="settingGame" name="settingGame"></textarea><br>
 
     <label for="programmingLang">Write which software you used to make this game</label>
-    <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="programmingLang" name="programmingLang"></textarea><br>
+    <textarea class="w3-input w3-border w3-margin-top" rows="2" type="text" id="programmingLang" name="programmingLang"></textarea><br>
 
     <div class="w3-container">
         <div class="w3-container">
             <button class="w3-button w3-border w3-border-blue w3-hover-blue w3-round transmission" type="button" id="chooseButtonLang"
-                    onclick="showAndHide('checkLang','fontChooseLang')" style="white-space: normal;">Choose one or more programming languages
+                    onclick="showAndHide('checkLang','fontChooseLang')">Choose one or more programming languages
                 that you used to make this game
                 <i id="fontChooseLang" class="fa fa-plus"></i></button>
         </div>
-        <div class="w3-container w3-left-align w3-animate-opacity" id="checkLang" style="margin-left: 41%; margin-top: 1%; display: none;">
+        <div class="w3-container w3-left-align w3-animate-opacity checkboxesPosition" id="checkLang">
             <input id="cplusplus" class="w3-check" type="checkbox">
             <label for="cplusplus">C++</label><br>
 

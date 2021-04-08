@@ -17,23 +17,14 @@ is the font of the button that we change.
 function showAndHide(el, btnFont){
     let x = document.getElementById(el);
     let y = document.getElementById(btnFont);
-    if(x.style.display === 'none'){
+
+    let disp = window.getComputedStyle(x).display;
+
+    if(disp === 'none'){
         x.style.display = 'block';
         y.className = 'fa fa-minus';
     }else{
         x.style.display = 'none';
         y.className = 'fa fa-plus';
-    }
-}
-
-/*
-Function to show and hide the password.
- */
-function showPassword() {
-    let x = document.getElementById("password");
-    if (x.type === "password") {
-        x.type = "text";
-    } else {
-        x.type = "password";
     }
 }

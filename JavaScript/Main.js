@@ -26,3 +26,15 @@ function showCategories(el, fontArrow){
         y.className = 'fa fa-chevron-up'
     }
 }
+
+/*
+Function to show and hide the password.
+ */
+function showPassword() {
+    let x = document.getElementById("password");
+    if (x.type === "password") {
+        x.type = "text";
+    } else {
+        x.type = "password";
+    }
+}

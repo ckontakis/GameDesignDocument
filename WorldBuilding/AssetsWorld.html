@@ -7,17 +7,7 @@
 </head>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="/css/main.css">
-
-<style>
-    .transmission{
-        transition-duration: 0.3s;
-    }
-
-    *{
-        white-space: normal !important;
-    }
-</style>
+<link rel="stylesheet" href="../css/main.css">
 
 <body>
 
@@ -35,20 +25,19 @@
     </div>
 </div>
 
-<div class="w3-container" style="margin-top:3%; margin-left: 13%; margin-right: 13%;">
+<div class="w3-container pathPosition">
     <a href="../write.html" class="w3-hover-text-blue">Write GDD</a>
     <i class="fa fa-angle-double-right"></i>
     <a href="AssetsWorld.html" class="w3-hover-text-blue">Assets</a>
 </div>
 
-<div class="w3-container w3-blue" style="text-align: center; margin-top: 3%; margin-left: 13%; margin-right: 13%">
-    <h3 style="text-align: center">Fill the assets</h3>
+<div class="w3-container w3-blue panelInFormWorld">
+    <h3 class="headerPanel">Fill the assets</h3>
 </div>
 
-<form class="w3-container w3-border w3-hover-shadow w3-padding-16" style="text-align: center; margin-left: 13%; margin-right: 13%" >
+<form class="w3-container w3-border w3-hover-shadow w3-padding-16 formWorldBuilding">
     <label for="musicDescription">Describe the music of the game</label>
-    <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="musicDescription" name="musicDescription"></textarea><br>
-
+    <textarea class="w3-input w3-border w3-margin-top" rows="2" type="text" id="musicDescription" name="musicDescription"></textarea><br>
 
     <label for="musicType">Add a kind of music that the game has</label>
 
@@ -59,13 +48,13 @@
         <div class="w3-modal-content w3-animate-zoom">
             <div class="w3-container">
                 <span onclick="document.getElementById('music-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
-                <h3 style="text-align: center">Add a kind of music</h3><br>
+                <h3 class="headerForModal">Add a kind of music</h3><br>
 
                 <label for="musicTypeName">Name of music kind</label>
                 <input class="w3-input w3-border w3-margin-top" type="text" id="musicTypeName" name="musicTypeName" required><br>
 
                 <label for="charTypeDescription">Describe the reason why you chose to use this kind of music in the game</label>
-                <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="3" type="text" id="charTypeDescription" name="charTypeDescription"></textarea><br>
+                <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="charTypeDescription" name="charTypeDescription"></textarea><br>
 
                 <div class="w3-container w3-padding-16">
                     <button class="w3-button w3-green transmission" id="saveMusicType" type="submit" name="saveMusicType">Save</button>
@@ -83,7 +72,7 @@
         <div class="w3-modal-content w3-animate-zoom">
             <div class="w3-container">
                 <span onclick="document.getElementById('musicTrack-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
-                <h3 style="text-align: center">Add a music track</h3><br>
+                <h3 class="headerForModal">Add a music track</h3><br>
 
                 <label for="musicTrackName">Name of track</label>
                 <input class="w3-input w3-border w3-margin-top" type="text" id="musicTrackName" name="musicTrackName" required><br>

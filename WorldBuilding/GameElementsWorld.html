@@ -7,17 +7,7 @@
 </head>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="/css/main.css">
-
-<style>
-    .transmission{
-        transition-duration: 0.3s;
-    }
-
-    *{
-        white-space: normal !important;
-    }
-</style>
+<link rel="stylesheet" href="../css/main.css">
 
 <body>
 
@@ -35,20 +25,19 @@
     </div>
 </div>
 
-
-<div class="w3-container" style="margin-top:3%; margin-left: 13%; margin-right: 13%;">
+<div class="w3-container pathPosition">
     <a href="../write.html" class="w3-hover-text-blue">Write GDD</a>
     <i class="fa fa-angle-double-right"></i>
     <a href="GameElementsWorld.html" class="w3-hover-text-blue">Game Elements</a>
 </div>
 
-<div class="w3-container w3-blue" style="text-align: center; margin-top: 3%; margin-left: 13%; margin-right: 13%">
-    <h3 style="text-align: center">Fill the characteristics for game elements</h3>
+<div class="w3-container w3-blue panelInFormWorld">
+    <h3 class="headerPanel">Fill the characteristics for game elements</h3>
 </div>
 
-<form class="w3-container w3-border w3-hover-shadow w3-padding-16" style="text-align: center; margin-left: 13%; margin-right: 13%;">
+<form class="w3-container w3-border w3-hover-shadow w3-padding-16 formWorldBuilding">
     <label for="story">Describe the story of the game</label>
-    <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="story" name="story"></textarea><br>
+    <textarea class="w3-input w3-border w3-margin-top" rows="2" type="text" id="story" name="story"></textarea><br>
 
     <label for="characters">Add characters of the game</label>
     <button onclick="document.getElementById('characters-modal').style.display='block'" class="w3-button w3-circle w3-border
@@ -58,7 +47,7 @@
         <div class="w3-modal-content w3-animate-zoom">
             <div class="w3-container">
                 <span onclick="document.getElementById('characters-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
-                <h3 style="text-align: center">Add a character</h3><br>
+                <h3 class="headerForModal">Add a character</h3><br>
 
                 <label for="imgChar"class="w3-margin-top" id="labelImChar" name="labelImChar">Choose an image of the character</label><br>
                 <input type="file" id="imgChar" class="w3-margin-top" name="imgChar" accept="image/*"><br><br>
@@ -67,7 +56,7 @@
                 <input class="w3-input w3-border w3-margin-top" type="text" id="charAdd" name="charAdd" required><br>
 
                 <label for="charDescription">Describe the character</label>
-                <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="3" type="text" id="charDescription" name="charDescription"></textarea><br>
+                <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="charDescription" name="charDescription"></textarea><br>
                 <div class="w3-container w3-padding-16">
                     <button class="w3-button w3-green transmission" id="saveCharacter" type="submit" name="saveCharacter">Save</button>
                 </div>
@@ -83,7 +72,7 @@
         <div class="w3-modal-content w3-animate-zoom">
             <div class="w3-container">
                 <span onclick="document.getElementById('objects-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
-                <h3 style="text-align: center">Add an object</h3><br>
+                <h3 class="headerForModal">Add an object</h3><br>
 
                 <label for="imgObject"class="w3-margin-top" id="labelImObj" name="labelImObj">Choose an image of the object</label><br>
                 <input type="file" id="imgObject" class="w3-margin-top" name="imgObject" accept="image/*"><br><br>
@@ -95,7 +84,7 @@
                 <input class="w3-input w3-border w3-margin-top" type="text" id="typeOfObj" name="typeOfObj" placeholder="e.g table, car, gun" required><br>
 
                 <label for="objDescription">Describe the object</label>
-                <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="3" type="text" id="objDescription" name="objDescription"></textarea><br>
+                <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="objDescription" name="objDescription"></textarea><br>
 
                 <div class="w3-container w3-padding-16">
                     <button class="w3-button w3-green transmission" id="saveObject" type="submit" name="saveObject">Save</button>
@@ -112,7 +101,7 @@
         <div class="w3-modal-content w3-animate-zoom">
             <div class="w3-container">
                 <span onclick="document.getElementById('locations-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
-                <h3 style="text-align: center">Add a location</h3><br>
+                <h3 class="headerForModal">Add a location</h3><br>
 
                 <label for="imgLocation"class="w3-margin-top" id="labelImLoc" name="labelImLoc">Choose an image of the location</label><br>
                 <input type="file" id="imgLocation" class="w3-margin-top" name="imgLocation" accept="image/*"><br><br>
@@ -121,7 +110,7 @@
                 <input class="w3-input w3-border w3-margin-top" type="text" id="locName" name="locName" required><br>
 
                 <label for="locDescription">Describe the location</label>
-                <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="3" type="text" id="locDescription" name="locDescription"></textarea><br>
+                <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="locDescription" name="locDescription"></textarea><br>
 
                 <label>Add objects that are at the location</label>
                 <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableObjects">
@@ -178,7 +167,7 @@
         <div class="w3-modal-content w3-animate-zoom">
             <div class="w3-container">
                 <span onclick="document.getElementById('dialogs-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
-                <h3 style="text-align: center">Add a dialog</h3><br>
+                <h3 class="headerForModal">Add a dialog</h3><br>
 
                 <label>Choose a character that talks to others</label>
                 <select class="w3-select w3-border w3-margin-top" id="selectFromChar" name="selectFromChar" required>
@@ -208,8 +197,8 @@
                     </tr>
                 </table><br>
 
-                <label for="objDescription">Write the dialog</label>
-                <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="3" type="text" id="dialogText" name="dialogText" required></textarea><br>
+                <label for="dialogText">Write the dialog</label>
+                <textarea id="dialogText" class="w3-input w3-border w3-margin-top" rows="3" type="text" name="dialogText" required></textarea><br>
 
                 <div class="w3-container w3-padding-16">
                     <button class="w3-button w3-green transmission" id="saveDialog" type="submit" name="saveDialog">Save</button>
@@ -226,13 +215,13 @@
         <div class="w3-modal-content w3-animate-zoom">
             <div class="w3-container">
                 <span onclick="document.getElementById('scenes-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
-                <h3 style="text-align: center">Add a scene</h3><br>
+                <h3 class="headerForModal">Add a scene</h3><br>
 
                 <label for="sceneName" class="w3-margin-top">Write the name of the scene</label>
                 <input class="w3-input w3-border w3-margin-top" type="text" id="sceneName" name="sceneName" required><br>
 
                 <label for="sceneDescription">Describe the scene</label>
-                <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="3" type="text" id="sceneDescription" name="sceneDescription"></textarea><br>
+                <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="sceneDescription" name="sceneDescription"></textarea><br>
 
                 <label>Add characters that take part in the scene</label>
                 <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableCharacters-scenes">

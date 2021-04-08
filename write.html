@@ -8,13 +8,7 @@
 </head>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-<style>
-	.transmission{
-		transition-duration: 0.3s;
-	}
-</style>
-
+<link rel="stylesheet" href="css/main.css">
 <body>
 <div class="w3-bar w3-blue">
 	<a href="index.html" class="w3-bar-item w3-button">Start Page</a>
@@ -25,7 +19,7 @@
 	<a href="login.html" class="w3-bar-item w3-button w3-teal w3-right">Login</a>
 </div>
 
-<div class="container" style="margin-top: 5%; margin-left: 3%; margin-right: 3%;">
+<div class="container writePageContent">
 	<input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue transmission" type="button"
 		   value="Δημιουργία νέου εγγράφου σχεδίασης παιχνιδιών"><br><br>
 
@@ -44,19 +38,19 @@
 					<button class="w3-button w3-round w3-border w3-border-black transmission" id="edit1" type="button"
 							name="btnEdit1"><i class="fa fa-edit"></i></button>
 					<div class="w3-dropdown-content w3-bar-block w3-border">
-						<button class="w3-bar-item w3-button w3-center" onclick="showCategories('mechCat1', 'mechCatDown1')">Mechanics
+						<button class="w3-bar-item w3-button w3-center transmission" onclick="showCategories('mechCat1', 'mechCatDown1')">Mechanics
 							<i id="mechCatDown1" class="fa fa-chevron-down"></i></button>
-						<div id="mechCat1" style="display: none;">
-							<a href="Mechanics/summary.html" class="w3-bar-item w3-button w3-border-top w3-center">Summary</a>
-							<a href="Mechanics/mech.html" class="w3-bar-item w3-button w3-center">Mechanics</a>
-							<a href="Mechanics/gameplay.html" class="w3-bar-item w3-button w3-center">Gameplay</a>
+						<div id="mechCat1" class="catButton">
+							<a href="Mechanics/summary.html" class="w3-bar-item w3-button w3-border-top w3-center transmission">Summary</a>
+							<a href="Mechanics/mech.html" class="w3-bar-item w3-button w3-center transmission">Mechanics</a>
+							<a href="Mechanics/gameplay.html" class="w3-bar-item w3-button w3-center transmission">Gameplay</a>
 						</div>
-						<button class="w3-bar-item w3-button w3-border-top w3-center" onclick="showCategories('worldCat1', 'worldCatDown1')">
+						<button class="w3-bar-item w3-button w3-border-top w3-center transmission" onclick="showCategories('worldCat1', 'worldCatDown1')">
 							World Building <i id="worldCatDown1" class="fa fa-chevron-down"></i></button>
-						<div id="worldCat1" style="display: none;">
-							<a href="WorldBuilding/SummaryWorld.html" class="w3-bar-item w3-button w3-center w3-border-top">Summary World</a>
-							<a href="WorldBuilding/GameElementsWorld.html" class="w3-bar-item w3-button w3-center">Game Elements</a>
-							<a href="WorldBuilding/AssetsWorld.html" class="w3-bar-item w3-button w3-center">Assets</a>
+						<div id="worldCat1" class="catButton">
+							<a href="WorldBuilding/SummaryWorld.html" class="w3-bar-item w3-button w3-center w3-border-top transmission">Summary World</a>
+							<a href="WorldBuilding/GameElementsWorld.html" class="w3-bar-item w3-button w3-center transmission">Game Elements</a>
+							<a href="WorldBuilding/AssetsWorld.html" class="w3-bar-item w3-button w3-center transmission">Assets</a>
 						</div>
 					</div>
 				</div>
@@ -73,19 +67,19 @@
 					<button class="w3-button w3-round w3-border w3-border-black transmission" id="edit2" type="button"
 							name="btnEdit1"><i class="fa fa-edit"></i></button>
 					<div class="w3-dropdown-content w3-bar-block w3-border">
-						<button class="w3-bar-item w3-button w3-center" onclick="showCategories('mechCat2', 'mechCatDown2')">Mechanics
+						<button class="w3-bar-item w3-button w3-center transmission" onclick="showCategories('mechCat2', 'mechCatDown2')">Mechanics
 							<i id="mechCatDown2" class="fa fa-chevron-down"></i></button>
-						<div id="mechCat2" style="display: none;">
-							<a href="Mechanics/summary.html" class="w3-bar-item w3-button w3-border-top w3-center">Summary</a>
-							<a href="Mechanics/mech.html" class="w3-bar-item w3-button w3-center">Mechanics</a>
-							<a href="Mechanics/gameplay.html" class="w3-bar-item w3-button w3-center">Gameplay</a>
+						<div id="mechCat2" class="catButton">
+							<a href="Mechanics/summary.html" class="w3-bar-item w3-button w3-border-top w3-center transmission">Summary</a>
+							<a href="Mechanics/mech.html" class="w3-bar-item w3-button w3-center transmission">Mechanics</a>
+							<a href="Mechanics/gameplay.html" class="w3-bar-item w3-button w3-center transmission">Gameplay</a>
 						</div>
-						<button class="w3-bar-item w3-button w3-border-top w3-center" onclick="showCategories('worldCat2', 'worldCatDown2')">
+						<button class="w3-bar-item w3-button w3-border-top w3-center transmission" onclick="showCategories('worldCat2', 'worldCatDown2')">
 							World Building <i id="worldCatDown2" class="fa fa-chevron-down"></i></button>
-						<div id="worldCat2" style="display: none;">
-							<a href="WorldBuilding/SummaryWorld.html" class="w3-bar-item w3-button w3-border-top w3-center">Summary World</a>
-							<a href="WorldBuilding/GameElementsWorld.html" class="w3-bar-item w3-button w3-center">Game Elements</a>
-							<a href="WorldBuilding/AssetsWorld.html" class="w3-bar-item w3-button w3-center">Assets</a>
+						<div id="worldCat2" class="catButton">
+							<a href="WorldBuilding/SummaryWorld.html" class="w3-bar-item w3-button w3-border-top w3-center transmission">Summary World</a>
+							<a href="WorldBuilding/GameElementsWorld.html" class="w3-bar-item w3-button w3-center transmission">Game Elements</a>
+							<a href="WorldBuilding/AssetsWorld.html" class="w3-bar-item w3-button w3-center transmission">Assets</a>
 						</div>
 					</div>
 				</div>

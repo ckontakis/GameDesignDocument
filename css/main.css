@@ -1,4 +1,6 @@
-
+/*
+CSS for index page
+ */
 .headers{
      text-align: center;
      margin-top: 5%;
@@ -9,6 +11,10 @@
 .image{
      width: 17%;
      height: 17%;
+     margin-top: 4%;
+     display: block;
+     margin-left: auto;
+     margin-right: auto;
 }
 
 .textInMain{
@@ -16,4 +22,94 @@
      margin-left: 20%;
      margin-right: 20%;
      font-size: large;
+}
+
+.transmission{
+     transition-duration: 0.3s;
+}
+
+*{
+     white-space: normal !important;
+}
+
+/*
+CSS for forms in world building pages
+ */
+.formWorldBuilding{
+     text-align: center;
+     margin-left: 13%;
+     margin-right: 13%;
+     margin-bottom: 1%;
+}
+
+.pathPosition{
+     margin-top:3%;
+     margin-left: 13%;
+     margin-right: 13%;
+}
+
+.panelInFormWorld{
+     text-align: center;
+     margin-top: 3%;
+     margin-left: 13%;
+     margin-right: 13%;
+}
+
+.headerPanel{
+     text-align: center;
+}
+
+textarea{
+     resize: none;
+}
+
+/*
+CSS for checkboxes in world building pages
+ */
+.checkboxesPosition{
+     margin-left: 41%;
+     margin-top: 1%;
+     display: none;
+}
+
+/*
+Style for headers in modals
+ */
+.headerForModal{
+     text-align: center;
+}
+
+/*
+Style for contact and register panel
+ */
+.contactRegisterPanel{
+     text-align: center;
+     margin-top: 8%;
+     margin-left: 20%;
+     margin-right: 20%;
+}
+
+/*
+Style for contact and register form
+ */
+.contactRegisterForm{
+     text-align: center;
+     margin-left: 35%;
+     margin-right: 35%;
+}
+
+/*
+Style for content in write page
+*/
+.writePageContent{
+     margin-top: 5%;
+     margin-left: 3%;
+     margin-right: 3%;
+}
+
+/*
+Style for categories in write page
+*/
+.catButton{
+     display: none;
 }

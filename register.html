@@ -4,7 +4,7 @@
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <title>Register</title>
     <link rel="icon" href="Images/favicon-new.ico">
-    <script src="JavaScript/WorldBuilding.js"></script>
+    <script src="JavaScript/Main.js"></script>
 </head>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="css/main.css">
@@ -18,12 +18,12 @@
         <a href="login.html" class="w3-bar-item w3-button w3-teal w3-right">Login</a>
     </div>
 
-    <div class="w3-card w3-border" style="text-align: center; margin-top: 8%; margin-left: 20%; margin-right: 20%">
+    <div class="w3-card w3-border contactRegisterPanel">
         <div class="w3-container w3-blue">
-            <h3 style="text-align: center">Register</h3>
+            <h3 class="headerPanel">Register</h3>
         </div>
 
-        <form class="w3-container w3-padding-16" style="text-align: center; margin-left: 35%; margin-right: 35%">
+        <form class="w3-container w3-padding-16 contactRegisterForm">
             <input class="w3-input w3-border w3-margin-top" id="firstName" type="text" placeholder="Name" required><br>
 
             <input class="w3-input w3-border w3-margin-top" id="lastName" type="text" placeholder="Surname" required><br>
@@ -35,9 +35,8 @@
             <input id="labelShow" class="w3-check w3-margin-top" type="checkbox" onclick="showPassword()">
             <label for="labelShow">Show password</label><br><br>
 
-            <input class="w3-button w3-green" style="transition-duration: 0.3s" type="submit" value="Register">
+            <input class="w3-button w3-green transmission" type="submit" value="Register">
         </form>
     </div>
 </body>
-
 </html>
