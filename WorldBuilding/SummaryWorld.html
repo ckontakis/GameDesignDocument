@@ -5,20 +5,45 @@
     <title>Characteristics for the summary of game</title>
     <link rel="icon" href="../Images/favicon-new.ico">
     <script src="../JavaScript/WorldBuilding.js"></script>
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
 </head>
-<link rel="stylesheet" href="/css/main.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
 <style>
     .transmission{
         transition-duration: 0.3s;
     }
+
+    *{
+        white-space: normal !important;
+    }
 </style>
 
 <body>
 
-<div class="w3-container w3-blue" style="text-align: center; margin-top: 8%; margin-left: 13%; margin-right: 13%">
+<div class="w3-bar w3-blue">
+    <a href="../index.html" class="w3-bar-item w3-button"><b>Start Page</b></a>
+    <a href="../write.html" class="w3-bar-item w3-button">Write GDD</a>
+    <a href="../contact.html" class="w3-bar-item w3-button">Contact</a>
+    <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
+    <div class="w3-dropdown-hover w3-right">
+        <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
+        <div class="w3-dropdown-content w3-bar-block w3-border">
+            <a href="#" class="w3-bar-item w3-button">Settings</a>
+            <button class="w3-bar-item w3-button">Logout</button>
+        </div>
+    </div>
+</div>
+
+<div class="w3-container" style="margin-top:3%; margin-left: 13%; margin-right: 13%;">
+    <a href="../write.html" class="w3-hover-text-blue">Write GDD</a>
+    <i class="fa fa-angle-double-right"></i>
+    <a href="SummaryWorld.html" class="w3-hover-text-blue">Summary World</a>
+</div>
+
+<div class="w3-container w3-blue" style="text-align: center; margin-top: 3%; margin-left: 13%; margin-right: 13%">
     <h3 style="text-align: center">Fill the characteristics for the summary of the game</h3>
 </div>
 
@@ -136,8 +161,55 @@
     <label for="settingGame">Describe the setting of the game</label>
     <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="settingGame" name="settingGame"></textarea><br>
 
-    <label for="programmingLang">Write which software and programming languages were used to make the game</label>
+    <label for="programmingLang">Write which software you used to make this game</label>
     <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="programmingLang" name="programmingLang"></textarea><br>
+
+    <div class="w3-container">
+        <div class="w3-container">
+            <button class="w3-button w3-border w3-border-blue w3-hover-blue w3-round transmission" type="button" id="chooseButtonLang"
+                    onclick="showAndHide('checkLang','fontChooseLang')" style="white-space: normal;">Choose one or more programming languages
+                that you used to make this game
+                <i id="fontChooseLang" class="fa fa-plus"></i></button>
+        </div>
+        <div class="w3-container w3-left-align w3-animate-opacity" id="checkLang" style="margin-left: 41%; margin-top: 1%; display: none;">
+            <input id="cplusplus" class="w3-check" type="checkbox">
+            <label for="cplusplus">C++</label><br>
+
+            <input id="java" class="w3-check" type="checkbox">
+            <label for="java">Java</label><br>
+
+            <input id="html5" class="w3-check" type="checkbox">
+            <label for="html5">HTML 5</label><br>
+
+            <input id="css3" class="w3-check" type="checkbox">
+            <label for="css3">CSS3</label><br>
+
+            <input id="javascript" class="w3-check" type="checkbox">
+            <label for="javascript">JavaScript</label><br>
+
+            <input id="sql" class="w3-check" type="checkbox">
+            <label for="sql">SQL</label><br>
+
+            <input id="c#" class="w3-check" type="checkbox">
+            <label for="c#">C#</label><br>
+
+            <input id="python" class="w3-check" type="checkbox">
+            <label for="python">Python</label><br>
+
+            <input id="swift" class="w3-check" type="checkbox">
+            <label for="swift">Swift</label><br>
+
+            <input id="kotlin" class="w3-check" type="checkbox">
+            <label for="kotlin">Kotlin</label><br>
+
+            <input id="scala" class="w3-check" type="checkbox">
+            <label for="scala">Scala</label><br>
+
+            <input id="otherLang" class="w3-check" type="checkbox" onclick="showFunction('otherLan')">
+            <label for="otherLang">Other</label>
+            <input id="otherLan" style="visibility: hidden" type="text" placeholder="Write a programming language...">
+        </div>
+    </div><br>
 
     <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue transmission" type="button" value="Submit">
 </form>
