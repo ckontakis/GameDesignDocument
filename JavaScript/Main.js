@@ -30,11 +30,27 @@ function showCategories(el, fontArrow){
 /*
 Function to show and hide the password.
  */
-function showPassword() {
-    let x = document.getElementById("password");
+function showPassword(el) {
+    let x = document.getElementById(el);
     if (x.type === "password") {
         x.type = "text";
     } else {
         x.type = "password";
     }
+}
+
+/*
+Function to show elements.
+ */
+function showElement(el){
+    let x = document.getElementById(el);
+    x.style.display = 'block';
+}
+
+/*
+Function to hide elements.
+ */
+function hideElement(el){
+    let x = document.getElementById(el);
+    x.style.display = 'none';
 }
