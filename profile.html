@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <title>Profile - GDD Maker</title>
+    <link rel="icon" href="Images/favicon-new.ico">
+
+    <script>
+        window.onload = function(){
+            let showInvitesTeam = localStorage.getItem('showInvitesTeams');
+
+            let x = document.getElementById('personalInfo');
+            let y = document.getElementById('invitesTeams');
+            let elButtonInfo = document.getElementById('buttonPersonalInfo');
+            let elButtonTeamsInv = document.getElementById('buttonTeamsInvites');
+
+            if(showInvitesTeam === 'true'){
+                x.style.display = 'none';
+                y.style.display = 'block';
+
+                elButtonInfo.classList.remove('w3-blue');
+                elButtonTeamsInv.classList.add('w3-blue');
+            }else{
+                x.style.display = 'block';
+                y.style.display = 'none';
+
+                elButtonInfo.classList.add('w3-blue');
+                elButtonTeamsInv.classList.remove('w3-blue');
+            }
+        }
+    </script>
+    <script src="JavaScript/Main.js"></script>
+</head>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/main.css">
+
+<body>
+
+<div class="w3-bar w3-blue">
+    <a href="index.html" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
+    <a href="write.html" class="w3-bar-item w3-button">Write GDD</a>
+    <a href="contact.html" class="w3-bar-item w3-button">Contact</a>
+    <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
+    <div class="w3-dropdown-hover w3-right">
+        <button class="w3-button"><b>Profile</b> <i class="fa fa-user-circle"></i></button>
+        <div class="w3-dropdown-content w3-bar-block w3-border">
+            <a href="profile.html" class="w3-bar-item w3-button">Settings</a>
+            <button class="w3-bar-item w3-button">Logout</button>
+        </div>
+    </div>
+</div>
+
+<div class="w3-container w3-border w3-padding-16 personalInfo">
+    <div class="w3-container w3-center w3-left w3-border-right w3-border-bottom w3-padding-16">
+        <button id="buttonPersonalInfo" class="w3-button w3-border w3-round w3-border-blue w3-hover-blue transmission"
+                onclick="showPersonalInfo('personalInfo', 'invitesTeams','buttonPersonalInfo','buttonTeamsInvites')">
+            Personal information</button><br><br>
+        <button id="buttonTeamsInvites" class="w3-button w3-border w3-round w3-border-blue w3-hover-blue transmission"
+                onclick="showInvitesTeams('personalInfo', 'invitesTeams','buttonPersonalInfo','buttonTeamsInvites')">
+            Invites and Teams</button>
+    </div>
+
+    <div class="w3-container inputProfile" id="personalInfo">
+        <label for="imgUser" id="labelImUser">Choose an image for your profile</label><br>
+        <input type="file" id="imgUser" class="w3-margin-top" name="imgUser" accept="image/*"><br><br>
+
+        <label for="userName" id="userNameLabel">Name</label>
+        <input class="w3-input w3-border w3-margin-top" id="userName" type="text"><br>
+
+        <label for="userSurname" id="userSurnameLabel">Surname</label>
+        <input class="w3-input w3-border w3-margin-top" id="userSurname" type="text"><br>
+
+        <label for="userEmail" id="userEmailLabel">Email</label>
+        <input class="w3-input w3-border w3-margin-top" id="userEmail" type="email"><br>
+
+        <label for="newPass" id="newPassLabel">New password</label>
+        <input class="w3-input w3-border w3-margin-top" id="newPass" type="password"><br>
+
+        <label for="confirmPass" id="confirmPassLabel">Confirm the new password</label>
+        <input class="w3-input w3-border w3-margin-top" id="confirmPass" type="password"><br>
+
+        <input class="w3-button w3-border w3-border-blue w3-hover-blue w3-round transmission" type="submit" value="Submit">
+    </div>
+
+    <div class="w3-container teams-invites" id="invitesTeams">
+        <h3 class="w3-border-bottom">Invites</h3><br>
+        <div class="w3-container w3-border w3-padding-16">
+            <label id="labelInviteDoc">User is inviting you to edit a document</label><br><br>
+            <button id="buttonAcceptInviteDoc" class="w3-button w3-green transmission">Accept</button>
+            <button id="buttonDeclineInviteDoc" class="w3-button w3-red transmission">Decline</button>
+        </div>
+        <h3 class="w3-border-bottom">Teams</h3><br>
+        <div class="w3-container w3-border w3-padding-16">
+            <label id="labelInviteTeam">Test team is inviting you to join the team</label><br><br>
+            <button id="buttonAcceptInviteTeam" class="w3-button w3-green transmission">Accept</button>
+            <button id="buttonDeclineInviteTeam" class="w3-button w3-red transmission">Decline</button>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

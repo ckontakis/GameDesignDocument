@@ -19,7 +19,7 @@
     <div class="w3-dropdown-hover w3-right">
         <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
-            <a href="#" class="w3-bar-item w3-button">Settings</a>
+            <a href="../profile.html" class="w3-bar-item w3-button">Settings</a>
             <button class="w3-bar-item w3-button">Logout</button>
         </div>
     </div>
@@ -49,11 +49,14 @@
                 <span onclick="document.getElementById('characters-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
                 <h3 class="headerForModal">Add a character</h3><br>
 
-                <label for="imgChar"class="w3-margin-top" id="labelImChar" name="labelImChar">Choose an image of the character</label><br>
+                <label for="imgChar" class="w3-margin-top" id="labelImChar">Choose an image of the character</label><br>
                 <input type="file" id="imgChar" class="w3-margin-top" name="imgChar" accept="image/*"><br><br>
 
                 <label for="charAdd" class="w3-margin-top">Write the name of the character</label>
                 <input class="w3-input w3-border w3-margin-top" type="text" id="charAdd" name="charAdd" required><br>
+
+                <label for="charType" class="w3-margin-top">Write the type of the character</label>
+                <input class="w3-input w3-border w3-margin-top" type="text" id="charType" name="charType" placeholder="e.g human, animal" required><br>
 
                 <label for="charDescription">Describe the character</label>
                 <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="charDescription" name="charDescription"></textarea><br>
@@ -74,7 +77,7 @@
                 <span onclick="document.getElementById('objects-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
                 <h3 class="headerForModal">Add an object</h3><br>
 
-                <label for="imgObject"class="w3-margin-top" id="labelImObj" name="labelImObj">Choose an image of the object</label><br>
+                <label for="imgObject" class="w3-margin-top" id="labelImObj">Choose an image of the object</label><br>
                 <input type="file" id="imgObject" class="w3-margin-top" name="imgObject" accept="image/*"><br><br>
 
                 <label for="objName" class="w3-margin-top">Write the name of the object</label>
@@ -103,7 +106,7 @@
                 <span onclick="document.getElementById('locations-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
                 <h3 class="headerForModal">Add a location</h3><br>
 
-                <label for="imgLocation"class="w3-margin-top" id="labelImLoc" name="labelImLoc">Choose an image of the location</label><br>
+                <label for="imgLocation" class="w3-margin-top" id="labelImLoc">Choose an image of the location</label><br>
                 <input type="file" id="imgLocation" class="w3-margin-top" name="imgLocation" accept="image/*"><br><br>
 
                 <label for="locName" class="w3-margin-top">Write the name of the location</label>

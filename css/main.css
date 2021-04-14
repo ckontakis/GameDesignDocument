@@ -113,6 +113,29 @@ Style for categories in write page
      display: none;
 }
 
+/*
+Style for button in profile page
+ */
+.personalInfo{
+     margin: 3% 10% 1%;
+}
+
+.inputProfile{
+     text-align: center;
+     margin-left: 30%;
+     margin-right: 30%;
+     margin-bottom: 1%;
+     display: none;
+}
+
+.teams-invites{
+     text-align: center;
+     margin-left: 30%;
+     margin-right: 30%;
+     margin-bottom: 1%;
+     display: none;
+}
+
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 991px) {
      .showSideBar{
