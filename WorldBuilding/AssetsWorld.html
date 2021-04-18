@@ -4,6 +4,7 @@
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
     <title>Assets - GDD Maker</title>
     <link rel="icon" href="../Images/favicon-new.ico">
+    <script src="../JavaScript/Main.js"></script>
 </head>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -11,7 +12,7 @@
 
 <body>
 
-<div class="w3-bar w3-blue">
+<div class="w3-bar w3-blue showBar">
     <a href="../index.html" class="w3-bar-item w3-button"><img src="../Images/favicon-new.ico" alt="logo"> Start Page</a>
     <a href="../write.html" class="w3-bar-item w3-button">Write GDD</a>
     <a href="../contact.html" class="w3-bar-item w3-button">Contact</a>
@@ -24,6 +25,22 @@
         </div>
     </div>
 </div>
+
+<div class="w3-sidebar w3-blue w3-bar-block w3-border-right w3-animate-left" id="sideBar" style="display: none;">
+    <a href="../index.html" class="w3-bar-item w3-button"><img src="../Images/favicon-new.ico" alt="logo"> Start Page</a>
+    <a href="../write.html" class="w3-bar-item w3-button">Write GDD</a>
+    <a href="../contact.html" class="w3-bar-item w3-button">Contact</a>
+    <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
+    <div class="w3-dropdown-hover w3-right">
+        <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
+        <div class="w3-dropdown-content w3-bar-block w3-border">
+            <a href="../profile.html" class="w3-bar-item w3-button">Settings</a>
+            <button class="w3-bar-item w3-button">Logout</button>
+        </div>
+    </div>
+</div>
+
+<button class="w3-button w3-blue w3-xlarge showSideBar" onclick="showElement('sideBar')"><i class="fa fa-bars"></i></button>
 
 <div class="w3-container pathPosition">
     <a href="../write.html" class="w3-hover-text-blue">Write GDD</a>

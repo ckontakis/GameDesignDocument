@@ -120,6 +120,9 @@ Style for button in profile page
      margin: 3% 10% 1%;
 }
 
+/*
+Style for personal information elements in profile page
+ */
 .inputProfile{
      text-align: center;
      margin-left: 30%;
@@ -128,12 +131,24 @@ Style for button in profile page
      display: none;
 }
 
+/*
+Style for team and invites elements in profile page
+ */
 .teams-invites{
      text-align: center;
-     margin-left: 30%;
-     margin-right: 30%;
+     margin-left: 25%;
+     margin-right: 25%;
      margin-bottom: 1%;
      display: none;
+}
+
+/*
+Style for input email of member in profile page
+ */
+.inputEmailMember{
+     width: 90%;
+     display: inline-block;
+     vertical-align: middle;
 }
 
 /* Extra small devices (phones, 600px and down) */

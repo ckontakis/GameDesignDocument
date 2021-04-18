@@ -58,6 +58,22 @@ function showPersonalInfo(persInfo, invTeams, buttonPersInfo, buttonInvTeams){
 }
 
 /*
+Function to show elements.
+ */
+function showElement(el){
+    let x = document.getElementById(el);
+    x.style.display = 'block';
+}
+
+/*
+Function to hide elements.
+ */
+function hideElement(el){
+    let x = document.getElementById(el);
+    x.style.display = 'none';
+}
+
+/*
 Function to show invites and teams.
  */
 function showInvitesTeams(persInfo, invTeams, buttonPersInfo, buttonInvTeams){
