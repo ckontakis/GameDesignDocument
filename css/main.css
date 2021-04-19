@@ -88,16 +88,6 @@ Style for contact and register panel
 }
 
 /*
-Style for contact and register form
- */
-.contactRegisterForm{
-     text-align: center;
-     margin-left: 30%;
-     margin-right: 30%;
-     margin-bottom: 1%;
-}
-
-/*
 Style for content in write page
 */
 .writePageContent{
@@ -160,10 +150,30 @@ Style for input email of member in profile page
      .showBar{
           display: none;
      }
+
+     /*
+     Style for contact and register form
+     */
+     .contactRegisterForm{
+          text-align: center;
+          margin-left: 25%;
+          margin-right: 25%;
+          margin-bottom: 1%;
+     }
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px){
+     /*
+     Style for contact and register form
+     */
+     .contactRegisterForm{
+          text-align: center;
+          margin-left: 35%;
+          margin-right: 35%;
+          margin-bottom: 1%;
+     }
+
      .showSideBar{
           display: none;
      }

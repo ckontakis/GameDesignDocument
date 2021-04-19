@@ -5,6 +5,7 @@
     <title>Characteristics for the summary of game</title>
     <link rel="icon" href="../Images/favicon-new.ico">
     <script src="../JavaScript/WorldBuilding.js"></script>
+    <script src="../JavaScript/Main.js"></script>
 
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -13,7 +14,7 @@
 
 <body>
 
-<div class="w3-bar w3-blue">
+<div class="w3-bar w3-blue showBar">
     <a href="../index.html" class="w3-bar-item w3-button"><img src="../Images/favicon-new.ico" alt="logo"> Start Page</a>
     <a href="../write.html" class="w3-bar-item w3-button">Write GDD</a>
     <a href="../contact.html" class="w3-bar-item w3-button">Contact</a>
@@ -26,6 +27,23 @@
         </div>
     </div>
 </div>
+
+<div class="w3-sidebar w3-blue w3-bar-block w3-border-right w3-animate-left" id="sideBar" style="display: none;">
+    <button onclick="hideElement('sideBar')" class="w3-bar-item w3-large">Close <i class="fa fa-close"></i></button>
+    <a href="../index.html" class="w3-bar-item w3-button"><img src="../Images/favicon-new.ico" alt="logo"> Start Page</a>
+    <a href="../write.html" class="w3-bar-item w3-button">Write GDD</a>
+    <a href="../contact.html" class="w3-bar-item w3-button">Contact</a>
+    <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
+    <div class="w3-dropdown-hover w3-right">
+        <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
+        <div class="w3-dropdown-content w3-bar-block w3-border">
+            <a href="../profile.html" class="w3-bar-item w3-button">Settings</a>
+            <button class="w3-bar-item w3-button">Logout</button>
+        </div>
+    </div>
+</div>
+
+<button class="w3-button w3-blue w3-xlarge showSideBar" onclick="showElement('sideBar')"><i class="fa fa-bars"></i></button>
 
 <div class="w3-container pathPosition">
     <a href="../write.html" class="w3-hover-text-blue">Write GDD</a>
@@ -44,8 +62,9 @@
 
     <div class="w3-container">
         <div class="w3-container">
-            <button class="w3-button w3-border w3-border-blue w3-hover-blue w3-round transmission" type="button" id="chooseButton"
-                   onclick="showAndHide('checkGenre','fontChoose')">Choose one or more genres <i id="fontChoose" class="fa fa-plus"></i></button>
+            <button class="w3-button w3-border w3-border-blue w3-hover-blue w3-round transmission" type="button"
+                    id="chooseButton" onclick="showAndHide('checkGenre','fontChoose')">
+                Choose one or more genres <i id="fontChoose" class="fa fa-plus"></i></button>
         </div>
         <div class="w3-container w3-left-align w3-animate-opacity checkboxesPosition" id="checkGenre">
             <input id="sandbox" class="w3-check" type="checkbox">
@@ -86,9 +105,9 @@
 
     <div class="w3-container">
         <div class="w3-container">
-            <button class="w3-button w3-border w3-border-blue w3-hover-blue w3-round transmission" type="button" id="chooseButtonAge"
-                   onclick="showAndHide('checkAgeGroup','fontChooseAge')">Choose one or more age target groups
-                <i id="fontChooseAge" class="fa fa-plus"></i></button>
+            <button class="w3-button w3-border w3-border-blue w3-hover-blue w3-round transmission" type="button"
+                    id="chooseButtonAge" onclick="showAndHide('checkAgeGroup','fontChooseAge')">
+                Choose one or more age target groups <i id="fontChooseAge" class="fa fa-plus"></i></button>
         </div>
         <div class="w3-container w3-left-align w3-animate-opacity checkboxesPosition" id="checkAgeGroup">
             <input id="three-plus" class="w3-check" type="checkbox">
@@ -110,9 +129,9 @@
 
     <div class="w3-container">
         <div class="w3-container">
-            <button class="w3-button w3-border w3-border-blue w3-hover-blue w3-round transmission" type="button" id="chooseButtonSystem"
-                    onclick="showAndHide('checkSystem','fontChooseSystem')">Choose one or more target systems
-                <i id="fontChooseSystem" class="fa fa-plus"></i></button>
+            <button class="w3-button w3-border w3-border-blue w3-hover-blue w3-round transmission" type="button"
+                    id="chooseButtonSystem" onclick="showAndHide('checkSystem','fontChooseSystem')">
+                Choose one or more target systems <i id="fontChooseSystem" class="fa fa-plus"></i></button>
         </div>
         <div class="w3-container w3-left-align w3-animate-opacity checkboxesPosition" id="checkSystem">
             <input id="pc" class="w3-check" type="checkbox">
@@ -149,16 +168,18 @@
     </div><br>
 
     <label for="settingGame">Describe the setting of the game</label>
-    <textarea class="w3-input w3-border w3-margin-top" rows="2" type="text" id="settingGame" name="settingGame"></textarea><br>
+    <textarea class="w3-input w3-border w3-margin-top" rows="2" type="text" id="settingGame"
+              name="settingGame"></textarea><br>
 
     <label for="programmingLang">Write which software you used to make this game</label>
-    <textarea class="w3-input w3-border w3-margin-top" rows="2" type="text" id="programmingLang" name="programmingLang"></textarea><br>
+    <textarea class="w3-input w3-border w3-margin-top" rows="2" type="text" id="programmingLang"
+              name="programmingLang"></textarea><br>
 
     <div class="w3-container">
         <div class="w3-container">
-            <button class="w3-button w3-border w3-border-blue w3-hover-blue w3-round transmission" type="button" id="chooseButtonLang"
-                    onclick="showAndHide('checkLang','fontChooseLang')">Choose one or more programming languages
-                that you used to make this game
+            <button class="w3-button w3-border w3-border-blue w3-hover-blue w3-round transmission"
+                    type="button" id="chooseButtonLang" onclick="showAndHide('checkLang','fontChooseLang')">
+                Choose one or more programming languages that you used to make this game
                 <i id="fontChooseLang" class="fa fa-plus"></i></button>
         </div>
         <div class="w3-container w3-left-align w3-animate-opacity checkboxesPosition" id="checkLang">

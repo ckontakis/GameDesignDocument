@@ -27,6 +27,7 @@
 </div>
 
 <div class="w3-sidebar w3-blue w3-bar-block w3-border-right w3-animate-left" id="sideBar" style="display: none;">
+    <button onclick="hideElement('sideBar')" class="w3-bar-item w3-large">Close <i class="fa fa-close"></i></button>
     <a href="../index.html" class="w3-bar-item w3-button"><img src="../Images/favicon-new.ico" alt="logo"> Start Page</a>
     <a href="../write.html" class="w3-bar-item w3-button">Write GDD</a>
     <a href="../contact.html" class="w3-bar-item w3-button">Contact</a>
@@ -41,6 +42,7 @@
 </div>
 
 <button class="w3-button w3-blue w3-xlarge showSideBar" onclick="showElement('sideBar')"><i class="fa fa-bars"></i></button>
+
 <div class="w3-container pathPosition">
     <a href="../write.html" class="w3-hover-text-blue">Write GDD</a>
     <i class="fa fa-angle-double-right"></i>
@@ -56,13 +58,15 @@
     <textarea class="w3-input w3-border w3-margin-top" rows="2" type="text" id="story" name="story"></textarea><br>
 
     <label for="characters">Add characters of the game</label>
-    <button onclick="document.getElementById('characters-modal').style.display='block'" class="w3-button w3-circle w3-border
-    w3-border-blue w3-hover-blue w3-margin-left transmission" id="characters" type="button" name="characters"><i class="fa fa-plus"></i></button><br><br>
+    <button onclick="showElement('characters-modal')" class="w3-button w3-circle w3-border
+    w3-border-blue w3-hover-blue w3-margin-left transmission" id="characters" type="button" name="characters">
+        <i class="fa fa-plus"></i></button><br><br>
 
     <div id="characters-modal" class="w3-modal">
         <div class="w3-modal-content w3-animate-zoom">
             <div class="w3-container">
-                <span onclick="document.getElementById('characters-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
+                <span onclick="hideElement('characters-modal')" class="w3-button w3-display-topright w3-hover-red">
+                    <i class="fa fa-close"></i></span>
                 <h3 class="headerForModal">Add a character</h3><br>
 
                 <label for="imgChar" class="w3-margin-top" id="labelImChar">Choose an image of the character</label><br>
@@ -72,25 +76,30 @@
                 <input class="w3-input w3-border w3-margin-top" type="text" id="charAdd" name="charAdd" required><br>
 
                 <label for="charType" class="w3-margin-top">Write the type of the character</label>
-                <input class="w3-input w3-border w3-margin-top" type="text" id="charType" name="charType" placeholder="e.g human, animal" required><br>
+                <input class="w3-input w3-border w3-margin-top" type="text" id="charType" name="charType"
+                       placeholder="e.g human, animal" required><br>
 
                 <label for="charDescription">Describe the character</label>
-                <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="charDescription" name="charDescription"></textarea><br>
+                <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="charDescription"
+                          name="charDescription"></textarea><br>
                 <div class="w3-container w3-padding-16">
-                    <button class="w3-button w3-green transmission" id="saveCharacter" type="submit" name="saveCharacter">Save</button>
+                    <button class="w3-button w3-green transmission" id="saveCharacter" type="submit"
+                            name="saveCharacter">Save</button>
                 </div>
             </div>
         </div>
     </div>
 
     <label for="objects">Add objects that are in the game</label>
-    <button onclick="document.getElementById('objects-modal').style.display='block'" class="w3-button w3-circle w3-border
-    w3-border-blue w3-hover-blue w3-margin-left transmission" id="objects" type="button" name="characters"><i class="fa fa-plus"></i></button><br><br>
+    <button onclick="showElement('objects-modal')" class="w3-button w3-circle w3-border
+    w3-border-blue w3-hover-blue w3-margin-left transmission" id="objects" type="button" name="characters">
+        <i class="fa fa-plus"></i></button><br><br>
 
     <div id="objects-modal" class="w3-modal">
         <div class="w3-modal-content w3-animate-zoom">
             <div class="w3-container">
-                <span onclick="document.getElementById('objects-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
+                <span onclick="hideElement('objects-modal')" class="w3-button w3-display-topright w3-hover-red">
+                    <i class="fa fa-close"></i></span>
                 <h3 class="headerForModal">Add an object</h3><br>
 
                 <label for="imgObject" class="w3-margin-top" id="labelImObj">Choose an image of the object</label><br>
@@ -100,10 +109,12 @@
                 <input class="w3-input w3-border w3-margin-top" type="text" id="objName" name="objName" required><br>
 
                 <label for="typeOfObj" class="w3-margin-top">Write the type of the object</label>
-                <input class="w3-input w3-border w3-margin-top" type="text" id="typeOfObj" name="typeOfObj" placeholder="e.g table, car, gun" required><br>
+                <input class="w3-input w3-border w3-margin-top" type="text" id="typeOfObj" name="typeOfObj"
+                       placeholder="e.g table, car, gun" required><br>
 
                 <label for="objDescription">Describe the object</label>
-                <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="objDescription" name="objDescription"></textarea><br>
+                <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="objDescription"
+                          name="objDescription"></textarea><br>
 
                 <div class="w3-container w3-padding-16">
                     <button class="w3-button w3-green transmission" id="saveObject" type="submit" name="saveObject">Save</button>
@@ -113,13 +124,15 @@
     </div>
 
     <label for="locations">Add locations of the game</label>
-    <button onclick="document.getElementById('locations-modal').style.display='block'" class="w3-button w3-circle w3-border
-    w3-border-blue w3-hover-blue w3-margin-left transmission" id="locations" type="button" name="locations"><i class="fa fa-plus"></i></button><br><br>
+    <button onclick="showElement('locations-modal')" class="w3-button w3-circle w3-border
+    w3-border-blue w3-hover-blue w3-margin-left transmission" id="locations" type="button" name="locations">
+        <i class="fa fa-plus"></i></button><br><br>
 
     <div id="locations-modal" class="w3-modal w3-padding-16">
         <div class="w3-modal-content w3-animate-zoom">
             <div class="w3-container">
-                <span onclick="document.getElementById('locations-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
+                <span onclick="hideElement('locations-modal')" class="w3-button w3-display-topright w3-hover-red">
+                    <i class="fa fa-close"></i></span>
                 <h3 class="headerForModal">Add a location</h3><br>
 
                 <label for="imgLocation" class="w3-margin-top" id="labelImLoc">Choose an image of the location</label><br>
@@ -129,7 +142,8 @@
                 <input class="w3-input w3-border w3-margin-top" type="text" id="locName" name="locName" required><br>
 
                 <label for="locDescription">Describe the location</label>
-                <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="locDescription" name="locDescription"></textarea><br>
+                <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="locDescription"
+                          name="locDescription"></textarea><br>
 
                 <label>Add objects that are at the location</label>
                 <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableObjects">
@@ -139,15 +153,18 @@
                     </tr>
                     <tr>
                         <td>Object 1</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="obj1" type="button" name="btnAddObj"><i class="fa fa-plus"></i></button></td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="obj1" type="button"
+                                    name="btnAddObj"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
                         <td>Object 2</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="obj2" type="button" name="btnAddObj"><i class="fa fa-plus"></i></button></td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="obj2" type="button"
+                                    name="btnAddObj"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
                         <td>Object 3</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="obj3" type="button" name="btnAddObj"><i class="fa fa-plus"></i></button></td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="obj3" type="button"
+                                    name="btnAddObj"><i class="fa fa-plus"></i></button></td>
                     </tr>
                 </table><br>
 
@@ -159,15 +176,18 @@
                     </tr>
                     <tr>
                         <td>Character 1</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="char1" type="button" name="btnAddChar"><i class="fa fa-plus"></i></button></td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="char1" type="button"
+                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
                         <td>Character 2</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="char2" type="button" name="btnAddChar"><i class="fa fa-plus"></i></button></td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="char2" type="button"
+                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
                         <td>Character 3</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="char3" type="button" name="btnAddChar"><i class="fa fa-plus"></i></button></td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="char3" type="button"
+                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
                     </tr>
                 </table>
 
@@ -179,16 +199,18 @@
     </div>
 
     <label for="dialogs">Add dialogs between characters of the game</label>
-    <button onclick="document.getElementById('dialogs-modal').style.display='block'" class="w3-button w3-circle w3-border
-    w3-border-blue w3-hover-blue w3-margin-left transmission" id="dialogs" type="button" name="dialogs"><i class="fa fa-plus"></i></button><br><br>
+    <button onclick="showElement('dialogs-modal')" class="w3-button w3-circle w3-border
+    w3-border-blue w3-hover-blue w3-margin-left transmission" id="dialogs" type="button" name="dialogs">
+        <i class="fa fa-plus"></i></button><br><br>
 
     <div id="dialogs-modal" class="w3-modal">
         <div class="w3-modal-content w3-animate-zoom">
             <div class="w3-container">
-                <span onclick="document.getElementById('dialogs-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
+                <span onclick="hideElement('dialogs-modal')" class="w3-button w3-display-topright w3-hover-red">
+                    <i class="fa fa-close"></i></span>
                 <h3 class="headerForModal">Add a dialog</h3><br>
 
-                <label>Choose a character that talks to others</label>
+                <label for="selectFromChar">Choose a character that talks to others</label>
                 <select class="w3-select w3-border w3-margin-top" id="selectFromChar" name="selectFromChar" required>
                     <option value="" disabled selected>Choose a character</option>
                     <option value="1">Character 1</option>
@@ -204,20 +226,24 @@
                     </tr>
                     <tr>
                         <td>Character 1</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="char1-dialogs" type="button" name="btnAddChar"><i class="fa fa-plus"></i></button></td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="char1-dialogs" type="button"
+                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
                         <td>Character 2</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="char2-dialogs" type="button" name="btnAddChar"><i class="fa fa-plus"></i></button></td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="char2-dialogs" type="button"
+                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
                         <td>Character 3</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="char3-dialogs" type="button" name="btnAddChar"><i class="fa fa-plus"></i></button></td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="char3-dialogs" type="button"
+                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
                     </tr>
                 </table><br>
 
                 <label for="dialogText">Write the dialog</label>
-                <textarea id="dialogText" class="w3-input w3-border w3-margin-top" rows="3" type="text" name="dialogText" required></textarea><br>
+                <textarea id="dialogText" class="w3-input w3-border w3-margin-top" rows="3" type="text"
+                          name="dialogText" required></textarea><br>
 
                 <div class="w3-container w3-padding-16">
                     <button class="w3-button w3-green transmission" id="saveDialog" type="submit" name="saveDialog">Save</button>
@@ -227,20 +253,23 @@
     </div>
 
     <label for="scenes">Add scenes of the game</label>
-    <button onclick="document.getElementById('scenes-modal').style.display='block'" class="w3-button w3-circle w3-border
-    w3-border-blue w3-hover-blue w3-margin-left transmission" id="scenes" type="button" name="scenes"><i class="fa fa-plus"></i></button><br><br>
+    <button onclick="showElement('scenes-modal')" class="w3-button w3-circle w3-border
+    w3-border-blue w3-hover-blue w3-margin-left transmission" id="scenes" type="button" name="scenes">
+        <i class="fa fa-plus"></i></button><br><br>
 
     <div id="scenes-modal" class="w3-modal w3-padding-16">
         <div class="w3-modal-content w3-animate-zoom">
             <div class="w3-container">
-                <span onclick="document.getElementById('scenes-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
+                <span onclick="hideElement('scenes-modal')" class="w3-button w3-display-topright w3-hover-red">
+                    <i class="fa fa-close"></i></span>
                 <h3 class="headerForModal">Add a scene</h3><br>
 
                 <label for="sceneName" class="w3-margin-top">Write the name of the scene</label>
                 <input class="w3-input w3-border w3-margin-top" type="text" id="sceneName" name="sceneName" required><br>
 
                 <label for="sceneDescription">Describe the scene</label>
-                <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="sceneDescription" name="sceneDescription"></textarea><br>
+                <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="sceneDescription"
+                          name="sceneDescription"></textarea><br>
 
                 <label>Add characters that take part in the scene</label>
                 <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableCharacters-scenes">
@@ -250,15 +279,18 @@
                     </tr>
                     <tr>
                         <td>Character 1</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="char1-scene" type="button" name="btnAddChar"><i class="fa fa-plus"></i></button></td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="char1-scene" type="button"
+                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
                         <td>Character 2</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="char2-scene" type="button" name="btnAddChar"><i class="fa fa-plus"></i></button></td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="char2-scene" type="button"
+                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
                         <td>Character 3</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="char3-scene" type="button" name="btnAddChar"><i class="fa fa-plus"></i></button></td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="char3-scene" type="button"
+                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
                     </tr>
                 </table><br>
 
@@ -270,15 +302,18 @@
                     </tr>
                     <tr>
                         <td>Location 1</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="loc1-scene" type="button" name="btnAddLoc"><i class="fa fa-plus"></i></button></td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="loc1-scene" type="button"
+                                    name="btnAddLoc"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
                         <td>Location 2</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="loc2-scene" type="button" name="btnAddLoc"><i class="fa fa-plus"></i></button></td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="loc2-scene" type="button"
+                                    name="btnAddLoc"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
                         <td>Location 3</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="loc3-scene" type="button" name="btnAddLoc"><i class="fa fa-plus"></i></button></td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="loc3-scene" type="button"
+                                    name="btnAddLoc"><i class="fa fa-plus"></i></button></td>
                     </tr>
                 </table><br>
 
@@ -290,15 +325,18 @@
                     </tr>
                     <tr>
                         <td>Object 1</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="obj1-scene" type="button" name="btnAddObj"><i class="fa fa-plus"></i></button></td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="obj1-scene" type="button"
+                                    name="btnAddObj"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
                         <td>Object 2</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="obj2-scene" type="button" name="btnAddObj"><i class="fa fa-plus"></i></button></td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="obj2-scene" type="button"
+                                    name="btnAddObj"><i class="fa fa-plus"></i></button></td>
                     </tr>
                     <tr>
                         <td>Object 3</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="obj3-scene" type="button" name="btnAddObj"><i class="fa fa-plus"></i></button></td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="obj3-scene" type="button"
+                                    name="btnAddObj"><i class="fa fa-plus"></i></button></td>
                     </tr>
                 </table><br>
                 <div class="w3-container w3-padding-16">
