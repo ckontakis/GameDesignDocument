@@ -2,28 +2,214 @@
 <html>
 <head>
 	<title>Explain Game Mechanics</title>
-	<meta charset="UTF-8">
+	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="../Images/favicon-new.ico">
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
+	<div class="w3-bar w3-blue">
+    <a href="../index.html" class="w3-bar-item w3-button"><b>Start Page</b></a>
+    <a href="../write.html" class="w3-bar-item w3-button w3-indigo">Write GDD</a>
+    <a href="../contact.html" class="w3-bar-item w3-button">Contact</a>
+    <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
+	    <div class="w3-dropdown-hover w3-right">
+	        <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
+	        <div class="w3-dropdown-content w3-bar-block w3-border">
+	            <a href="#" class="w3-bar-item w3-button">Settings</a>
+	            <button class="w3-bar-item w3-button">Logout</button>
+	        </div>
+	    </div>
+	</div>
+
+	<div class="w3-container pathPosition">
+	    <a href="../write.html" class="w3-hover-text-blue">Write GDD</a>
+	    <i class="fa fa-angle-double-right"></i>
+	    <a href="mech.html" class="w3-hover-text-blue">Game Mechanics</a>
+	</div>
 	<div class="w3-container w3-blue" style="text-align: center; margin-top: 8%; margin-left: 13%; margin-right: 13%">
 	   <h3 style="text-align: center">Explain Mechanics</h3>
 	</div>
 
 	<form class="w3-container w3-border w3-hover-shadow w3-padding-16" style="text-align: center; margin-left: 13%; margin-right: 13%" >
-	   	<label for="rules">Specify Rules</label>
-	    <input class="w3-input w3-border w3-margin-top" type="text" id="rules" name="rules"><br>
+	   	<label for="rules">Add Rules</label>
+	   	<button onclick="document.getElementById('rules-modal').style.display='block'" class="w3-button w3-circle w3-border
+    	w3-border-blue w3-hover-blue w3-margin-left transmission" id="rules" type="button" name="rules"><i class="fa fa-plus"></i></button><br><br>
+	    <div id="rules-modal" class="w3-modal">
+        <div class="w3-modal-content w3-animate-zoom">
+            <div class="w3-container">
+                <span onclick="document.getElementById('rules-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
+                	<h3 class="headerForModal">Rule Addition</h3><br>
+
+                	<label for="charAdd" class="w3-margin-top">Write the name of rule</label>
+                	<input class="w3-input w3-border w3-margin-top" type="text" id="ruleAdd" name="ruleAdd" required><br>
+
+                	<label for="charDescription">Describe rule</label>
+                	<textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="ruleDescription" name="ruleDescription"></textarea><br>
+                	<div class="w3-container w3-padding-16">
+                    	<button class="w3-button w3-green transmission" id="saveRule" type="submit" name="saveRule">Save</button>
+                	</div>
+            	</div>
+        	</div>
+    	</div>
+
+    	<button type="button" class="collapsible">Rules</button>
+		<div class="content">
+	    	<p class="rule Rcontainer">Win : The player has to defeat the enemy to win the game</p>
+	    	<p class="rule Rcontainer">Loss : The player has to lose all their lives, to lose the game</p>
+	    </div><br><br>
+	    	
 
 	    <label for="combat">Explain Combat</label>
 	    <input class="w3-input w3-border w3-margin-top" type="text" id="combat" name="combat"><br>
 
-	    <label for="physics">Explain Physics</label>
-	    <input class="w3-input w3-border w3-margin-top" type="text" id="physics" name="physics"><br>
+	    <label for="physics">Explain Physics</label><br><br>
+	    <button type="button" class="collapsible">Physics</button>
+		<div class="content physics">
+		    <label for="environment">Choose Game Environment</label>
+		    <select id="environment" name="environment">
+		    	<option value="normal">Normal</option>
+	    		<option value="plains">Plains</option>
+	    		<option value="mountainous">Mountainous</option>
+	    		<option value="seaside">Seaside</option>
+	    		<option value="city">City</option>
+	    		<option value="countryside">Countryside</option>
+	    		<option value="desert">Desert</option>
+	    		<option value="icy">Icy</option>
+	    		<option value="forest">Forest</option>
+	    		<option value="island">Island</option>
+	    		<option value="swamp">Swamp</option>
+		    </select> 
+		    <br><br>
 
-	    <label for="controls">Explain Controls</label>
-	    <input class="w3-input w3-border w3-margin-top" type="text" id="controls" name="controls"><br>
+		    <label for="weather">Choose Environment Weather</label>
+		    <select id="weather" name="weather">
+		    	<option value="sunny" selected="">Sunny/Clear</option>
+	    		<option value="partially">Partially Cloudy</option>
+	    		<option value="cloudy">Cloudy</option>
+	    		<option value="overcast">Overcast</option>
+	    		<option value="rain">Rain</option>
+	    		<option value="drizzle">Drizzle</option>
+	    		<option value="snow">Snow</option>
+	    		<option value="stormy">Stormy</option>
+	    		<option value="tornadoes">Tornadoes</option>
+	    		<option value="thundersnows">Thundersnows</option>
+	    		<option value="fog">Fog</option>
+	    		<option value="hurricanes">Hurricanes</option>
+	    		<option value="sandstorms">Sandstorms</option>
+		    </select> 
+		    <br><br>
+
+		    <label for="climate">Choose Environment Climate</label>
+		    <select id="climate" name="climate">
+		    	<option value="tropical">Tropical</option>
+	    		<option value="dry">Dry</option>
+	    		<option value="temperate">Temperate</option>
+	    		<option value="continental">Continental</option>
+	    		<option value="polar">Polar</option>
+		    </select> 
+		    <br><br>
+
+		    <label for="humidity">Choose Environment Humidity</label>
+		    <select id="humidity" name="humidity">
+		    	<option value="high">High</option>
+	    		<option value="normal" selected="">Normal</option>
+	    		<option value="low">Low</option>
+		    </select> 
+		    <br><br>
+
+		    <label for="gravity">Choose Environment Gravity</label>
+		    <select id="gravity" name="gravity">
+		    	<option value="high">High</option>
+	    		<option value="normal" selected="">Normal</option>
+	    		<option value="low">Low</option>
+		    </select> 
+		    <br><br>
+
+		    <label for="lethality">Choose Environment Lethality</label>
+		    <select id="lethality" name="lethality">
+		    	<option value="high">High</option>
+	    		<option value="normal" selected="">Normal</option>
+	    		<option value="low">Low</option>
+	    		<option value="none">None</option>
+		    </select> 
+		    <br><br>
+
+		    <label for="simulations">Choose Physics Simulations</label>
+		    <select id="simulations" name="simulations">
+		    	<option value="rigid">Rigid body</option>
+	    		<option value="soft">Soft-body</option>
+		    </select> 
+		    <br><br>
+
+		    <label for="particles">Choose Particle system</label>
+		    <select id="particles" name="particles">
+		    	<option value="high">High density</option>
+	    		<option value="normal" selected="">Normal density</option>
+	    		<option value="low">Low density</option>
+	    		<option value="off">No particles</option>
+		    </select> 
+		    <br><br>
+
+		    <label for="ragdoll">Choose Ragdoll Physics</label>
+		    <select id="ragdoll" name="ragdoll">
+		    	<option value="on">On</option>
+	    		<option value="off">Off</option>
+		    </select>
+	    </div> <br><br>
+
+
+
+	    <label for="controls">Add Controls</label>
+	    <button onclick="document.getElementById('controls-modal').style.display='block'" class="w3-button w3-circle w3-border
+    	w3-border-blue w3-hover-blue w3-margin-left transmission" id="controls" type="button" name="controls"><i class="fa fa-plus"></i></button><br><br>
+    	<div id="controls-modal" class="w3-modal">
+        <div class="w3-modal-content w3-animate-zoom">
+            <div class="w3-container">
+                <span onclick="document.getElementById('controls-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
+                	<h3 class="headerForModal">Controls Addition</h3><br>
+
+                	<label for="charAdd" class="w3-margin-top">Write the name of the button</label>
+                	<input class="w3-input w3-border w3-margin-top" type="text" id="controlsAdd" name="controlsAdd" required><br>
+
+                	<label for="charDescription">Describe control button</label>
+                	<textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="controlsDescription" name="controlsDescription"></textarea><br>
+                	<div class="w3-container w3-padding-16">
+                    	<button class="w3-button w3-green transmission" id="saveControls" type="submit" name="saveControls">Save</button>
+                	</div>
+            	</div>
+        	</div>
+    	</div>
+
+    	<button type="button" class="collapsible">Controls</button>
+		<div class="content">
+    		<p class="rule Rcontainer">W : Move forward</p>
+    		<p class="rule Rcontainer">A : Move to the left</p>
+    		<p class="rule Rcontainer">S : Move backwards</p>
+    		<p class="rule Rcontainer">D : Move to the right</p>
+    		<p class="rule Rcontainer">Mouse : The player can move the camera with their mouse</p>
+    		<p class="rule Rcontainer">Left click : Push buttons and interact with objects</p>
+    	</div><br><br>
 
 	    <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue" type="submit" value="Submit">
 	</form>
+
+	<script type="text/javascript">
+		var coll = document.getElementsByClassName("collapsible");
+		var i;
+
+		for (i = 0; i < coll.length; i++) {
+		  coll[i].addEventListener("click", function() {
+		    this.classList.toggle("active");
+		    var content = this.nextElementSibling;
+		    if (content.style.display === "block") {
+		      content.style.display = "none";
+		    } else {
+		      content.style.display = "block";
+		    }
+		  });
+		}
+	</script>
 </body>
 </html>
