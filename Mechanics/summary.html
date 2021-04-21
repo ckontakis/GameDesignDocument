@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<title>Create Game Summary</title>
-	<meta charset="UTF-8">
+	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="../Images/favicon-new.ico">
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../css/main.css">
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>  
@@ -13,11 +16,34 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css" />
 </head>
 <body>
-	<div class="w3-container w3-blue" style="text-align: center; margin-top: 8%; margin-left: 13%; margin-right: 13%">
-	    <h3 style="text-align: center">Add summary of the game's mechanics</h3>
+	<div class="w3-bar w3-blue">
+    <a href="../index.html" class="w3-bar-item w3-button"><b>Start Page</b></a>
+    <a href="../write.html" class="w3-bar-item w3-button w3-indigo">Write GDD</a>
+    <a href="../contact.html" class="w3-bar-item w3-button">Contact</a>
+    <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
+	    <div class="w3-dropdown-hover w3-right">
+	        <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
+	        <div class="w3-dropdown-content w3-bar-block w3-border">
+	            <a href="#" class="w3-bar-item w3-button">Settings</a>
+	            <button class="w3-bar-item w3-button">Logout</button>
+	        </div>
+	    </div>
 	</div>
 
-	<form class="w3-container w3-border w3-hover-shadow w3-padding-16" style="text-align: center; margin-left: 13%; margin-right: 13%" >
+	<div class="w3-container pathPosition">
+	    <a href="../write.html" class="w3-hover-text-blue">Write GDD</a>
+	    <i class="fa fa-angle-double-right"></i>
+	    <a href="summary.html" class="w3-hover-text-blue">Summary Mechanics</a>
+	</div>
+	<div class="w3-container w3-blue panelInFormWorld">
+	    <h3 class="headerPanel">Create summary of the game</h3>
+	</div>
+
+	<form class="w3-container w3-border w3-hover-shadow w3-padding-16 formWorldBuilding" >
+
+		<label for="nameGame">Type the name of the game</label>
+    	<textarea class="w3-input w3-border w3-margin-top" rows="1" type="text" id="nameGame" name="nameGame"></textarea><br>
+
 	   	<label for="concept">Create Game Concept</label>
 	    <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="concept" name="concept"></textarea><br>
 
@@ -39,6 +65,7 @@
 		      <option value="Sports">Sports</option>
 		      <option value="MMO">MMO</option>
 		      <option value="Gacha">Gacha</option>
+		      <option value="Other">Other</option>
      		</select>
     	</div><br/>
    
@@ -64,6 +91,7 @@
 		      <option value="Mobile">Mobile</option>
 		      <option value="Nintendo3DS">Nintendo 3DS</option>
 		      <option value="WiiU">Wii U</option>
+		      <option value="Other">Other</option>
      		</select>
     	</div><br/>
 
@@ -90,11 +118,15 @@
 		      <option value="competitive">Competitive</option>
 		      <option value="trivia">Trivia</option>
 		      <option value="party">Party</option>
+		      <option value="Other">Other</option>
      		</select>
     	</div><br/>
 
 	    <label for="settingGame">Create Setting</label>
 	    <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="settingGame" name="settingGame"></textarea><br>
+
+	    <label for="programmingLang">What software was used to make this game</label>
+    	<textarea class="w3-input w3-border w3-margin-top" rows="2" type="text" id="programmingLang" name="programmingLang"></textarea><br>
 
 	    <label for="addCode">Add Game Code:</label>
 	    <a id="myCode" name="myCode" href="#">Link to Game Code repository</a>
