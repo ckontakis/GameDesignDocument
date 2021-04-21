@@ -2,10 +2,32 @@
 <html>
 <head>
 	<title>Explain Gameplay</title>
-	<meta charset="UTF-8">
+	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="../Images/favicon-new.ico">
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../css/main.css">	
 </head>
 <body>
+	<div class="w3-bar w3-blue">
+    <a href="../index.html" class="w3-bar-item w3-button"><b>Start Page</b></a>
+    <a href="../write.html" class="w3-bar-item w3-button w3-indigo">Write GDD</a>
+    <a href="../contact.html" class="w3-bar-item w3-button">Contact</a>
+    <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
+	    <div class="w3-dropdown-hover w3-right">
+	        <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
+	        <div class="w3-dropdown-content w3-bar-block w3-border">
+	            <a href="#" class="w3-bar-item w3-button">Settings</a>
+	            <button class="w3-bar-item w3-button">Logout</button>
+	        </div>
+	    </div>
+	</div>
+
+	<div class="w3-container pathPosition">
+	    <a href="../write.html" class="w3-hover-text-blue">Write GDD</a>
+	    <i class="fa fa-angle-double-right"></i>
+	    <a href="gameplay.html" class="w3-hover-text-blue">Gameplay Mechanics</a>
+	</div>
 	<div class="w3-container w3-blue" style="text-align: center; margin-top: 8%; margin-left: 13%; margin-right: 13%">
 	   <h3 style="text-align: center">Explain Gameplay</h3>
 	</div>
@@ -17,17 +39,53 @@
 	    <label for="progression">Specify Progression</label>
 	    <input class="w3-input w3-border w3-margin-top" type="text" id="combat" name="combat"><br>
 
-	    <label for="myGui">Create GUI:</label>
-		<input type="file" id="myGui" name="myGui"><br><br>
+	    <label for="cutscenes">Add Intro,Cutscenes etc.:</label>
+	   	<button onclick="document.getElementById('cutscenes-modal').style.display='block'" class="w3-button w3-circle w3-border
+    	w3-border-blue w3-hover-blue w3-margin-left transmission" id="cutscenes" type="button" name="cutscenes"><i class="fa fa-plus"></i></button><br><br>
+	    <div id="cutscenes-modal" class="w3-modal">
+        <div class="w3-modal-content w3-animate-zoom">
+            <div class="w3-container">
+                <span onclick="document.getElementById('cutscenes-modal').style.display='none'" class="w3-button w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
+                	<h3 class="headerForModal">Cutscene Addition</h3><br>
 
-	    <label for="myMenu">Create Menus:</label>
-		<input type="file" id="myMenu" name="myMenu"><br><br>
+                	<label for="cutsceneAdd" class="w3-margin-top">Write the name of the cutscene</label>
+                	<input class="w3-input w3-border w3-margin-top" type="text" id="cutsceneAdd" name="cutsceneAdd" required><br>
 
-	    <label for="myCutscenes">Add Intro,Cutscenes etc.:</label>
-		<input type="file" id="myCutscenes" name="myCutscenes"><br><br>
+                	<label for="myCutscene">Add Cutscene:</label>
+                	<input type="file" id="myCutscenes" name="myCutscenes"><br><br>
+                	<div class="w3-container w3-padding-16">
+                    	<button class="w3-button w3-green transmission" id="saveRule" type="submit" name="saveRule">Save</button>
+                	</div>
+            	</div>
+        	</div>
+    	</div>
+
+
+    	<button type="button" class="collapsible">Cutscenes</button>
+		<div class="content">
+	    	<p class="rule Rcontainer">Intro: <a href="../Images/ratfren.jpg" download>Download</a></p>
+	    	<p class="rule Rcontainer">Outro: <a href="../Images/ratfren.jpg" download>Download</a></p>
+	    </div><br><br>
 
 	    <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue" type="submit" value="Submit">
 	</form>
 
+
+<script type="text/javascript">
+		var coll = document.getElementsByClassName("collapsible");
+		var i;
+
+		for (i = 0; i < coll.length; i++) {
+		  coll[i].addEventListener("click", function() {
+		    this.classList.toggle("active");
+		    var content = this.nextElementSibling;
+		    if (content.style.display === "block") {
+		      content.style.display = "none";
+		    } else {
+		      content.style.display = "block";
+		    }
+		  });
+		}
+	</script>
 </body>
 </html>
