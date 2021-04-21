@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Create Game Menus and Gui</title>
+	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="../Images/favicon-new.ico">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+	<div class="w3-bar w3-blue">
+    <a href="../index.html" class="w3-bar-item w3-button"><b>Start Page</b></a>
+    <a href="../write.html" class="w3-bar-item w3-button w3-indigo">Write GDD</a>
+    <a href="../contact.html" class="w3-bar-item w3-button">Contact</a>
+    <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
+	    <div class="w3-dropdown-hover w3-right">
+	        <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
+	        <div class="w3-dropdown-content w3-bar-block w3-border">
+	            <a href="#" class="w3-bar-item w3-button">Settings</a>
+	            <button class="w3-bar-item w3-button">Logout</button>
+	        </div>
+	    </div>
+	</div>
+
+	<div class="w3-container pathPosition">
+	    <a href="../write.html" class="w3-hover-text-blue">Write GDD</a>
+	    <i class="fa fa-angle-double-right"></i>
+	    <a href="GuiMenus.html" class="w3-hover-text-blue">Game Menus and Gui</a>
+	</div>
+	<div class="w3-container w3-blue" style="text-align: center; margin-top: 8%; margin-left: 13%; margin-right: 13%">
+	   <h3 style="text-align: center">Create Menus and Gui</h3>
+	</div>
+
+	<form class="w3-container w3-border w3-hover-shadow w3-padding-16 formWorldBuilding" >
+		<label for="myGui">Create GUI:</label>
+		<input type="file" id="myGui" name="myGui"><br><br>
+
+		<label for="myMenu">Create Menus:</label>
+		<input type="file" id="myMenu" name="myMenu"><br><br>
+
+		<input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue" type="submit" value="Submit">
+	</form>
+</body>
+</html>
