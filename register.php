@@ -1,20 +1,13 @@
 <?php
-$servername = "localhost";
-$usernameDB = "root";
-$passwordDB = "";
-$dbname = "thesis2021";
+
+require 'connect.php';
+
+$conn = $_SESSION["conn"];
 
 $name = $surname = $email = $password = "";
 
 $showDivSuccess = $showDivDuplicateEmail = $showDivSomethingWrong = FALSE;
 $nameLen = $surnameLen = $emailLen = $passwordLen = TRUE;
-
-$conn = new mysqli($servername, $usernameDB, $passwordDB, $dbname);
-mysqli_set_charset($conn, "utf8");
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     $name = test_data($_POST["firstName"]);
@@ -28,12 +21,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $passwordLen = strlen($password) <= 50; // checking length of password
 
     if($nameLen && $surnameLen && $emailLen && $passwordLen){
-        $query = "INSERT INTO person (name, surname, email, password) VALUES ('$name', '$surname', '$email', '$password')";
+        $query = "INSERT INTO Person (name, surname, email, password) VALUES ('$name', '$surname', '$email', '$password')";
 
         if($conn->query($query) === TRUE){
             $showDivSuccess = TRUE;
         }else{
-            $queryDuplicateEmail = "SELECT ID FROM person WHERE email = '$email'";
+            $queryDuplicateEmail = "SELECT ID FROM Person WHERE email = '$email'";
             $checkEmail = $conn->query($queryDuplicateEmail);
 
             if($checkEmail->num_rows === 1){ // checking if there is already an account with that email
@@ -70,7 +63,7 @@ $conn->close();
     <div class="w3-bar w3-blue showBar">
         <a href="index.html" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
         <a href="write.html" class="w3-bar-item w3-button">Write GDD</a>
-        <a href="contact.html" class="w3-bar-item w3-button">Contact</a>
+        <a href="contact.php" class="w3-bar-item w3-button">Contact</a>
         <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
         <a href="register.php" class="w3-bar-item w3-button w3-teal w3-right"><b>Register</b></a>
         <a href="login.html" class="w3-bar-item w3-button w3-teal w3-right">Login</a>
@@ -80,7 +73,7 @@ $conn->close();
         <button onclick="hideElement('sideBar')" class="w3-bar-item w3-large">Close <i class="fa fa-close"></i></button>
         <a href="index.html" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
         <a href="write.html" class="w3-bar-item w3-button">Write GDD</a>
-        <a href="contact.html" class="w3-bar-item w3-button">Contact</a>
+        <a href="contact.php" class="w3-bar-item w3-button">Contact</a>
         <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
         <a href="register.php" class="w3-bar-item w3-button w3-teal w3-right"><b>Register</b></a>
         <a href="login.html" class="w3-bar-item w3-button w3-teal w3-right">Login</a>
