@@ -33,7 +33,7 @@
 
 <div class="container writePageContent">
 	<button class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue transmission" type="button"
-			onclick="showElement('newDocument-modal')">Δημιουργία νέου εγγράφου σχεδίασης παιχνιδιών</button><br><br>
+			onclick="showElement('newDocument-modal')">Create a new Game Design Document</button><br><br>
 
 	<form style="text-align: center;">
 		<div id="newDocument-modal" class="w3-modal">
@@ -90,7 +90,7 @@
 			<th>Edit</th>
 			<th>Delete</th>
 			<th>Download</th>
-			<th>Print</th>
+			<th>Teams</th>
 		</tr>
 		<tr>
 			<td>GDD 1</td>
@@ -119,7 +119,7 @@
 			</td>
 			<td><button class="w3-button w3-round w3-border w3-border-black transmission" id="remove1" onclick="confirmDelete()" type="button" name="btnRemove1"><i class="fa fa-trash"></i></button></td>
 			<td><button class="w3-button w3-round w3-border w3-border-black transmission" id="down1" type="button" name="down1"><i class="fa fa-download"></i></button></td>
-			<td><button class="w3-button w3-round w3-border w3-border-black transmission" id="print1" type="button" name="print1"><i class="fa fa-print"></i></button></td>
+			<td><button class="w3-button w3-round w3-border w3-border-black transmission" id="teams1" onclick="showElement('teams-modal')" type="button" name="teams1"><i class="fa fa-users"></i></button></td>
 		</tr>
 
 		<tr>
@@ -148,9 +148,67 @@
 			</td>
 			<td><button class="w3-button w3-round w3-border w3-border-black transmission" id="remove2" onclick="confirmDelete()" type="button" name="btnRemove1"><i class="fa fa-trash"></i></button></td>
 			<td><button class="w3-button w3-round w3-border w3-border-black transmission" id="down2" type="button" name="down1"><i class="fa fa-download"></i></button></td>
-			<td><button class="w3-button w3-round w3-border w3-border-black transmission" id="print2" type="button" name="print1"><i class="fa fa-print"></i></button></td>
+			<td><button class="w3-button w3-round w3-border w3-border-black transmission" id="teams2" type="button" name="teams1"><i class="fa fa-users"></i></button></td>
 		</tr>
 	</table><br>
+
+	<div id="teams-modal" class="w3-modal">
+		<div class="w3-modal-content w3-animate-zoom" style="text-align: center;">
+			<div class="w3-container">
+                        <span onclick="hideElement('teams-modal')" class="w3-button
+                        w3-display-topright w3-hover-red"><i class="fa fa-close"></i></span>
+
+				<h3 class="headerForModal">Edit teams and users that can edit the document</h3><br>
+
+				<label>Editors of the document</label>
+
+				<table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableEditors1">
+					<tr>
+						<th>Name</th>
+						<th>Delete</th>
+					</tr>
+					<tr>
+						<td>Kostas</td>
+						<td><button class="w3-button w3-green w3-circle transmission" id="editor1" type="button" name="btnRemoveEditor"><i class="fa fa-minus"></i></button></td>
+					</tr>
+				</table><br>
+
+				<label for="emailTDocumentEditor" class="w3-margin-top" id="labelTEmailDocumentEditor">Invite more people to edit the document</label><br>
+
+				<input class="w3-input w3-border w3-margin-top inputEmailMember" type="email"
+					   placeholder="Type the email of the person that you want to invite"
+					   id="emailTDocumentEditor" name="emailTDocumentEditor">
+				<button class="w3-button w3-border w3-margin-top w3-border-blue w3-hover-blue transmission"
+						id="addTEditor" type="button" name="addTEditor" style="display: inline-block;">
+					<i class="fa fa-plus"></i></button><br><br>
+
+				<label>Add teams that can edit the document</label>
+				<table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableTeams1">
+					<tr>
+						<th>Teams</th>
+						<th>Add</th>
+					</tr>
+					<tr>
+						<td>Team 1</td>
+						<td><button class="w3-button w3-green w3-circle transmission" id="teamT1" type="button" name="btnAddTeam"><i class="fa fa-plus"></i></button></td>
+					</tr>
+					<tr>
+						<td>Team 2</td>
+						<td><button class="w3-button w3-green w3-circle transmission" id="teamT2" type="button" name="btnAddTeam"><i class="fa fa-plus"></i></button></td>
+					</tr>
+					<tr>
+						<td>Team 3</td>
+						<td><button class="w3-button w3-green w3-circle transmission" id="teamT3" type="button" name="btnAddTeam"><i class="fa fa-plus"></i></button></td>
+					</tr>
+				</table><br>
+
+				<div class="w3-container w3-padding-16">
+					<button class="w3-button w3-green transmission" id="saveTeam" type="submit" name="saveDocument">
+						Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 </body>
 </html>
