@@ -13,9 +13,9 @@
 <div class="w3-bar w3-blue showBar">
 	<a href="index.html" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
 	<a href="write.html" class="w3-bar-item w3-button w3-indigo"><b>Write GDD</b></a>
-	<a href="contact.html" class="w3-bar-item w3-button">Contact</a>
+	<a href="contact.php" class="w3-bar-item w3-button">Contact</a>
 	<a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
-	<a href="register.html" class="w3-bar-item w3-button w3-teal w3-right">Register</a>
+	<a href="register.php" class="w3-bar-item w3-button w3-teal w3-right">Register</a>
 	<a href="login.html" class="w3-bar-item w3-button w3-teal w3-right">Login</a>
 </div>
 
@@ -23,9 +23,9 @@
 	<button onclick="hideElement('sideBar')" class="w3-bar-item w3-large">Close <i class="fa fa-close"></i></button>
 	<a href="index.html" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
 	<a href="write.html" class="w3-bar-item w3-button w3-indigo"><b>Write GDD</b></a>
-	<a href="contact.html" class="w3-bar-item w3-button">Contact</a>
+	<a href="contact.php" class="w3-bar-item w3-button">Contact</a>
 	<a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
-	<a href="register.html" class="w3-bar-item w3-button w3-teal w3-right">Register</a>
+	<a href="register.php" class="w3-bar-item w3-button w3-teal w3-right">Register</a>
 	<a href="login.html" class="w3-bar-item w3-button w3-teal w3-right">Login</a>
 </div>
 
@@ -160,6 +160,15 @@
 
 				<h3 class="headerForModal">Edit teams and users that can edit the document</h3><br>
 
+				<label for="emailTDocumentEditor" class="w3-margin-top" id="labelTEmailDocumentEditor">Invite more people to edit the document</label><br>
+
+				<input class="w3-input w3-border w3-margin-top inputEmailMember" type="email"
+					   placeholder="Type the email of the person that you want to invite"
+					   id="emailTDocumentEditor" name="emailTDocumentEditor">
+				<button class="w3-button w3-border w3-margin-top w3-border-blue w3-hover-blue transmission"
+						id="addTEditor" type="button" name="addTEditor" style="display: inline-block;">
+					<i class="fa fa-plus"></i></button><br><br>
+
 				<label>Editors of the document</label>
 
 				<table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableEditors1">
@@ -173,16 +182,7 @@
 					</tr>
 				</table><br>
 
-				<label for="emailTDocumentEditor" class="w3-margin-top" id="labelTEmailDocumentEditor">Invite more people to edit the document</label><br>
-
-				<input class="w3-input w3-border w3-margin-top inputEmailMember" type="email"
-					   placeholder="Type the email of the person that you want to invite"
-					   id="emailTDocumentEditor" name="emailTDocumentEditor">
-				<button class="w3-button w3-border w3-margin-top w3-border-blue w3-hover-blue transmission"
-						id="addTEditor" type="button" name="addTEditor" style="display: inline-block;">
-					<i class="fa fa-plus"></i></button><br><br>
-
-				<label>Add teams that can edit the document</label>
+				<label>Teams that can edit the document</label>
 				<table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableTeams1">
 					<tr>
 						<th>Teams</th>

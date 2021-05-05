@@ -2,7 +2,7 @@
 
 require 'connect.php';
 
-$conn = $_SESSION["conn"];
+$conn = $_SESSION["conn"]; // variable that connected to database
 
 $name = $surname = $email = $password = "";
 
@@ -21,7 +21,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $passwordLen = strlen($password) <= 50; // checking length of password
 
     if($nameLen && $surnameLen && $emailLen && $passwordLen){
-        $query = "INSERT INTO Person (name, surname, email, password) VALUES ('$name', '$surname', '$email', '$password')";
+        $query = "INSERT INTO person (name, surname, email, psw) VALUES ('$name', '$surname', '$email', '$password')";
 
         if($conn->query($query) === TRUE){
             $showDivSuccess = TRUE;

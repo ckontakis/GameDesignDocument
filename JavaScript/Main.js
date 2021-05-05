@@ -42,24 +42,6 @@ function showPassword(el) {
 /*
 Function to show elements.
  */
-function showPersonalInfo(persInfo, invTeams, buttonPersInfo, buttonInvTeams){
-    let x = document.getElementById(persInfo);
-    let y = document.getElementById(invTeams);
-    let elButtonInfo = document.getElementById(buttonPersInfo);
-    let elButtonTeamsInv = document.getElementById(buttonInvTeams);
-
-    x.style.display = 'block';
-    y.style.display = 'none';
-
-    elButtonInfo.classList.add('w3-blue');
-    elButtonTeamsInv.classList.remove('w3-blue');
-
-    localStorage.removeItem('showInvitesTeams');
-}
-
-/*
-Function to show elements.
- */
 function showElement(el){
     let x = document.getElementById(el);
     x.style.display = 'block';
@@ -71,22 +53,4 @@ Function to hide elements.
 function hideElement(el){
     let x = document.getElementById(el);
     x.style.display = 'none';
-}
-
-/*
-Function to show invites and teams.
- */
-function showInvitesTeams(persInfo, invTeams, buttonPersInfo, buttonInvTeams){
-    let x = document.getElementById(persInfo);
-    let y = document.getElementById(invTeams);
-    let elButtonInfo = document.getElementById(buttonPersInfo);
-    let elButtonTeamsInv = document.getElementById(buttonInvTeams);
-
-    x.style.display = 'none';
-    y.style.display = 'block';
-
-    elButtonInfo.classList.remove('w3-blue');
-    elButtonTeamsInv.classList.add('w3-blue');
-
-    localStorage.setItem('showInvitesTeams', 'true'); //store state in localStorage
 }
