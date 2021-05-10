@@ -23,8 +23,12 @@ function showAndHide(el, btnFont){
     if(disp === 'none'){
         x.style.display = 'block';
         y.className = 'fa fa-minus';
+
+        localStorage.setItem(el, 'true');
     }else{
         x.style.display = 'none';
         y.className = 'fa fa-plus';
+
+        localStorage.setItem(el, 'false');
     }
 }

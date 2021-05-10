@@ -9,7 +9,7 @@ $name = $surname = $email = $password = "";
 $showDivSuccess = $showDivDuplicateEmail = $showDivSomethingWrong = FALSE;
 $nameLen = $surnameLen = $emailLen = $passwordLen = TRUE;
 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+if(isset($_POST['submit'])){
     $name = test_data($_POST["firstName"]);
     $surname = test_data($_POST["lastName"]);
     $email = test_data($_POST["email"]);
@@ -154,7 +154,7 @@ $conn->close();
                 <p>Something went wrong. Please check your information.</p>
             </div>
 
-            <input class="w3-button w3-green transmission" type="submit" value="Register">
+            <input class="w3-button w3-green transmission" type="submit" name="submit" value="Register">
         </form>
     </div>
 </body>

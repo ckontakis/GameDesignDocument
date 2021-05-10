@@ -7,7 +7,7 @@ $name = $surname = $email = $message = "";
 $showDivSuccess = $showDivSomethingWrong = FALSE;
 $nameLen = $surnameLen = $emailLen = $messageLen = TRUE;
 
-if($_SERVER["REQUEST_METHOD"] == "POST") {
+if(isset($_POST['submit'])) {
     $name = test_data($_POST["firstName"]);
     $surname = test_data($_POST["lastName"]);
     $email = test_data($_POST["email"]);
@@ -90,7 +90,7 @@ function test_data($data){
         }else{
             echo 'style="display: none"';
         }?>>
-            <p>Thanks for your message. We will contact with you as soon as possible.</p>
+            <p>Thank you for your message. We will contact with you as soon as possible.</p>
         </div>
 
         <div class="w3-panel w3-red" <?php if(!$nameLen) {
@@ -133,7 +133,7 @@ function test_data($data){
             <p>Something went wrong. Please check your information.</p>
         </div>
 
-        <input class="w3-button w3-green transmission" type="submit" value="Submit">
+        <input class="w3-button w3-green transmission" type="submit" name="submit" value="Submit">
     </form>
 </div>
 </body>

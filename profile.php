@@ -3,8 +3,10 @@
 require 'connect.php'; // connecting to database
 $conn = $_SESSION["conn"]; // variable that connected to database
 
+$idOfPerson = '1';
+
 // loading previous data fields
-$queryData = "SELECT name, surname, email FROM person WHERE ID = '1';";
+$queryData = "SELECT name, surname, email FROM person WHERE ID = '$idOfPerson';";
 $data = $conn->query($queryData);
 
 $prevName = $prevSurname = $prevEmail = "";
@@ -22,7 +24,7 @@ $name = $surname = $email = $newPass = $confNewPass = "";
 $showDivSuccess = $showDivDuplicateEmail = $showDivSomethingWrong = $passIsDiff = $updateEmail = FALSE;
 $nameLen = $surnameLen = $emailLen = $passwordLen = TRUE;
 
-if($_SERVER["REQUEST_METHOD"] == "POST") {
+if(isset($_POST['submit'])) {
     $name = test_data($_POST["userName"]);
     $surname = test_data($_POST["userSurname"]);
     $email = test_data($_POST["userEmail"]);
@@ -49,7 +51,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         if($password !== ""){
             $query = $query . ", psw = '$password'";
         }
-        $query = $query . " WHERE ID = '1';";
+        $query = $query . " WHERE ID = '$idOfPerson';";
 
         if($conn->query($query) === TRUE){
             $showDivSuccess = TRUE;
@@ -58,7 +60,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             $prevSurname = $surname;
             if($updateEmail) $prevEmail = $email;
         }else{
-            $queryDuplicateEmail = "SELECT ID FROM Person WHERE email = '$email' AND ID <> '1';";
+            $queryDuplicateEmail = "SELECT ID FROM Person WHERE email = '$email' AND ID <> '$idOfPerson';";
             $checkEmail = $conn->query($queryDuplicateEmail);
 
             if($checkEmail->num_rows === 1){ // checking if there is already an account with that email
@@ -94,7 +96,7 @@ $conn->close();
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="css/main.css">
 
-<body id="body">
+<body>
 
 <div class="w3-bar w3-blue showBar">
     <a href="index.html" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
@@ -104,7 +106,7 @@ $conn->close();
     <div class="w3-dropdown-hover w3-right">
         <button class="w3-button"><b>Profile</b> <i class="fa fa-user-circle"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
-            <a href="profile.html" class="w3-bar-item w3-button">Settings</a>
+            <a href="profile.php" class="w3-bar-item w3-button">Settings</a>
             <button class="w3-bar-item w3-button">Logout</button>
         </div>
     </div>
@@ -119,7 +121,7 @@ $conn->close();
     <div class="w3-dropdown-hover w3-right">
         <button class="w3-button"><b>Profile</b> <i class="fa fa-user-circle"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
-            <a href="profile.html" class="w3-bar-item w3-button">Settings</a>
+            <a href="profile.php" class="w3-bar-item w3-button">Settings</a>
             <button class="w3-bar-item w3-button">Logout</button>
         </div>
     </div>
@@ -137,10 +139,6 @@ $conn->close();
     </div>
 
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" class="w3-container inputProfile" id="personalInfo">
-        <label for="chooseFile" id="labelImUser">Choose an image for your profile</label><br><br>
-        <input type="file" id="imgUser" class="w3-margin-top" name="imgUser" style="display: none;" accept="image/*">
-        <input type="button" id="chooseFile" class="w3-button w3-border w3-border-blue w3-hover-blue w3-round transmission"
-               value="Choose a file" onclick="document.getElementById('imgUser').click();" /><br><br>
 
         <label for="userName" id="userNameLabel">Name</label>
         <input class="w3-input w3-border w3-margin-top" id="userName" name="userName" value="<?php echo $prevName?>" type="text" required><br>
@@ -221,7 +219,7 @@ $conn->close();
             <p>Something went wrong. Please check your information.</p>
         </div>
 
-        <input class="w3-button w3-border w3-border-blue w3-hover-blue w3-round transmission" type="submit" value="Submit">
+        <input class="w3-button w3-border w3-border-blue w3-hover-blue w3-round transmission" name="submit" type="submit" value="Submit">
     </form>
 
 </div>
