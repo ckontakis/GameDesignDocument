@@ -1,14 +1,8 @@
 /*
 Function to confirm if a user wants to delete a document or not.
  */
-function confirmDelete(){
-    let con = confirm('Are you sure you want to delete this game design document?');
-
-    if(con){
-        return true;
-    }else{
-        return false;
-    }
+function confirmDelete(message){
+    return confirm(message);
 }
 
 /*

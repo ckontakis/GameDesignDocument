@@ -70,9 +70,12 @@ VALUES ('$idOfPerson', '$teamId', 'accepted', '1');";
     }
 }
 
+$emailInviteLen = TRUE;
 if(isset($_POST['saveInvitePerson'])){
     $emailInvite = test_data($_POST['emailTeamMember']);
     $teamToInvite = $_POST['keyTeam'];
+
+    $invitePerson = TRUE;
 
     // finding id of person to invite
 
@@ -80,7 +83,13 @@ if(isset($_POST['saveInvitePerson'])){
     $resultFindPerson = $conn->query($queryToFindIdPerson);
 
     $rowFindPerson = $resultFindPerson->fetch_assoc();
-    $idOfPersonToInvite = $rowFindPerson['ID'];
+    if(isset($rowFindPerson['ID'])){
+        $idOfPersonToInvite = $rowFindPerson['ID'];
+    }else{
+        $invitePerson = FALSE;
+        echo "<script>alert('Invitation failed: The given email does not match with any user.')</script>";
+    }
+
 
     // finding id of team
 
@@ -90,7 +99,24 @@ if(isset($_POST['saveInvitePerson'])){
     $rowFindTeam = $resultFindTeam->fetch_assoc();
     $idOfTeamToInvite = $rowFindTeam['ID'];
 
+    // checking if person is already invited
+    if($invitePerson){
+        $queryToCheckIsInvited = "SELECT PERSON_ID, TEAM_ID FROM person_is_in_team WHERE PERSON_ID = '$idOfPersonToInvite' AND TEAM_ID = '$idOfTeamToInvite'";
+        $resultCheckInvited = $conn->query($queryToCheckIsInvited);
+
+        $rowCheckIsInvited = $resultCheckInvited->fetch_assoc();
+        if(isset($rowCheckIsInvited['PERSON_ID'])){
+            $invitePerson = FALSE;
+            echo "<script>alert('Invitation failed: The user is already member of the team or is invited to become member of the team')</script>";
+        }
+    }
+
+
     $emailInviteLen = strlen($emailInvite) <= 200;
+
+    if(!$emailInviteLen){
+        echo "<script>alert('Invitation failed: The maximum length of email is 200 characters.')</script>";
+    }
 
     $isAdmin = '0';
 
@@ -98,12 +124,49 @@ if(isset($_POST['saveInvitePerson'])){
         $isAdmin = '1';
     }
 
-    if($emailInviteLen){
+    if($emailInviteLen && $invitePerson){
         $queryInviteMember = "INSERT INTO person_is_in_team (PERSON_ID, TEAM_ID, isAdmin) VALUES 
         ('$idOfPersonToInvite', '$idOfTeamToInvite', '$isAdmin')";
 
         if($conn->query($queryInviteMember) === FALSE){
-            echo "Something went wrong.";
+            echo "<script>alert('Invitation failed: please check your information.')</script>";
+        }
+    }
+}
+
+// Actions for button submit to accept the invite of team
+
+if(isset($_POST['buttonAcceptInviteTeam'])){
+    $idOfTeamPost = $_POST['keyIdTeam'];
+
+    $queryAcceptInvite = "UPDATE person_is_in_team SET status_of_invitation = 'accepted' WHERE PERSON_ID = '$idOfPerson' AND TEAM_ID = '$idOfTeamPost'";
+
+    if($conn->query($queryAcceptInvite) === TRUE){
+        header("Refresh:0");
+    }
+}
+
+// Actions for button submit to reject the invite of team
+
+if(isset($_POST['buttonRejectInviteTeam'])){
+    $idOfTeamPost = $_POST['keyIdTeam'];
+
+    $queryRejectInvite = "UPDATE person_is_in_team SET status_of_invitation = 'rejected' WHERE PERSON_ID = '$idOfPerson' AND TEAM_ID = '$idOfTeamPost'";
+
+    if($conn->query($queryRejectInvite) === TRUE){
+        if($conn->query("DELETE FROM person_is_in_team WHERE PERSON_ID = '$idOfPerson' AND TEAM_ID = '$idOfTeamPost';")){
+            header("Refresh:0");
+        }
+    }
+}
+
+// Actions when admin deletes a team
+
+if(isset($_POST['deleteTeam'])){
+    $idOfTeamToDelete = $_POST['keyIdTeam'];
+    if($conn->query("DELETE FROM person_is_in_team WHERE TEAM_ID = '$idOfTeamToDelete';")){
+        if($conn->query("DELETE FROM team WHERE ID = '$idOfTeamToDelete';")){
+            header("Refresh:0");
         }
     }
 }
@@ -197,14 +260,33 @@ function test_data($data){
 
     <div class="w3-container teams-invites" id="invitesTeams">
         <h3 class="w3-border-bottom">Invites</h3><br>
-        <div class="w3-container w3-border w3-padding-16">
-            <label id="labelInviteDoc">User is inviting you to edit a document</label><br>
-            <button id="buttonAcceptInviteDoc" class="w3-button w3-margin-top w3-green transmission">Accept</button>
-            <button id="buttonDeclineInviteDoc" class="w3-button w3-margin-top w3-red transmission">Decline</button>
-        </div><br>
+
+        <?php
+        $queryFindAllTeamInvites = "SELECT TEAM_ID FROM person_is_in_team WHERE PERSON_ID = '$idOfPerson' AND status_of_invitation = 'pending';";
+        $findAllTeamInvitesResult = $conn->query($queryFindAllTeamInvites);
+
+        while($rowTeamInvites = $findAllTeamInvitesResult->fetch_assoc()){
+            ?>
+            <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" class="w3-container w3-border w3-padding-16">
+            <?php
+            $idOfTeamInvite = $rowTeamInvites['TEAM_ID'];
+            $findNameOfTeamInvite = $conn->query("SELECT name FROM team WHERE ID = '$idOfTeamInvite'");
+            $rowNameOfTeamInvite = $findNameOfTeamInvite->fetch_assoc();
+            $nameOfTeamInvite = $rowNameOfTeamInvite['name'];
+
+            echo "<label>$nameOfTeamInvite team is inviting you to join the team</label><br>
+            <button type=\"submit\" name=\"buttonAcceptInviteTeam\"
+                    class=\"w3-button w3-margin-top w3-green transmission\">Accept</button>
+            <button type=\"submit\" name=\"buttonRejectInviteTeam\"
+                    class=\"w3-button w3-margin-top w3-red transmission\">Reject</button>
+                    <input type=\"hidden\"  name=\"keyIdPerson\" value=\"$idOfPerson\" />
+                    <input type=\"hidden\"  name=\"keyIdTeam\" value=\"$idOfTeamInvite\" />
+            </form><br>";
+        }
+        ?>
 
         <div class="w3-container w3-border w3-padding-16">
-            <label id="labelInviteTeam">Test team is inviting you to join the team</label><br>
+            <label id="labelInviteTeam">User is inviting you to edit a document</label><br>
             <button id="buttonAcceptInviteTeam" class="w3-button w3-margin-top w3-green transmission">Accept</button>
             <button id="buttonDeclineInviteTeam" class="w3-button w3-margin-top w3-red transmission">Decline</button>
         </div>
@@ -213,13 +295,21 @@ function test_data($data){
 
         <button id="createNewTeam" onclick="showAndHide('formCreateTeam', 'fontCreateTeam')"
                 class="w3-button w3-border w3-border-blue w3-hover-blue w3-round transmission">Create a new team
-            <i id="fontCreateTeam" class="fa fa-plus"></i></button><br><br>
+            <i id="fontCreateTeam" class="fa fa-plus"></i></button>
 
 
         <?php
         for($i=0; $i < count($allTeamsNames) ; $i++){
 
-            $queryFindMembersIds = "SELECT PERSON_ID, isAdmin FROM person_is_in_team WHERE TEAM_ID = (SELECT id FROM team WHERE name = '$allTeamsNames[$i]')";
+            // finding the id of team that clicked to open the modal
+            $idOfTeamModalResult = $conn->query("SELECT id FROM team WHERE name = '$allTeamsNames[$i]'");
+            $rowIdOfTeamModal = $idOfTeamModalResult->fetch_assoc();
+            $idOfTeamModal = $rowIdOfTeamModal['id'];
+
+            //Getting all members of the team that accepted tha invitation or the invitation is on pending status
+            $queryFindMembersIds = "SELECT PERSON_ID, isAdmin, status_of_invitation FROM person_is_in_team WHERE 
+                                                       TEAM_ID = '$idOfTeamModal'
+                                                   AND (status_of_invitation = 'accepted' OR status_of_invitation = 'pending');";
             $resultFindMembersIds = $conn->query($queryFindMembersIds);?>
             <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" class="w3-container inputProfile" id="invitePersonForm">
                 <?php
@@ -235,12 +325,20 @@ function test_data($data){
 
                     <input style=\"display: block;\" class=\"w3-input w3-border w3-margin-top\" type=\"email\"
                            placeholder=\"Type the email of the person that you want to invite\"
-                           id=\"emailTeamMember\" name=\"emailTeamMember\" required>
+                           id=\"emailTeamMember\" name=\"emailTeamMember\" required>";
 
-                    <input class=\"w3-check w3-margin-top\" id=\"adminCheck\" name=\"adminCheck\" type=\"checkbox\">
-                    <label for=\"adminCheck\">Admin of team</label><br><br>
+                    // checking if signed in person is admin of team to add the checkbox for admin option.
+
+                    $queryFindIfPersonIsAdmin = "SELECT isAdmin FROM person_is_in_team WHERE PERSON_ID = '$idOfPerson' AND TEAM_ID = '$idOfTeamModal';";
+                    $findIfPersonAdmin = $conn->query($queryFindIfPersonIsAdmin);
+                    $findIfPersonAdminRes = $findIfPersonAdmin->fetch_assoc();
+
+                    if($findIfPersonAdminRes['isAdmin'] === '1'){
+                        echo"<input class=\"w3-check w3-margin-top\" id=\"adminCheck\" name=\"adminCheck\" type=\"checkbox\">
+                    <label for=\"adminCheck\">Admin of team</label><br><br>";
+                    }
                     
-                    <input type=\"hidden\"  name=\"keyTeam\" value=\"$allTeamsNames[$i]\" />
+                    echo "<input type=\"hidden\"  name=\"keyTeam\" value=\"$allTeamsNames[$i]\" />
                     
                     <h3>Members</h3>
                     <table class=\"w3-table w3-border w3-centered w3-striped w3-margin-top\" id=\"tableInvitedPeople\">
@@ -249,8 +347,10 @@ function test_data($data){
                             <th>Surname</th>
                             <th>Email</th>
                             <th>Admin</th>
+                            <th>Invitation</th>
                         </tr> ";
 
+                    // adding all members in the table
                         while ($row = $resultFindMembersIds->fetch_assoc()) {
                             $memberId = $row['PERSON_ID'];
                             $queryFindNameOfMember = "SELECT name, surname, email FROM person WHERE id = '$memberId'";
@@ -264,8 +364,16 @@ function test_data($data){
 
                                 echo "<tr> <td>$nameMem</td> <td>$surnameMem</td> <td>$emailMem</td>
                                 <td>";
-                                if($row['isAdmin']) echo 'Yes'; else echo 'No';
-                                echo "</td></tr> ";
+                                if($row['isAdmin']) echo '<span class="w3-text-green">Yes</span>'; else echo '<span class="w3-text-red">No</span>';
+                                echo "</td> ";
+                                echo "<td>";
+                                if($row['status_of_invitation'] === 'accepted'){
+                                    //echo "<p class='w3-text-green'>Accepted</p>";
+                                    echo "<span class='w3-text-green'>Accepted</span>";
+                                }else{
+                                    echo "<span class='w3-text-orange'>Pending</span>";
+                                }
+                                echo "</td> </tr>";
                             }
                         }
 
@@ -330,15 +438,42 @@ function test_data($data){
             <tr>
                 <th>Team</th>
                 <th>Members</th>
+                <th>Delete</th>
             </tr>
 
             <?php
 
             for($i = 0; $i < count($allTeamsNames) ; $i++) {
 
+                // finding the id of team
+                $idOfTeamTable = $conn->query("SELECT id FROM team WHERE name = '$allTeamsNames[$i]'");
+                $rowIdOfTeamTable = $idOfTeamTable->fetch_assoc();
+                $idOfTeam = $rowIdOfTeamTable['id'];
+
+                // checking if signed in person is admin of team to add delete button.
+
+                $queryFindIfPersonIsAdminTable = "SELECT isAdmin FROM person_is_in_team WHERE PERSON_ID = '$idOfPerson' AND TEAM_ID = '$idOfTeam';";
+                $findIfPersonAdminTable = $conn->query($queryFindIfPersonIsAdminTable);
+                $findIfPersonAdminTableRes = $findIfPersonAdminTable->fetch_assoc();
+
                 echo "<tr> " . "<td>$allTeamsNames[$i]</td> ";
                 echo "<td><button class=\"w3-button w3-border transmission\" onclick=\"showElement('$allTeamsNames[$i]-modal')\" id=\"$allTeamsNames[$i]\" type=\"button\"
-                                    name=\"$allTeamsNames[$i]\"><i class=\"fa fa-users\"></i></button></td> </tr>";
+                                    name=\"$allTeamsNames[$i]\"><i class=\"fa fa-users\"></i></button></td>";
+                if($findIfPersonAdminTableRes['isAdmin'] === '1'){
+                    ?>
+                <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+                <?php
+                    echo "<td><button class=\"w3-button w3-border transmission\" 
+                          onclick=\"return confirm('Are you sure that you want to delete $allTeamsNames[$i] team?')\" type=\"submit\"
+                                    name=\"deleteTeam\"><i class=\"fa fa-trash\"></i></button>
+                                    <input type=\"hidden\"  name=\"keyIdTeam\" value=\"$idOfTeam\" /></td>";
+
+                }else{
+                    echo "<td><button class=\"w3-button w3-border transmission\" type=\"button\"
+                                    name=\"deleteTeamDisabled\" disabled><i class=\"fa fa-trash\"></i></button></td>";
+                }
+                echo "</form>";
+                echo "</tr>";
             }
 
             ?>
