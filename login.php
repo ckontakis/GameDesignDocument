@@ -2,10 +2,8 @@
 	if (session_status() == PHP_SESSION_NONE) {
     	session_start();
 	}
-	if ($_SESSION['logged_in']==true) {
-		header('Location: index.php');
-	}	
-	$con = mysqli_connect("webpagesdb.it.auth.gr:3306","thesis2021","Thesis2021*","thesis2021"); 
+	
+	$con = mysqli_connect("localhost","root","","thesis"); 
 	mysqli_set_charset($con,"utf8");
 	if($con === false){
 		die("ERROR: Could not connect. " . mysqli_connect_error());
@@ -25,7 +23,7 @@
 				session_start();
 				$_SESSION['id']=$row['ID'];
 				mysqli_close($con);
-				header('Location: index.php');
+				header('Location: index.html');
 				$_SESSION['logged_in'] = true;
 			}
 			else{
@@ -54,8 +52,8 @@
         <a href="write.html" class="w3-bar-item w3-button">Write GDD</a>
         <a href="contact.html" class="w3-bar-item w3-button">Contact</a>
         <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
-        <a href="register.html" class="w3-bar-item w3-button w3-teal w3-right">Register</a>
-        <a href="login.html" class="w3-bar-item w3-button w3-teal w3-right"><b>Login</b></a>
+        <a href="register.php" class="w3-bar-item w3-button w3-teal w3-right">Register</a>
+        <a href="login.php" class="w3-bar-item w3-button w3-teal w3-right"><b>Login</b></a>
     </div>
 
 	 <div class="w3-sidebar w3-blue w3-bar-block w3-border-right w3-animate-left" id="sideBar" style="display: none;">
@@ -71,14 +69,17 @@
 	 <button class="w3-button w3-blue w3-xlarge showSideBar" onclick="showElement('sideBar')"><i class="fa fa-bars"></i></button>
 
 <div class="container">
-	<input type="text" placeholder="Enter Email" name="email" required>
-	<input type="password" placeholder="Enter Password" id="psw" name="psw" required>
+	<form id="login-form" class="form" action="login.php" method="POST">
 
-	<input id="labelShow" class="w3-check w3-margin-top" type="checkbox" onclick="showPassword('psw')">
-	<label for="labelShow">Show password</label><br><br>
+		<input type="text" placeholder="Enter Email" name="email" required>
+		<input type="password" placeholder="Enter Password" id="psw" name="psw" required>
 
-	<button type="submit">Login</button>
-	<a href="register.html">Don't have an account?</a>
+		<input id="labelShow" class="w3-check w3-margin-top" type="checkbox" onclick="showPassword('psw')">
+		<label for="labelShow">Show password</label><br><br>
+
+		<button type="submit" name="submit" value="Submit">Login</button>
+		<a href="register.php">Don't have an account?</a>
+	</form>
 </div>
 
 
