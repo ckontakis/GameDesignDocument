@@ -3,11 +3,15 @@
     	session_start();
 	}
 	
-	$con = mysqli_connect("localhost","root","","thesis"); 
+	$con = mysqli_connect("localhost","root","","thesis2021");
 	mysqli_set_charset($con,"utf8");
 	if($con === false){
 		die("ERROR: Could not connect. " . mysqli_connect_error());
 	}
+
+	if(isset($_SESSION['logged_in'])){
+	    header('Location:index.php');
+    }
 	$error="";
 	if(isset($_POST['submit'])){
 		$email= $_POST['email'];
@@ -23,7 +27,7 @@
 				session_start();
 				$_SESSION['id']=$row['ID'];
 				mysqli_close($con);
-				header('Location: index.html');
+				header('Location: index.php');
 				$_SESSION['logged_in'] = true;
 			}
 			else{
@@ -48,9 +52,9 @@
 	
 <body>
 	 <div class="w3-bar w3-blue w3-border showBar">
-        <a href="index.html" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
-        <a href="write.html" class="w3-bar-item w3-button">Write GDD</a>
-        <a href="contact.html" class="w3-bar-item w3-button">Contact</a>
+        <a href="index.php" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
+        <a href="write.php" class="w3-bar-item w3-button">Write GDD</a>
+        <a href="contact.php" class="w3-bar-item w3-button">Contact</a>
         <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
         <a href="register.php" class="w3-bar-item w3-button w3-teal w3-right">Register</a>
         <a href="login.php" class="w3-bar-item w3-button w3-teal w3-right"><b>Login</b></a>
@@ -58,12 +62,12 @@
 
 	 <div class="w3-sidebar w3-blue w3-bar-block w3-border-right w3-animate-left" id="sideBar" style="display: none;">
 		 <button onclick="hideElement('sideBar')" class="w3-bar-item w3-large">Close <i class="fa fa-close"></i></button>
-		 <a href="index.html" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
-		 <a href="write.html" class="w3-bar-item w3-button">Write GDD</a>
-		 <a href="contact.html" class="w3-bar-item w3-button">Contact</a>
+		 <a href="index.php" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
+		 <a href="write.php" class="w3-bar-item w3-button">Write GDD</a>
+		 <a href="contact.php" class="w3-bar-item w3-button">Contact</a>
 		 <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
-		 <a href="register.html" class="w3-bar-item w3-button w3-teal w3-right">Register</a>
-		 <a href="login.html" class="w3-bar-item w3-button w3-teal w3-right"><b>Login</b></a>
+		 <a href="register.php" class="w3-bar-item w3-button w3-teal w3-right">Register</a>
+		 <a href="login.php" class="w3-bar-item w3-button w3-teal w3-right"><b>Login</b></a>
 	 </div>
 
 	 <button class="w3-button w3-blue w3-xlarge showSideBar" onclick="showElement('sideBar')"><i class="fa fa-bars"></i></button>

@@ -20,7 +20,8 @@ if(isset($_POST['submit'])) {
     $messageLen = strlen($email) <= 200;
 
     if($nameLen && $surnameLen && $emailLen && $messageLen){
-        $query = "INSERT INTO contact (name, surname, email, message) VALUES ('$name', '$surname', '$email', '$message')";
+        $dateToSubmit = date("Y-m-d");
+        $query = "INSERT INTO contact (name, surname, email, message, date) VALUES ('$name', '$surname', '$email', '$message', '$dateToSubmit')";
 
         if($conn->query($query) === TRUE){
             $showDivSuccess = TRUE;
@@ -51,22 +52,50 @@ function test_data($data){
 <link rel="stylesheet" href="css/main.css">
 <body>
 <div class="w3-bar w3-blue showBar">
-    <a href="index.html" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
-    <a href="write.html" class="w3-bar-item w3-button">Write GDD</a>
+    <a href="index.php" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
+    <a href="write.php" class="w3-bar-item w3-button">Write GDD</a>
     <a href="contact.php" class="w3-bar-item w3-button w3-indigo"><b>Contact</b></a>
     <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
-    <a href="register.php" class="w3-bar-item w3-button w3-teal w3-right">Register</a>
-    <a href="login.html" class="w3-bar-item w3-button w3-teal w3-right">Login</a>
+    <?php
+    // if user is logged in we show settings button and logout button
+    if(isset($_SESSION["logged_in"])){
+        echo "<div class=\"w3-dropdown-hover w3-right\">
+        <button class=\"w3-button\">Profile <i class=\"fa fa-user-circle\"></i></button>
+        <div class=\"w3-dropdown-content w3-bar-block w3-border\">
+            <a href=\"profile.php\" class=\"w3-bar-item w3-button\">Settings</a>
+            <a href=\"logout.php\" class=\"w3-bar-item w3-button\">Logout</a>
+        </div>
+    </div>";
+    }else{
+        // else we show register and login button
+        echo "<a href=\"register.php\" class=\"w3-bar-item w3-button w3-teal w3-right\">Register</a>
+              <a href=\"login.php\" class=\"w3-bar-item w3-button w3-teal w3-right\">Login</a>";
+    }
+    ?>
 </div>
 
 <div class="w3-sidebar w3-blue w3-bar-block w3-border-right w3-animate-left" id="sideBar" style="display: none;">
     <button onclick="hideElement('sideBar')" class="w3-bar-item w3-large">Close <i class="fa fa-close"></i></button>
-    <a href="index.html" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
-    <a href="write.html" class="w3-bar-item w3-button">Write GDD</a>
+    <a href="index.php" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
+    <a href="write.php" class="w3-bar-item w3-button">Write GDD</a>
     <a href="contact.php" class="w3-bar-item w3-button w3-indigo"><b>Contact</b></a>
     <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
-    <a href="register.php" class="w3-bar-item w3-button w3-teal w3-right">Register</a>
-    <a href="login.html" class="w3-bar-item w3-button w3-teal w3-right">Login</a>
+    <?php
+    // if user is logged in we show settings button and logout button
+    if(isset($_SESSION["logged_in"])){
+        echo "<div class=\"w3-dropdown-hover w3-right\">
+        <button class=\"w3-button\">Profile <i class=\"fa fa-user-circle\"></i></button>
+        <div class=\"w3-dropdown-content w3-bar-block w3-border\">
+            <a href=\"profile.php\" class=\"w3-bar-item w3-button\">Settings</a>
+            <a href=\"logout.php\" class=\"w3-bar-item w3-button\">Logout</a>
+        </div>
+    </div>";
+    }else{
+        // else we show register and login button
+        echo "<a href=\"register.php\" class=\"w3-bar-item w3-button w3-teal w3-right\">Register</a>
+              <a href=\"login.php\" class=\"w3-bar-item w3-button w3-teal w3-right\">Login</a>";
+    }
+    ?>
 </div>
 
 <button class="w3-button w3-blue w3-xlarge showSideBar" onclick="showElement('sideBar')"><i class="fa fa-bars"></i></button>

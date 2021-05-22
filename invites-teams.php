@@ -3,7 +3,11 @@
 require 'connect.php';
 $conn = $_SESSION["conn"]; // variable that connected to database
 
-$idOfPerson = '1';
+if(!isset($_SESSION['logged_in'])){
+    header("Location:login.php");
+}
+
+$idOfPerson = $_SESSION['id'];
 
 $showModal = FALSE;
 $clickedModalIdTeam = "";
@@ -30,7 +34,6 @@ while ($row = $teamsIdResult->fetch_assoc()) {
     $nameOfTeamFinal =  $findNameOfTeam['name'];
     array_push($allTeamsNames, $nameOfTeamFinal);
 }
-
 
 if(isset($_POST['saveCreateTeam'])){
     $nameOfTeam = test_data($_POST['nameTeam']);
@@ -165,12 +168,12 @@ if(isset($_POST['buttonRejectInviteTeam'])){
 if(isset($_POST['deleteTeam'])){
     $idOfTeamToDelete = $_POST['keyIdTeam'];
     if($conn->query("DELETE FROM person_is_in_team WHERE TEAM_ID = '$idOfTeamToDelete';")){
-        if($conn->query("DELETE FROM team WHERE ID = '$idOfTeamToDelete';")){
-            header("Refresh:0");
-        }
+        //if($conn->query("DELETE FROM team_edits_document WHERE TEAM_ID = '$idOfTeamToDelete'")){
+            if($conn->query("DELETE FROM team WHERE ID = '$idOfTeamToDelete';")){
+                header("Refresh:0");
+            }
     }
 }
-
 
 /*
  * Function to filter data.
@@ -219,43 +222,63 @@ function test_data($data){
 <body>
 
 <div class="w3-bar w3-blue showBar">
-    <a href="index.html" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
-    <a href="write.html" class="w3-bar-item w3-button">Write GDD</a>
+    <a href="index.php" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
+    <a href="write.php" class="w3-bar-item w3-button">Write GDD</a>
     <a href="contact.php" class="w3-bar-item w3-button">Contact</a>
     <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
     <div class="w3-dropdown-hover w3-right">
         <button class="w3-button"><b>Profile</b> <i class="fa fa-user-circle"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
-            <a href="invites-teams.php" class="w3-bar-item w3-button">Settings</a>
-            <button class="w3-bar-item w3-button">Logout</button>
+            <a href="profile.php" class="w3-bar-item w3-button">Settings</a>
+            <a href="logout.php" class="w3-bar-item w3-button">Logout</a>
         </div>
     </div>
 </div>
 
 <div class="w3-sidebar w3-blue w3-bar-block w3-border-right w3-animate-left" id="sideBar" style="display: none;">
     <button onclick="hideElement('sideBar')" class="w3-bar-item w3-large">Close <i class="fa fa-close"></i></button>
-    <a href="index.html" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
-    <a href="write.html" class="w3-bar-item w3-button">Write GDD</a>
+    <a href="index.php" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
+    <a href="write.php" class="w3-bar-item w3-button">Write GDD</a>
     <a href="contact.php" class="w3-bar-item w3-button">Contact</a>
     <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
     <div class="w3-dropdown-hover w3-right">
         <button class="w3-button"><b>Profile</b> <i class="fa fa-user-circle"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
-            <a href="invites-teams.php" class="w3-bar-item w3-button">Settings</a>
-            <button class="w3-bar-item w3-button">Logout</button>
+            <a href="profile.php" class="w3-bar-item w3-button">Settings</a>
+            <a href="logout.php" class="w3-bar-item w3-button">Logout</a>
         </div>
     </div>
 </div>
 
 <button class="w3-button w3-blue w3-xlarge showSideBar" onclick="showElement('sideBar')"><i class="fa fa-bars"></i></button>
 
+<?php
+
+/*
+ * Checking if logged in user is administrator of the website
+ */
+$queryPersonIsAdminOfSite = "SELECT administrator FROM person WHERE ID = '$idOfPerson';";
+$personIsAdminOfSiteRes = $conn->query($queryPersonIsAdminOfSite);
+$rowPersonIsAdminOfSite = $personIsAdminOfSiteRes->fetch_assoc();
+
+$personIsAdminOfSite = $rowPersonIsAdminOfSite['administrator'];
+?>
+
 <div class="w3-container w3-border w3-padding-16 personalInfo">
     <div class="w3-container w3-center w3-left w3-border-right w3-border-bottom w3-padding-16">
         <button id="buttonPersonalInfo" class="w3-button w3-border w3-round w3-border-blue w3-hover-blue transmission"
                 onclick="window.location.href = 'profile.php'">
-            Personal information</button><br><br>
+            Personal Information</button><br><br>
         <button id="buttonTeamsInvites" class="w3-button w3-border w3-round w3-border-blue w3-blue w3-hover-blue transmission">
             Invites and Teams</button>
+        <?php
+        if($personIsAdminOfSite === '1'){
+            echo "<br><br>";
+            echo "<button id=\"buttonContactMess\" class=\"w3-button w3-border w3-round w3-border-blue w3-hover-blue transmission\"
+                onclick=\"window.location.href = 'contact-messages.php'\">
+            Contact Messages</button>";
+        }
+        ?>
     </div>
 
     <div class="w3-container teams-invites" id="invitesTeams">
@@ -304,7 +327,12 @@ function test_data($data){
             // finding the id of team that clicked to open the modal
             $idOfTeamModalResult = $conn->query("SELECT id FROM team WHERE name = '$allTeamsNames[$i]'");
             $rowIdOfTeamModal = $idOfTeamModalResult->fetch_assoc();
-            $idOfTeamModal = $rowIdOfTeamModal['id'];
+
+            if(isset($rowIdOfTeamModal['id'])){
+                $idOfTeamModal = $rowIdOfTeamModal['id'];
+            }else{
+                continue;
+            }
 
             //Getting all members of the team that accepted tha invitation or the invitation is on pending status
             $queryFindMembersIds = "SELECT PERSON_ID, isAdmin, status_of_invitation FROM person_is_in_team WHERE 
@@ -321,11 +349,11 @@ function test_data($data){
                   
                     <h3 class=\"headerForModal\">Invite a person</h3><br>
 
-                    <label for=\"emailTeamMember\" class=\"w3-margin-top\" id=\"labelEmailMem\">Invite a person to your team</label><br>
+                    <label for=\"emailTeamMember$allTeamsNames[$i]\" class=\"w3-margin-top\" id=\"labelEmailMem\">Invite a person to your team</label><br>
 
                     <input style=\"display: block;\" class=\"w3-input w3-border w3-margin-top\" type=\"email\"
                            placeholder=\"Type the email of the person that you want to invite\"
-                           id=\"emailTeamMember\" name=\"emailTeamMember\" required>";
+                           id=\"emailTeamMember$allTeamsNames[$i]\" name=\"emailTeamMember\" required>";
 
                     // checking if signed in person is admin of team to add the checkbox for admin option.
 
@@ -388,8 +416,7 @@ function test_data($data){
         </div>";
         }
         ?>
-
-        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+        <form class="w3-margin-top" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
             <div class="w3-container w3-border w3-padding-16 w3-animate-opacity" id="formCreateTeam">
 
                 <label for="nameTeam" class="w3-margin-top" id="labelNameTeam">Type the name of the team *</label>
@@ -447,8 +474,13 @@ function test_data($data){
 
                 // finding the id of team
                 $idOfTeamTable = $conn->query("SELECT id FROM team WHERE name = '$allTeamsNames[$i]'");
-                $rowIdOfTeamTable = $idOfTeamTable->fetch_assoc();
-                $idOfTeam = $rowIdOfTeamTable['id'];
+
+                if($rowIdOfTeamTable = $idOfTeamTable->fetch_assoc()){
+                    $idOfTeam = $rowIdOfTeamTable['id'];
+                }else{
+                    continue;
+                }
+
 
                 // checking if signed in person is admin of team to add delete button.
 
@@ -475,10 +507,8 @@ function test_data($data){
                 echo "</form>";
                 echo "</tr>";
             }
-
             ?>
         </table><br>
-
     </div>
 </div>
 </body>

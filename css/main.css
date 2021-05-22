@@ -168,6 +168,16 @@ Style for team and invites elements in profile page
 }
 
 /*
+Style for contact messages page
+ */
+.contact-messages{
+     text-align: center;
+     margin-left: 15%;
+     margin-right: 15%;
+     margin-bottom: 1%;
+}
+
+/*
 Style for input email of member in profile page
  */
 .inputEmailMember{
