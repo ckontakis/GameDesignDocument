@@ -1,3 +1,75 @@
+<?php
+
+require '../connect.php'; // connecting to database
+$conn = $_SESSION["conn"]; // variable that connected to database
+
+// If user is not logged in then we redirect user to login page
+if(!isset($_SESSION['logged_in'])){
+    header("Location:../login.php");
+}
+
+$idOfPerson = $_SESSION['id']; // getting the id of user if is logged in
+
+/*
+ Getting the id of the document with the GET method for the Game Elements page. If there is no id of document we
+ redirect user to write page
+*/
+if(isset($_GET['id'])){
+    $idOfDocument = $_GET['id']; // gets id of document
+}else{
+    header("Location:../write.php"); // redirects user to write page
+}
+
+/*
+ * Checking if user does not have access to the document that is typing at the url. If user does not have access
+ * we redirect user to write page
+ */
+if($resultAccessDoc = $conn->query("SELECT * from person_edits_document WHERE PERSON_ID = '$idOfPerson' AND DOCUMENT_ID = '$idOfDocument' 
+                                      AND status_of_invitation = 'accepted';")){
+    if($resultAccessDoc->num_rows === 0){
+        header('Location:../write.php');
+    }
+}else{
+    header("Location:../write.php");
+}
+
+/*
+ * Getting the id of Game Elements to connect elements (e.g character, location) with game elements of the document.
+ * If there is a problem with the execution of queries we redirect user to write page.
+ */
+if($resultInfoDoc = $conn->query("SELECT * from document WHERE ID = '$idOfDocument';")){
+    if($resultInfoDoc->num_rows === 1){
+        $rowInfoDoc = $resultInfoDoc->fetch_assoc();
+
+        if(isset($rowInfoDoc['WORLD_BUILDING_ID'])){
+            $worldBuildingId = $rowInfoDoc['WORLD_BUILDING_ID'];
+
+            if($resultInfoWorldBuilding = $conn->query("SELECT * from world_building WHERE ID = '$worldBuildingId';")){
+                if($resultInfoWorldBuilding->num_rows === 1){
+                    $rowInfoWorldBuilding = $resultInfoWorldBuilding->fetch_assoc();
+
+                    if(isset($rowInfoWorldBuilding['GAME_ELEMENTS_ID'])){
+                        $gameElementsId = $rowInfoWorldBuilding['GAME_ELEMENTS_ID'];
+                    }else{
+                        header("Location:../write.php");
+                    }
+                }
+            }else{
+                header("Location:../write.php");
+            }
+        }else{
+            header("Location:../write.php");
+        }
+
+    }else{
+        header("Location:../write.php");
+    }
+}
+
+
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,31 +84,33 @@
 <link rel="stylesheet" href="../css/main.css">
 
 <body>
+
 <div class="w3-bar w3-blue showBar">
-    <a href="../index.html" class="w3-bar-item w3-button"><img src="../Images/favicon-new.ico" alt="logo"> Start Page</a>
-    <a href="../write.html" class="w3-bar-item w3-button">Write GDD</a>
+    <a href="../index.php" class="w3-bar-item w3-button"><img src="../Images/favicon-new.ico" alt="logo"> Start Page</a>
+    <a href="../write.php" class="w3-bar-item w3-button">Write GDD</a>
     <a href="../contact.php" class="w3-bar-item w3-button">Contact</a>
     <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
     <div class="w3-dropdown-hover w3-right">
-        <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
+        <button class="w3-button"><b>Profile</b> <i class="fa fa-user-circle"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
             <a href="../profile.php" class="w3-bar-item w3-button">Settings</a>
-            <button class="w3-bar-item w3-button">Logout</button>
+            <a href="../logout.php" class="w3-bar-item w3-button">Logout</a>
         </div>
     </div>
 </div>
 
+
 <div class="w3-sidebar w3-blue w3-bar-block w3-border-right w3-animate-left" id="sideBar" style="display: none;">
     <button onclick="hideElement('sideBar')" class="w3-bar-item w3-large">Close <i class="fa fa-close"></i></button>
-    <a href="../index.html" class="w3-bar-item w3-button"><img src="../Images/favicon-new.ico" alt="logo"> Start Page</a>
-    <a href="../write.html" class="w3-bar-item w3-button">Write GDD</a>
+    <a href="../index.php" class="w3-bar-item w3-button"><img src="../Images/favicon-new.ico" alt="logo"> Start Page</a>
+    <a href="../write.php" class="w3-bar-item w3-button">Write GDD</a>
     <a href="../contact.php" class="w3-bar-item w3-button">Contact</a>
     <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
     <div class="w3-dropdown-hover w3-right">
-        <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
+        <button class="w3-button"><b>Profile</b> <i class="fa fa-user-circle"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
             <a href="../profile.php" class="w3-bar-item w3-button">Settings</a>
-            <button class="w3-bar-item w3-button">Logout</button>
+            <a href="../logout.php" class="w3-bar-item w3-button">Logout</a>
         </div>
     </div>
 </div>
@@ -44,13 +118,42 @@
 <button class="w3-button w3-blue w3-xlarge showSideBar" onclick="showElement('sideBar')"><i class="fa fa-bars"></i></button>
 
 <div class="w3-container pathPosition">
-    <a href="../write.html" class="w3-hover-text-blue">Write GDD</a>
+    <a href="../write.php" class="w3-hover-text-blue">Write GDD</a>
     <i class="fa fa-angle-double-right"></i>
-    <a href="GameElementsWorld.html" class="w3-hover-text-blue">Game Elements</a>
+    <a href="GameElementsWorld.php?id=<?php if(isset($idOfDocument)) echo $idOfDocument ?>" class="w3-hover-text-blue">Game Elements</a>
 </div>
 
 <div class="w3-container w3-blue panelInFormWorld">
     <h3 class="headerPanel">Fill the characteristics for game elements</h3>
+</div>
+
+<!--- Content of characters modal -->
+<div id="characters-modal" class="w3-modal">
+    <div class="w3-modal-content w3-animate-zoom">
+        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" class="w3-container" style="text-align: center;">
+                <span onclick="hideElement('characters-modal')" class="w3-button w3-display-topright w3-hover-red">
+                        <i class="fa fa-close"></i></span>
+            <h3 class="headerForModal">Add a character</h3><br>
+
+            <label for="imgChar" class="w3-margin-top" id="labelImChar">Choose an image of the character</label><br>
+            <input type="file" id="imgChar" class="w3-margin-top" name="imgChar" accept="image/*"><br><br>
+
+            <label for="charAdd" class="w3-margin-top">Write the name of the character *</label>
+            <input class="w3-input w3-border w3-margin-top" type="text" id="charAdd" name="charAdd" required><br>
+
+            <label for="charType" class="w3-margin-top">Write the type of the character *</label>
+            <input class="w3-input w3-border w3-margin-top" type="text" id="charType" name="charType"
+                   placeholder="e.g human, animal" required><br>
+
+            <label for="charDescription">Describe the character</label>
+            <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="charDescription"
+                      name="charDescription"></textarea><br>
+            <div class="w3-container w3-padding-16">
+                <button class="w3-button w3-green transmission" id="saveCharacter" type="submit"
+                        name="saveCharacter">Save</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <form class="w3-container w3-border w3-hover-shadow w3-padding-16 formWorldBuilding">
@@ -62,33 +165,6 @@
     w3-border-blue w3-hover-blue w3-margin-left transmission" id="characters" type="button" name="characters">
         <i class="fa fa-plus"></i></button><br><br>
 
-    <div id="characters-modal" class="w3-modal">
-        <div class="w3-modal-content w3-animate-zoom">
-            <div class="w3-container">
-                <span onclick="hideElement('characters-modal')" class="w3-button w3-display-topright w3-hover-red">
-                    <i class="fa fa-close"></i></span>
-                <h3 class="headerForModal">Add a character</h3><br>
-
-                <label for="imgChar" class="w3-margin-top" id="labelImChar">Choose an image of the character</label><br>
-                <input type="file" id="imgChar" class="w3-margin-top" name="imgChar" accept="image/*"><br><br>
-
-                <label for="charAdd" class="w3-margin-top">Write the name of the character *</label>
-                <input class="w3-input w3-border w3-margin-top" type="text" id="charAdd" name="charAdd" required><br>
-
-                <label for="charType" class="w3-margin-top">Write the type of the character *</label>
-                <input class="w3-input w3-border w3-margin-top" type="text" id="charType" name="charType"
-                       placeholder="e.g human, animal" required><br>
-
-                <label for="charDescription">Describe the character</label>
-                <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="charDescription"
-                          name="charDescription"></textarea><br>
-                <div class="w3-container w3-padding-16">
-                    <button class="w3-button w3-green transmission" id="saveCharacter" type="submit"
-                            name="saveCharacter">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <label for="objects">Add objects that are in the game</label>
     <button onclick="showElement('objects-modal')" class="w3-button w3-circle w3-border
@@ -341,6 +417,101 @@
                 </table><br>
                 <div class="w3-container w3-padding-16">
                     <button class="w3-button w3-green transmission" id="saveScene" type="submit" name="saveScene">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <label for="objectives">Add an objective of the game</label>
+    <button onclick="showElement('objectives-modal')" class="w3-button w3-circle w3-border
+    w3-border-blue w3-hover-blue w3-margin-left transmission" id="objectives" type="button" name="objectives">
+        <i class="fa fa-plus"></i></button><br><br>
+
+    <div id="objectives-modal" class="w3-modal w3-padding-16">
+        <div class="w3-modal-content w3-animate-zoom">
+            <div class="w3-container">
+                <span onclick="hideElement('objectives-modal')" class="w3-button w3-display-topright w3-hover-red">
+                    <i class="fa fa-close"></i></span>
+                <h3 class="headerForModal">Add an objective</h3><br>
+
+                <label for="objTitle" class="w3-margin-top">Write the title of the objective *</label>
+                <input class="w3-input w3-border w3-margin-top" type="text" id="objTitle" name="objTitle" required><br>
+
+                <label for="objectiveDescription">Describe the objective</label>
+                <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="objectiveDescription"
+                          name="objDescription"></textarea><br>
+
+                <label>Add scenes of the objective</label>
+                <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableScenes">
+                    <tr>
+                        <th>Scenes</th>
+                        <th>Add</th>
+                    </tr>
+                    <tr>
+                        <td>Scene 1</td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="scene1" type="button"
+                                    name="btnAddScene"><i class="fa fa-plus"></i></button></td>
+                    </tr>
+                    <tr>
+                        <td>Scene 2</td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="scene2" type="button"
+                                    name="btnAddScene"><i class="fa fa-plus"></i></button></td>
+                    </tr>
+                    <tr>
+                        <td>Scene 3</td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="scene3" type="button"
+                                    name="btnAddScene"><i class="fa fa-plus"></i></button></td>
+                    </tr>
+                </table><br>
+
+                <label>Add other characters that take part in the objective</label>
+                <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableCharactersObjective">
+                    <tr>
+                        <th>Characters</th>
+                        <th>Add</th>
+                    </tr>
+                    <tr>
+                        <td>Character 1</td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="charObj1" type="button"
+                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
+                    </tr>
+                    <tr>
+                        <td>Character 2</td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="charObj2" type="button"
+                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
+                    </tr>
+                    <tr>
+                        <td>Character 3</td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="charObj3" type="button"
+                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
+                    </tr>
+                </table><br>
+
+                <label>Add other objects that are used for the objective</label>
+                <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableObjectsObjectives">
+                    <tr>
+                        <th>Objects</th>
+                        <th>Add</th>
+                    </tr>
+                    <tr>
+                        <td>Object 1</td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="objObjective1" type="button"
+                                    name="btnAddObj"><i class="fa fa-plus"></i></button></td>
+                    </tr>
+                    <tr>
+                        <td>Object 2</td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="objObjective2" type="button"
+                                    name="btnAddObj"><i class="fa fa-plus"></i></button></td>
+                    </tr>
+                    <tr>
+                        <td>Object 3</td>
+                        <td><button class="w3-button w3-green w3-circle transmission" id="objObjective3" type="button"
+                                    name="btnAddObj"><i class="fa fa-plus"></i></button></td>
+                    </tr>
+                </table><br>
+
+                <div class="w3-container w3-padding-16">
+                    <button class="w3-button w3-green transmission" id="saveObjective" type="submit" name="saveObjective">Save</button>
                 </div>
             </div>
         </div>

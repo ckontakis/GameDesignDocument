@@ -186,6 +186,16 @@ Style for input email of member in profile page
      vertical-align: middle;
 }
 
+/*
+Style for write-login page content
+*/
+.writeLogin{
+     margin-top: 15%;
+     margin-right: 20%;
+     margin-left: 20%;
+     text-align: center;
+}
+
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 991px) {
      .showSideBar{

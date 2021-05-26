@@ -130,6 +130,8 @@ function test_data($data){
     </div>
 </div>
 
+<button class="w3-button w3-blue w3-xlarge showSideBar" onclick="showElement('sideBar')"><i class="fa fa-bars"></i></button>
+
 <?php
 
 $queryPersonIsAdminOfSite = "SELECT administrator FROM person WHERE ID = '$idOfPerson';";
@@ -139,7 +141,6 @@ $rowPersonIsAdminOfSite = $personIsAdminOfSiteRes->fetch_assoc();
 $personIsAdminOfSite = $rowPersonIsAdminOfSite['administrator'];
 ?>
 
-<button class="w3-button w3-blue w3-xlarge showSideBar" onclick="showElement('sideBar')"><i class="fa fa-bars"></i></button>
 
 <div class="w3-container w3-border w3-padding-16 personalInfo">
     <div class="w3-container w3-center w3-left w3-border-right w3-border-bottom w3-padding-16">

@@ -1,3 +1,76 @@
+<?php
+
+require '../connect.php'; // connecting to database
+$conn = $_SESSION["conn"]; // variable that connected to database
+
+// If user is not logged in then we redirect user to login page
+if(!isset($_SESSION['logged_in'])){
+    header("Location:../login.php");
+}
+
+$idOfPerson = $_SESSION['id']; // getting the id of user if is logged in
+
+/*
+ Getting the id of the document with the GET method for the Game Elements page. If there is no id of document we
+ redirect user to write page
+*/
+if(isset($_GET['id'])){
+    $idOfDocument = $_GET['id']; // gets id of document
+}else{
+    header("Location:../write.php"); // redirects user to write page
+}
+
+/*
+ * Checking if user does not have access to the document that is typing at the url. If user does not have access
+ * we redirect user to write page
+ */
+if($resultAccessDoc = $conn->query("SELECT * from person_edits_document WHERE PERSON_ID = '$idOfPerson' AND DOCUMENT_ID = '$idOfDocument' 
+                                      AND status_of_invitation = 'accepted';")){
+    if($resultAccessDoc->num_rows === 0){
+        header('Location:../write.php');
+    }
+}else{
+    header("Location:../write.php");
+}
+
+/*
+ * Getting the id of Assets to connect elements (e.g music kind, track) with the assets of the document.
+ * If there is a problem with the execution of queries we redirect user to write page.
+ */
+if($resultInfoDoc = $conn->query("SELECT * from document WHERE ID = '$idOfDocument';")){
+    if($resultInfoDoc->num_rows === 1){
+        $rowInfoDoc = $resultInfoDoc->fetch_assoc();
+
+        if(isset($rowInfoDoc['WORLD_BUILDING_ID'])){
+            $worldBuildingId = $rowInfoDoc['WORLD_BUILDING_ID'];
+
+            if($resultInfoWorldBuilding = $conn->query("SELECT * from world_building WHERE ID = '$worldBuildingId';")){
+                if($resultInfoWorldBuilding->num_rows === 1){
+                    $rowInfoWorldBuilding = $resultInfoWorldBuilding->fetch_assoc();
+
+                    if(isset($rowInfoWorldBuilding['ASSETS_ID'])){
+                        $assetsId = $rowInfoWorldBuilding['ASSETS_ID'];
+                    }else{
+                        header("Location:../write.php");
+                    }
+                }
+            }else{
+                header("Location:../write.php");
+            }
+        }else{
+            header("Location:../write.php");
+        }
+
+    }else{
+        header("Location:../write.php");
+    }
+}
+
+
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,30 +86,31 @@
 <body>
 
 <div class="w3-bar w3-blue showBar">
-    <a href="../index.html" class="w3-bar-item w3-button"><img src="../Images/favicon-new.ico" alt="logo"> Start Page</a>
-    <a href="../write.html" class="w3-bar-item w3-button">Write GDD</a>
+    <a href="../index.php" class="w3-bar-item w3-button"><img src="../Images/favicon-new.ico" alt="logo"> Start Page</a>
+    <a href="../write.php" class="w3-bar-item w3-button">Write GDD</a>
     <a href="../contact.php" class="w3-bar-item w3-button">Contact</a>
     <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
     <div class="w3-dropdown-hover w3-right">
-        <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
+        <button class="w3-button"><b>Profile</b> <i class="fa fa-user-circle"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
             <a href="../profile.php" class="w3-bar-item w3-button">Settings</a>
-            <button class="w3-bar-item w3-button">Logout</button>
+            <a href="../logout.php" class="w3-bar-item w3-button">Logout</a>
         </div>
     </div>
 </div>
 
+
 <div class="w3-sidebar w3-blue w3-bar-block w3-border-right w3-animate-left" id="sideBar" style="display: none;">
     <button onclick="hideElement('sideBar')" class="w3-bar-item w3-large">Close <i class="fa fa-close"></i></button>
-    <a href="../index.html" class="w3-bar-item w3-button"><img src="../Images/favicon-new.ico" alt="logo"> Start Page</a>
-    <a href="../write.html" class="w3-bar-item w3-button">Write GDD</a>
+    <a href="../index.php" class="w3-bar-item w3-button"><img src="../Images/favicon-new.ico" alt="logo"> Start Page</a>
+    <a href="../write.php" class="w3-bar-item w3-button">Write GDD</a>
     <a href="../contact.php" class="w3-bar-item w3-button">Contact</a>
     <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
     <div class="w3-dropdown-hover w3-right">
-        <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
+        <button class="w3-button"><b>Profile</b> <i class="fa fa-user-circle"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
             <a href="../profile.php" class="w3-bar-item w3-button">Settings</a>
-            <button class="w3-bar-item w3-button">Logout</button>
+            <a href="../logout.php" class="w3-bar-item w3-button">Logout</a>
         </div>
     </div>
 </div>
@@ -44,9 +118,9 @@
 <button class="w3-button w3-blue w3-xlarge showSideBar" onclick="showElement('sideBar')"><i class="fa fa-bars"></i></button>
 
 <div class="w3-container pathPosition">
-    <a href="../write.html" class="w3-hover-text-blue">Write GDD</a>
+    <a href="../write.php" class="w3-hover-text-blue">Write GDD</a>
     <i class="fa fa-angle-double-right"></i>
-    <a href="AssetsWorld.html" class="w3-hover-text-blue">Assets</a>
+    <a href="AssetsWorld.php?id=<?php if(isset($idOfDocument)) echo $idOfDocument ?>" class="w3-hover-text-blue">Assets</a>
 </div>
 
 <div class="w3-container w3-blue panelInFormWorld">

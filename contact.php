@@ -1,32 +1,58 @@
 <?php
-require 'connect.php';
 
-$conn = $_SESSION["conn"];
+require 'connect.php'; // connecting to database
 
-$name = $surname = $email = $message = "";
+$conn = $_SESSION["conn"]; // variable that connected to database
+
+$namePrev = $surnamePrev = $emailPrev = ""; // Initializing data of user
+
+// Getting data of user if user is logged in
+if(isset($_SESSION['id'])){
+    $idOfUser = $_SESSION['id'];
+    $userInfoRes = $conn->query("SELECT name, surname, email FROM person WHERE ID = '$idOfUser'");
+
+    if($row = $userInfoRes->fetch_assoc()){
+        $namePrev = $row['name'];
+        $surnamePrev = $row['surname'];
+        $emailPrev = $row['email'];
+    }
+}
+
+$name = $surname = $email = $message = ""; // Initializing variables that will get values from POST method
+
+// Initializing variables to show success or error messages when user submits the form
 $showDivSuccess = $showDivSomethingWrong = FALSE;
 $nameLen = $surnameLen = $emailLen = $messageLen = TRUE;
 
+// Actions when user submits the form
 if(isset($_POST['submit'])) {
+
+    /* Getting the name, surname, email and message from the form with the POST method
+     and testing them with test_data function
+    */
     $name = test_data($_POST["firstName"]);
     $surname = test_data($_POST["lastName"]);
     $email = test_data($_POST["email"]);
     $message = test_data($_POST["message"]);
 
-    // checking the length of fields
+    // Checking the length of fields
     $nameLen = strlen($name) <= 30;
     $surnameLen = strlen($surname) <= 30;
     $emailLen = strlen($email) <= 200;
     $messageLen = strlen($email) <= 200;
 
+    // Actions if length of variables are accepted
     if($nameLen && $surnameLen && $emailLen && $messageLen){
-        $dateToSubmit = date("Y-m-d");
+        $dateToSubmit = date("Y-m-d"); // Getting the date
+
+        // Query that inserts a row in contact array with the given data
         $query = "INSERT INTO contact (name, surname, email, message, date) VALUES ('$name', '$surname', '$email', '$message', '$dateToSubmit')";
 
+        // Actions if query is executed
         if($conn->query($query) === TRUE){
-            $showDivSuccess = TRUE;
+            $showDivSuccess = TRUE; // Setting the variable showDivSuccess to true to show the appropriate message
         }else{
-            $showDivSomethingWrong = TRUE;
+            $showDivSomethingWrong = TRUE; // Setting the variable showDivSomethingWrong to true to show the appropriate message
         }
     }
 }
@@ -106,11 +132,14 @@ function test_data($data){
     </div>
 
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" class="w3-container w3-padding-16 contactRegisterForm">
-        <input class="w3-input w3-border w3-margin-top" id="firstName" name="firstName" type="text" placeholder="Name *" required><br>
+        <input class="w3-input w3-border w3-margin-top" id="firstName" name="firstName"
+               value="<?php if(isset($namePrev)) echo $namePrev?>" type="text" placeholder="Name *" required><br>
 
-        <input class="w3-input w3-border w3-margin-top" id="lastName" name="lastName" type="text" placeholder="Surname *" required><br>
+        <input class="w3-input w3-border w3-margin-top" id="lastName" name="lastName" type="text"
+               value="<?php if(isset($surnamePrev)) echo $surnamePrev?>" placeholder="Surname *" required><br>
 
-        <input class="w3-input w3-border w3-margin-top" id="email" name="email" type="email" placeholder="Email *" required><br>
+        <input class="w3-input w3-border w3-margin-top" id="email" name="email" type="email"
+               value="<?php if(isset($emailPrev)) echo $emailPrev?>" placeholder="Email *" required><br>
 
         <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="message" name="message" placeholder="Message *" required></textarea><br>
 

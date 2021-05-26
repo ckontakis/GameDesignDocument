@@ -139,7 +139,7 @@ if (isset($_POST['saveDocument'])){
 
     <?php
         $query = "SELECT DOCUMENT_ID FROM person_edits_document WHERE PERSON_ID ='$person_ID' AND status_of_invitation='accepted'    ORDER BY DOCUMENT_ID ASC";
-        $result = mysqli_query($con, $query);
+        $resultDocForeign = mysqli_query($con, $query);
 
     ?>
     <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableGDD">
@@ -152,36 +152,38 @@ if (isset($_POST['saveDocument'])){
         </tr>
 
         <?php
-            if(mysqli_num_rows ( $result )>=1){
-                while ($row = mysqli_fetch_assoc($result)) {
-                    $doc_id=$row['DOCUMENT_ID'];
+            if(mysqli_num_rows ( $resultDocForeign)>=1){
+                while ($rowDocForeign = mysqli_fetch_assoc($resultDocForeign)) {
+                    $doc_id=$rowDocForeign['DOCUMENT_ID'];
                     $query = "SELECT * FROM document WHERE ID ='$doc_id' ORDER BY ID ASC";
-                    $result = mysqli_query($con, $query);
-                    if(mysqli_num_rows ( $result )==1){
-
+                    $resultDocument = mysqli_query($con, $query);
+                    if(mysqli_num_rows ( $resultDocument )==1){
+                            $rowDocument = $resultDocument->fetch_assoc();
 
                         ?>
         <tr>
             <input type="hidden"  name="keyIdPerson"  value="<?php echo $person_ID; ?>" />
-            <td><?php echo $row["name"]?></td>
+            <td><?php echo $rowDocument["name"]?></td>
             <td>
                 <div class="w3-dropdown-hover">
-                    <button class="w3-button w3-round w3-border w3-border-black transmission" id="edit1" type="button"
-                            name="btnEdit1"><i class="fa fa-edit"></i></button>
+                    <button class="w3-button w3-round w3-border w3-border-black transmission" id="edit<?php echo $rowDocument['ID']?>" type="button"
+                            name="btnEdit<?php echo $rowDocument['ID']?>"><i class="fa fa-edit"></i></button>
                     <div class="w3-dropdown-content w3-bar-block w3-border">
-                        <?php echo '<a href="Mechanics/summary.php?id="'.$row['ID'].'class="w3-bar-item w3-button w3-center transmission">Summary</a>';?>
-                        <button class="w3-bar-item w3-button w3-center transmission" onclick="showCategories('mechCat1', 'mechCatDown1')">Mechanics <i id="mechCatDown1" class="fa fa-chevron-down"></i></button>
-                        <div id="mechCat1" class="catButton">
-                            <?php echo '<a href="Mechanics/mech.php?id="'.$row['ID'].'class="w3-bar-item w3-button w3-center transmission">Mechanics</a>';?>
-                            <?php echo '<a href="Mechanics/gameplay.php?id="'.$row['ID'].'class="w3-bar-item w3-button w3-center transmission">Gameplay</a>';?>
-                            <?php echo '<a href="Mechanics/GuiMenusi.php?id="'.$row['ID'].'class="w3-bar-item w3-button w3-center transmission">Menus and Gui</a>';?>
-                            
+                        <?php echo '<a href="Mechanics/summary.php?id=' . $rowDocument['ID'] . '" class="w3-bar-item w3-button w3-border-bottom w3-center transmission">Summary</a>';?>
+                        <button class="w3-bar-item w3-button w3-center transmission"
+                                onclick="showCategories('mechCat<?php echo $rowDocument['ID']?>', 'mechCatDown<?php echo $rowDocument['ID']?>')">
+                            Mechanics <i id="mechCatDown<?php echo $rowDocument['ID']?>" class="fa fa-chevron-down"></i></button>
+                        <div id="mechCat<?php echo $rowDocument['ID']?>" class="catButton">
+                            <?php echo '<a href="Mechanics/mech.php?id=' . $rowDocument['ID'] . '" class="w3-bar-item w3-button w3-center transmission">Mechanics</a>';?>
+                            <?php echo '<a href="Mechanics/gameplay.php?id=' . $rowDocument['ID'] . '" class="w3-bar-item w3-button w3-center transmission">Gameplay</a>';?>
+                            <?php echo '<a href="Mechanics/GuiMenusi.php?id=' . $rowDocument['ID'] . '" class="w3-bar-item w3-button w3-center transmission">Menus and Gui</a>';?>
                         </div>
-                        <button class="w3-bar-item w3-button w3-border-top w3-center transmission" onclick="showCategories('worldCat1', 'worldCatDown1')">
-                            World Building <i id="worldCatDown1" class="fa fa-chevron-down"></i></button>
-                        <div id="worldCat1" class="catButton">
-                            <?php echo '<a href="WorldBuilding/GameElementsWorld.php?id="'.$row['ID'].'class="w3-bar-item w3-button w3-center transmission">Game Elements</a>';?>
-                            <?php echo '<a href="WorldBuilding/AssetsWorld.php?id="'.$row['ID'].'class="w3-bar-item w3-button w3-center transmission">Assets</a>';?>
+                        <button class="w3-bar-item w3-button w3-border-top w3-center transmission"
+                                onclick="showCategories('worldCat<?php echo $rowDocument['ID']?>', 'worldCatDown<?php echo $rowDocument['ID']?>')">
+                            World Building <i id="worldCatDown<?php echo $rowDocument['ID']?>" class="fa fa-chevron-down"></i></button>
+                        <div id="worldCat<?php echo $rowDocument['ID']?>" class="catButton">
+                            <?php echo '<a href="WorldBuilding/GameElementsWorld.php?id=' . $rowDocument['ID'] . '" class="w3-bar-item w3-button w3-center transmission">Game Elements</a>';?>
+                            <?php echo '<a href="WorldBuilding/AssetsWorld.php?id=' . $rowDocument['ID'] . '" class="w3-bar-item w3-button w3-center transmission">Assets</a>';?>
                         </div>
                     </div>
                 </div>
