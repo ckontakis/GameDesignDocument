@@ -2,7 +2,12 @@
 
 require 'connect.php';
 $con = $_SESSION["conn"]; // variable that connected to database
-require 'redirect.php';
+//require 'redirect.php';
+$person_ID=$_SESSION["id"];
+
+if (!isset($_SESSION['logged_in'])) {
+    header('Location: write-login.php');
+}
 
 if (isset($_POST['saveDocument'])){
     echo "done";
@@ -44,12 +49,21 @@ if (isset($_POST['saveDocument'])){
 
         $query="INSERT INTO document (name, WORLD_BUILDING_ID, SUMMARY_ID, MECHANICS_ID) 
                 VALUES ('$name', '$world_building_last_id', '$summary_last_id', '$mechanics_last_id')";
-        if(mysqli_query($con, $query)){
-            echo "Success!";
-        }else{
-            echo "Error: " . $$query . "<br>" . $con->error;
+        
+        if(!mysqli_query($con, $query)){
+           echo "Error: " . $query . "<br>" . $con->error;
         }
-        //header('Location:write.php');
+
+        $document_last_id = mysqli_insert_id($con);
+
+        $query="INSERT INTO person_edits_document (PERSON_ID, DOCUMENT_ID, status_of_invitation) 
+                VALUES ('$person_ID', '$document_last_id', 'accepted')";
+
+        if(!mysqli_query($con, $query)){
+            echo "Error: " . $query . "<br>" . $con->error;
+        }
+        
+        header('Location:write.php');
     }
 }
 
@@ -72,8 +86,13 @@ if (isset($_POST['saveDocument'])){
     <a href="write.php" class="w3-bar-item w3-button w3-indigo"><b>Write GDD</b></a>
     <a href="contact.php" class="w3-bar-item w3-button">Contact</a>
     <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
-    <a href="register.php" class="w3-bar-item w3-button w3-teal w3-right">Register</a>
-    <a href="login.php" class="w3-bar-item w3-button w3-teal w3-right">Login</a>
+    <div class="w3-dropdown-hover w3-right">
+        <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
+        <div class="w3-dropdown-content w3-bar-block w3-border">
+            <a href="profile.php" class="w3-bar-item w3-button">Settings</a>
+            <a href="logout.php" class="w3-bar-item w3-button">Logout</a>
+        </div>
+    </div>
 </div>
 
 <div class="w3-sidebar w3-blue w3-bar-block w3-border-right w3-animate-left" id="sideBar" style="display: none;">
@@ -82,8 +101,13 @@ if (isset($_POST['saveDocument'])){
     <a href="write.php" class="w3-bar-item w3-button w3-indigo"><b>Write GDD</b></a>
     <a href="contact.php" class="w3-bar-item w3-button">Contact</a>
     <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
-    <a href="register.php" class="w3-bar-item w3-button w3-teal w3-right">Register</a>
-    <a href="login.php" class="w3-bar-item w3-button w3-teal w3-right">Login</a>
+    <div class="w3-dropdown-hover w3-right">
+        <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
+        <div class="w3-dropdown-content w3-bar-block w3-border">
+            <a href="profile.php" class="w3-bar-item w3-button">Settings</a>
+            <a href="logout.php" class="w3-bar-item w3-button">Logout</a>
+        </div>
+    </div>
 </div>
 
 <button class="w3-button w3-blue w3-xlarge showSideBar" onclick="showElement('sideBar')"><i class="fa fa-bars"></i></button>
@@ -112,6 +136,12 @@ if (isset($_POST['saveDocument'])){
         </div>
     </form>
 
+
+    <?php
+        $query = "SELECT DOCUMENT_ID FROM person_edits_document WHERE PERSON_ID ='$person_ID' AND status_of_invitation='accepted'    ORDER BY DOCUMENT_ID ASC";
+        $result = mysqli_query($con, $query);
+
+    ?>
     <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableGDD">
         <tr>
             <th>Game Design Document</th>
@@ -120,27 +150,38 @@ if (isset($_POST['saveDocument'])){
             <th>Download</th>
             <th>Teams</th>
         </tr>
+
+        <?php
+            if(mysqli_num_rows ( $result )>=1){
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $doc_id=$row['DOCUMENT_ID'];
+                    $query = "SELECT * FROM document WHERE ID ='$doc_id' ORDER BY ID ASC";
+                    $result = mysqli_query($con, $query);
+                    if(mysqli_num_rows ( $result )==1){
+
+
+                        ?>
         <tr>
-            <td>GDD 1</td>
+            <input type="hidden"  name="keyIdPerson"  value="<?php echo $person_ID; ?>" />
+            <td><?php echo $row["name"]?></td>
             <td>
                 <div class="w3-dropdown-hover">
                     <button class="w3-button w3-round w3-border w3-border-black transmission" id="edit1" type="button"
                             name="btnEdit1"><i class="fa fa-edit"></i></button>
                     <div class="w3-dropdown-content w3-bar-block w3-border">
-                        <button class="w3-bar-item w3-button w3-center transmission" onclick="showCategories('mechCat1', 'mechCatDown1')">Mechanics
-                            <i id="mechCatDown1" class="fa fa-chevron-down"></i></button>
+                        <?php echo '<a href="Mechanics/summary.php?id="'.$row['ID'].'class="w3-bar-item w3-button w3-center transmission">Summary</a>';?>
+                        <button class="w3-bar-item w3-button w3-center transmission" onclick="showCategories('mechCat1', 'mechCatDown1')">Mechanics <i id="mechCatDown1" class="fa fa-chevron-down"></i></button>
                         <div id="mechCat1" class="catButton">
-                            <a href="Mechanics/summary.html" class="w3-bar-item w3-button w3-border-top w3-center transmission">Summary</a>
-                            <a href="Mechanics/mech.html" class="w3-bar-item w3-button w3-center transmission">Mechanics</a>
-                            <a href="Mechanics/gameplay.html" class="w3-bar-item w3-button w3-center transmission">Gameplay</a>
-                            <a href="Mechanics/GuiMenus.html" class="w3-bar-item w3-button w3-center transmission">Menus and Gui</a>
+                            <?php echo '<a href="Mechanics/mech.php?id="'.$row['ID'].'class="w3-bar-item w3-button w3-center transmission">Mechanics</a>';?>
+                            <?php echo '<a href="Mechanics/gameplay.php?id="'.$row['ID'].'class="w3-bar-item w3-button w3-center transmission">Gameplay</a>';?>
+                            <?php echo '<a href="Mechanics/GuiMenusi.php?id="'.$row['ID'].'class="w3-bar-item w3-button w3-center transmission">Menus and Gui</a>';?>
+                            
                         </div>
                         <button class="w3-bar-item w3-button w3-border-top w3-center transmission" onclick="showCategories('worldCat1', 'worldCatDown1')">
                             World Building <i id="worldCatDown1" class="fa fa-chevron-down"></i></button>
                         <div id="worldCat1" class="catButton">
-                            <a href="WorldBuilding/SummaryWorld.html" class="w3-bar-item w3-button w3-center w3-border-top transmission">Summary World</a>
-                            <a href="WorldBuilding/GameElementsWorld.html" class="w3-bar-item w3-button w3-center transmission">Game Elements</a>
-                            <a href="WorldBuilding/AssetsWorld.html" class="w3-bar-item w3-button w3-center transmission">Assets</a>
+                            <?php echo '<a href="WorldBuilding/GameElementsWorld.php?id="'.$row['ID'].'class="w3-bar-item w3-button w3-center transmission">Game Elements</a>';?>
+                            <?php echo '<a href="WorldBuilding/AssetsWorld.php?id="'.$row['ID'].'class="w3-bar-item w3-button w3-center transmission">Assets</a>';?>
                         </div>
                     </div>
                 </div>
@@ -149,35 +190,11 @@ if (isset($_POST['saveDocument'])){
             <td><button class="w3-button w3-round w3-border w3-border-black transmission" id="down1" type="button" name="down1"><i class="fa fa-download"></i></button></td>
             <td><button class="w3-button w3-round w3-border w3-border-black transmission" id="teams1" onclick="showElement('teams-modal')" type="button" name="teams1"><i class="fa fa-users"></i></button></td>
         </tr>
-
-        <tr>
-            <td>GDD 2</td>
-            <td>
-                <div class="w3-dropdown-hover">
-                    <button class="w3-button w3-round w3-border w3-border-black transmission" id="edit2" type="button"
-                            name="btnEdit1"><i class="fa fa-edit"></i></button>
-                    <div class="w3-dropdown-content w3-bar-block w3-border">
-                        <button class="w3-bar-item w3-button w3-center transmission" onclick="showCategories('mechCat2', 'mechCatDown2')">Mechanics
-                            <i id="mechCatDown2" class="fa fa-chevron-down"></i></button>
-                        <div id="mechCat2" class="catButton">
-                            <a href="Mechanics/summary.html" class="w3-bar-item w3-button w3-border-top w3-center transmission">Summary</a>
-                            <a href="Mechanics/mech.html" class="w3-bar-item w3-button w3-center transmission">Mechanics</a>
-                            <a href="Mechanics/gameplay.html" class="w3-bar-item w3-button w3-center transmission">Gameplay</a>
-                        </div>
-                        <button class="w3-bar-item w3-button w3-border-top w3-center transmission" onclick="showCategories('worldCat2', 'worldCatDown2')">
-                            World Building <i id="worldCatDown2" class="fa fa-chevron-down"></i></button>
-                        <div id="worldCat2" class="catButton">
-                            <a href="WorldBuilding/SummaryWorld.html" class="w3-bar-item w3-button w3-border-top w3-center transmission">Summary World</a>
-                            <a href="WorldBuilding/GameElementsWorld.html" class="w3-bar-item w3-button w3-center transmission">Game Elements</a>
-                            <a href="WorldBuilding/AssetsWorld.html" class="w3-bar-item w3-button w3-center transmission">Assets</a>
-                        </div>
-                    </div>
-                </div>
-            </td>
-            <td><button class="w3-button w3-round w3-border w3-border-black transmission" id="remove2" onclick="confirmDelete()" type="button" name="btnRemove1"><i class="fa fa-trash"></i></button></td>
-            <td><button class="w3-button w3-round w3-border w3-border-black transmission" id="down2" type="button" name="down1"><i class="fa fa-download"></i></button></td>
-            <td><button class="w3-button w3-round w3-border w3-border-black transmission" id="teams2" type="button" name="teams1"><i class="fa fa-users"></i></button></td>
-        </tr>
+        <?php
+                }
+            }
+        }
+        ?>
     </table><br>
 
     <div id="teams-modal" class="w3-modal">
