@@ -37,19 +37,21 @@ if($resultAccessDoc = $conn->query("SELECT * from person_edits_document WHERE PE
  * Getting the id of Game Elements to connect elements (e.g character, location) with game elements of the document.
  * If there is a problem with the execution of queries we redirect user to write page.
  */
-if($resultInfoDoc = $conn->query("SELECT * from document WHERE ID = '$idOfDocument';")){
-    if($resultInfoDoc->num_rows === 1){
-        $rowInfoDoc = $resultInfoDoc->fetch_assoc();
 
-        if(isset($rowInfoDoc['WORLD_BUILDING_ID'])){
-            $worldBuildingId = $rowInfoDoc['WORLD_BUILDING_ID'];
+// finding the id of world_building table
+if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT_ID = '$idOfDocument';")){
+    if($resultInfoWorld->num_rows === 1){
+        $rowInfoWorld = $resultInfoWorld->fetch_assoc();
 
-            if($resultInfoWorldBuilding = $conn->query("SELECT * from world_building WHERE ID = '$worldBuildingId';")){
-                if($resultInfoWorldBuilding->num_rows === 1){
-                    $rowInfoWorldBuilding = $resultInfoWorldBuilding->fetch_assoc();
+        if(isset($rowInfoWorld['ID'])){
+            $worldBuildingId = $rowInfoWorld['ID'];
+            // finding the id of game elements table
+            if($resultInfoGameElements = $conn->query("SELECT ID FROM game_elements WHERE WORLD_BUILDING_ID = '$worldBuildingId';")){
+                if($resultInfoGameElements->num_rows === 1){
+                    $rowInfoGameElements = $resultInfoGameElements->fetch_assoc();
 
-                    if(isset($rowInfoWorldBuilding['GAME_ELEMENTS_ID'])){
-                        $gameElementsId = $rowInfoWorldBuilding['GAME_ELEMENTS_ID'];
+                    if(isset($rowInfoGameElements['ID'])){
+                        $gameElementsId = $rowInfoGameElements['ID']; // setting the id of game elements
                     }else{
                         header("Location:../write.php");
                     }
@@ -61,12 +63,11 @@ if($resultInfoDoc = $conn->query("SELECT * from document WHERE ID = '$idOfDocume
             header("Location:../write.php");
         }
 
+
     }else{
         header("Location:../write.php");
     }
 }
-
-
 
 
 ?>

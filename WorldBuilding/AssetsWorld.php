@@ -37,19 +37,21 @@ if($resultAccessDoc = $conn->query("SELECT * from person_edits_document WHERE PE
  * Getting the id of Assets to connect elements (e.g music kind, track) with the assets of the document.
  * If there is a problem with the execution of queries we redirect user to write page.
  */
-if($resultInfoDoc = $conn->query("SELECT * from document WHERE ID = '$idOfDocument';")){
-    if($resultInfoDoc->num_rows === 1){
-        $rowInfoDoc = $resultInfoDoc->fetch_assoc();
 
-        if(isset($rowInfoDoc['WORLD_BUILDING_ID'])){
-            $worldBuildingId = $rowInfoDoc['WORLD_BUILDING_ID'];
+// finding the id of world_building table
+if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT_ID = '$idOfDocument';")){
+    if($resultInfoWorld->num_rows === 1){
+        $rowInfoWorld = $resultInfoWorld->fetch_assoc();
 
-            if($resultInfoWorldBuilding = $conn->query("SELECT * from world_building WHERE ID = '$worldBuildingId';")){
-                if($resultInfoWorldBuilding->num_rows === 1){
-                    $rowInfoWorldBuilding = $resultInfoWorldBuilding->fetch_assoc();
+        if(isset($rowInfoWorld['ID'])){
+            $worldBuildingId = $rowInfoWorld['ID'];
+            // finding the id of assets table
+            if($resultInfoAssets = $conn->query("SELECT ID FROM assets WHERE WORLD_BUILDING_ID = '$worldBuildingId';")){
+                if($resultInfoAssets->num_rows === 1){
+                    $rowInfoAssets = $resultInfoAssets->fetch_assoc();
 
-                    if(isset($rowInfoWorldBuilding['ASSETS_ID'])){
-                        $assetsId = $rowInfoWorldBuilding['ASSETS_ID'];
+                    if(isset($rowInfoAssets['ID'])){
+                        $assetsId = $rowInfoAssets['ID']; // setting the id of assets to variable assetsId
                     }else{
                         header("Location:../write.php");
                     }
@@ -60,6 +62,7 @@ if($resultInfoDoc = $conn->query("SELECT * from document WHERE ID = '$idOfDocume
         }else{
             header("Location:../write.php");
         }
+
 
     }else{
         header("Location:../write.php");
