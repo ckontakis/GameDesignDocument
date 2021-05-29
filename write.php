@@ -1,63 +1,68 @@
 <?php
 
-require 'connect.php';
+require 'connect.php'; // connecting to database
 $con = $_SESSION["conn"]; // variable that connected to database
-//require 'redirect.php';
-$person_ID=$_SESSION["id"];
 
+/*
+ * If user is not connected we redirect user to write page
+ */
 if (!isset($_SESSION['logged_in'])) {
     header('Location: write-login.php');
 }
 
+$person_ID=$_SESSION["id"]; // Getting the id of user
+
+/*
+ * Actions when user creates a new document
+ */
 if (isset($_POST['saveDocument'])){
-    echo "done";
     $name=$_POST['nameDocument'];
     if(empty($_POST['nameDocument']))
     {
         $err="Συμπληρώστε όλα τα πεδία";
     }
     else{
+
+        $query="INSERT INTO document (name) 
+                VALUES ('$name')";
+
+        if(!mysqli_query($con, $query)){
+            echo "Error: " . $query . "<br>" . $con->error;
+        }
+
+        $document_last_id = mysqli_insert_id($con);
+
+        if(!$con->query("INSERT INTO world_building (DOCUMENT_ID) VALUES ('$document_last_id');")){
+            echo "Error: " . "<br>" . $con->error;
+        }
+        $world_building_last_id = mysqli_insert_id($con);
+
+        if(!$con->query("INSERT INTO mechanics (DOCUMENT_ID, combat) 
+                        VALUES ('$document_last_id',NULL);")){
+            echo "Error: " . "<br>" . $con->error;
+        }
+        $mechanics_last_id = mysqli_insert_id($con);
+
+        if(!$con->query("INSERT INTO game_summary (DOCUMENT_ID,name, concept, genre, audience, system, type, setting, software, game_code) 
+                        VALUES ('$document_last_id',NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);")){
+            echo "Error: " . "<br>" . $con->error;
+        }
+        $summary_last_id = mysqli_insert_id($con);
+
         // Creating game elements row
-        if(!$con->query("INSERT INTO game_elements (story_describe) VALUES (NULL);")){
+        if(!$con->query("INSERT INTO game_elements (WORLD_BUILDING_ID,story_describe) VALUES ('$world_building_last_id',NULL);")){
             echo "Error: " . "<br>" . $con->error;
         }
         $game_elements_last_id = mysqli_insert_id($con);
 
         // Creating assets row
-        if(!$con->query("INSERT INTO assets (describe_music) VALUES (NULL);")){
+        if(!$con->query("INSERT INTO assets (WORLD_BUILDING_ID,describe_music) VALUES ('$world_building_last_id',NULL);")){
             echo "Error: " . "<br>" . $con->error;
         }
         $assets_last_id = mysqli_insert_id($con);
 
-        if(!$con->query("INSERT INTO world_building (ASSETS_ID, GAME_ELEMENTS_ID) VALUES ('$assets_last_id', '$game_elements_last_id');")){
-            echo "Error: " . "<br>" . $con->error;
-        }
-        $world_building_last_id = mysqli_insert_id($con);
-
-        if(!$con->query("INSERT INTO game_summary (name, concept, genre, audience, system, type, setting, software, game_code) 
-                        VALUES (NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);")){
-            echo "Error: " . "<br>" . $con->error;
-        }
-        $summary_last_id = mysqli_insert_id($con);
-
-
-        if(!$con->query("INSERT INTO mechanics (combat) 
-                        VALUES (NULL);")){
-            echo "Error: " . "<br>" . $con->error;
-        }
-        $mechanics_last_id = mysqli_insert_id($con);
-
-        $query="INSERT INTO document (name, WORLD_BUILDING_ID, SUMMARY_ID, MECHANICS_ID) 
-                VALUES ('$name', '$world_building_last_id', '$summary_last_id', '$mechanics_last_id')";
-        
-        if(!mysqli_query($con, $query)){
-           echo "Error: " . $query . "<br>" . $con->error;
-        }
-
-        $document_last_id = mysqli_insert_id($con);
-
-        $query="INSERT INTO person_edits_document (PERSON_ID, DOCUMENT_ID, status_of_invitation) 
-                VALUES ('$person_ID', '$document_last_id', 'accepted')";
+        $query="INSERT INTO person_edits_document (PERSON_ID, DOCUMENT_ID, status_of_invitation, isAdmin) 
+                VALUES ('$person_ID', '$document_last_id', 'accepted', '1')";
 
         if(!mysqli_query($con, $query)){
             echo "Error: " . $query . "<br>" . $con->error;
@@ -67,6 +72,19 @@ if (isset($_POST['saveDocument'])){
     }
 }
 
+/*
+ * Actions when user deletes a document
+ */
+if(isset($_POST['deleteDocument'])){
+    $idOfDocumentToDel = $_POST['keyIdDocument'];
+    $queryDeleteDocument = "DELETE FROM document WHERE ID='$idOfDocumentToDel';";
+
+    if($con->query($queryDeleteDocument)){
+        header('Location:write.php');
+    }else{
+        echo "<script>alert('Something went wrong. Cannot delete document.')</script>";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -76,6 +94,7 @@ if (isset($_POST['saveDocument'])){
     <title>Write GDD - GDD Maker</title>
     <link rel="icon" href="Images/favicon-new.ico">
     <script src="JavaScript/Main.js"></script>
+    <script src="JavaScript/WorldBuilding.js"></script>
 </head>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -138,7 +157,7 @@ if (isset($_POST['saveDocument'])){
 
 
     <?php
-        $query = "SELECT DOCUMENT_ID FROM person_edits_document WHERE PERSON_ID ='$person_ID' AND status_of_invitation='accepted'    ORDER BY DOCUMENT_ID ASC";
+        $query = "SELECT DOCUMENT_ID FROM person_edits_document WHERE PERSON_ID ='$person_ID' AND status_of_invitation='accepted' ORDER BY DOCUMENT_ID ASC";
         $resultDocForeign = mysqli_query($con, $query);
 
     ?>
@@ -162,7 +181,6 @@ if (isset($_POST['saveDocument'])){
 
                         ?>
         <tr>
-            <input type="hidden"  name="keyIdPerson"  value="<?php echo $person_ID; ?>" />
             <td><?php echo $rowDocument["name"]?></td>
             <td>
                 <div class="w3-dropdown-hover">
@@ -188,8 +206,17 @@ if (isset($_POST['saveDocument'])){
                     </div>
                 </div>
             </td>
-            <td><button class="w3-button w3-round w3-border w3-border-black transmission" id="remove1" onclick="confirmDelete('Are you sure you want to delete this document?')" type="button" name="btnRemove1"><i class="fa fa-trash"></i></button></td>
-            <td><button class="w3-button w3-round w3-border w3-border-black transmission" id="down1" type="button" name="down1"><i class="fa fa-download"></i></button></td>
+            <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+                <td><button class="w3-button w3-round w3-border w3-border-black transmission"
+                            <?php
+                                $nameOfDocument = $rowDocument['name'];
+                                echo "onclick=\"return  confirm('Are you sure that you want to delete $nameOfDocument document?')\"";
+                            ?>
+                            type="submit" name="deleteDocument"><i class="fa fa-trash"></i></button>
+                    <input type="hidden"  name="keyIdDocument"  value="<?php echo $rowDocument['ID']; ?>" />
+                </td>
+                <td><button class="w3-button w3-round w3-border w3-border-black transmission" type="submit" name="download"><i class="fa fa-download"></i></button></td>
+            </form>
             <td><button class="w3-button w3-round w3-border w3-border-black transmission" id="teams1" onclick="showElement('teams-modal')" type="button" name="teams1"><i class="fa fa-users"></i></button></td>
         </tr>
         <?php
@@ -207,30 +234,32 @@ if (isset($_POST['saveDocument'])){
 
                 <h3 class="headerForModal">Edit teams and users that can edit the document</h3><br>
 
-                <label for="emailTDocumentEditor" class="w3-margin-top" id="labelTEmailDocumentEditor">Invite more people to edit the document</label><br>
+                <label for="emailTeamMember" class="w3-margin-top" id="labelEmailMem">Invite a person to edit the document</label><br>
 
-                <input class="w3-input w3-border w3-margin-top inputEmailMember" type="email"
-                       placeholder="Type the email of the person that you want to invite"
-                       id="emailTDocumentEditor" name="emailTDocumentEditor">
-                <button class="w3-button w3-border w3-margin-top w3-border-blue w3-hover-blue transmission"
-                        id="addTEditor" type="button" name="addTEditor" style="display: inline-block;">
-                    <i class="fa fa-plus"></i></button><br><br>
+                <input style="display: block;" class="w3-input w3-border w3-margin-top" type="email"
+                placeholder="Type the email of the person that you want to invite"
+                id="emailTeamMember" name="emailTeamMember" required>
+
+                <input class="w3-check w3-margin-top" id="adminCheck" name="adminCheck" type="checkbox">
+                <label for="adminCheck">Admin of document</label><br>
+
+                <button id="addEditor" class="w3-button w3-border w3-margin-top w3-green transmission">
+                    Add</button><br><br>
 
                 <label>Editors of the document</label>
 
-                <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableEditors1">
-                    <tr>
-                        <th>Name</th>
-                        <th>Delete</th>
-                    </tr>
-                    <tr>
-                        <td>Kostas</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="editor1" type="button" name="btnRemoveEditor"><i class="fa fa-minus"></i></button></td>
-                    </tr>
+                <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableEditors">
+                <tr>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Email</th>
+                    <th>Admin</th>
+                    <th>Invitation</th>
+                </tr>
                 </table><br>
 
                 <label>Teams that can edit the document</label>
-                <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableTeams1">
+                <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableTeamsWrite">
                     <tr>
                         <th>Teams</th>
                         <th>Add</th>
@@ -239,20 +268,8 @@ if (isset($_POST['saveDocument'])){
                         <td>Team 1</td>
                         <td><button class="w3-button w3-green w3-circle transmission" id="teamT1" type="button" name="btnAddTeam"><i class="fa fa-plus"></i></button></td>
                     </tr>
-                    <tr>
-                        <td>Team 2</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="teamT2" type="button" name="btnAddTeam"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Team 3</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="teamT3" type="button" name="btnAddTeam"><i class="fa fa-plus"></i></button></td>
-                    </tr>
                 </table><br>
 
-                <div class="w3-container w3-padding-16">
-                    <button class="w3-button w3-green transmission" id="saveTeam" type="submit" name="saveDocument">
-                        Save</button>
-                </div>
             </div>
         </div>
     </div>
