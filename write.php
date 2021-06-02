@@ -85,6 +85,42 @@ if(isset($_POST['deleteDocument'])){
         echo "<script>alert('Something went wrong. Cannot delete document.')</script>";
     }
 }
+
+if(isset($_POST['addEditor'])){
+    $emailInvite = test_data($_POST['emailTeamMember']);
+    $docInvite = $_POST['keyDocID'];
+    if(isset($_POST['adminCheck'])){
+        $adminInv='1';
+    }else{
+        $adminInv='0';
+    }
+
+    $invitePerson = TRUE;
+
+    // finding id of person to invite
+
+    $queryToFindIdPerson = "SELECT ID FROM person WHERE email = '$emailInvite'";
+    $resultFindPerson = $conn->query($queryToFindIdPerson);
+
+    $rowFindPerson = $resultFindPerson->fetch_assoc();
+    if(isset($rowFindPerson['ID'])){
+        $idOfPersonToInvite = $rowFindPerson['ID'];
+        $query= "INSERT INTO person_edits_document (PERSON_ID, DOCUMENT_ID,isAdmin) VALUES ('$idOfPersonToInvite','$docInvite','$adminInv')";
+        if(mysqli_query($con, $query)){
+            echo "<script>alert('Invitation succeeded!')</script>";
+        }else{echo "<script>alert('Invitation failed.')</script>";}
+    }else{
+        $invitePerson = FALSE;
+        echo "<script>alert('Invitation failed: The given email does not match with any user.')</script>";
+    }
+}
+
+/*
+ * Function to filter data.
+ */
+function test_data($data){
+    return htmlspecialchars(stripslashes($data));
+}
 ?>
 
 <!DOCTYPE html>
@@ -159,6 +195,7 @@ if(isset($_POST['deleteDocument'])){
     <?php
         $query = "SELECT DOCUMENT_ID FROM person_edits_document WHERE PERSON_ID ='$person_ID' AND status_of_invitation='accepted' ORDER BY DOCUMENT_ID ASC";
         $resultDocForeign = mysqli_query($con, $query);
+        $resultDocTeam = $resultDocForeign;
 
     ?>
     <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableGDD">
@@ -194,7 +231,7 @@ if(isset($_POST['deleteDocument'])){
                         <div id="mechCat<?php echo $rowDocument['ID']?>" class="catButton">
                             <?php echo '<a href="Mechanics/mech.php?id=' . $rowDocument['ID'] . '" class="w3-bar-item w3-button w3-center transmission">Mechanics</a>';?>
                             <?php echo '<a href="Mechanics/gameplay.php?id=' . $rowDocument['ID'] . '" class="w3-bar-item w3-button w3-center transmission">Gameplay</a>';?>
-                            <?php echo '<a href="Mechanics/GuiMenusi.php?id=' . $rowDocument['ID'] . '" class="w3-bar-item w3-button w3-center transmission">Menus and Gui</a>';?>
+                            <?php echo '<a href="Mechanics/GuiMenus.php?id=' . $rowDocument['ID'] . '" class="w3-bar-item w3-button w3-center transmission">Menus and Gui</a>';?>
                         </div>
                         <button class="w3-bar-item w3-button w3-border-top w3-center transmission"
                                 onclick="showCategories('worldCat<?php echo $rowDocument['ID']?>', 'worldCatDown<?php echo $rowDocument['ID']?>')">
@@ -226,6 +263,12 @@ if(isset($_POST['deleteDocument'])){
         ?>
     </table><br>
 
+
+    <?php 
+        while ($rowDocTeam = mysqli_fetch_assoc($resultDocTeam)) {
+        
+    
+        ?>
     <div id="teams-modal" class="w3-modal">
         <div class="w3-modal-content w3-animate-zoom" style="text-align: center;">
             <div class="w3-container">
@@ -234,45 +277,65 @@ if(isset($_POST['deleteDocument'])){
 
                 <h3 class="headerForModal">Edit teams and users that can edit the document</h3><br>
 
-                <label for="emailTeamMember" class="w3-margin-top" id="labelEmailMem">Invite a person to edit the document</label><br>
+                <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 
-                <input style="display: block;" class="w3-input w3-border w3-margin-top" type="email"
-                placeholder="Type the email of the person that you want to invite"
-                id="emailTeamMember" name="emailTeamMember" required>
+                    <input type="hidden"  name="keyDocID"  value="<?php echo $rowDocTeam['DOCUMENT_ID']; ?>" />
 
-                <input class="w3-check w3-margin-top" id="adminCheck" name="adminCheck" type="checkbox">
-                <label for="adminCheck">Admin of document</label><br>
+                    <label for="emailTeamMember" class="w3-margin-top" id="labelEmailMem">Invite a person to edit the document</label><br>
 
-                <button id="addEditor" class="w3-button w3-border w3-margin-top w3-green transmission">
-                    Add</button><br><br>
+                    <input style="display: block;" class="w3-input w3-border w3-margin-top" type="email"
+                    placeholder="Type the email of the person that you want to invite"
+                    id="emailTeamMember" name="emailTeamMember" required>
 
-                <label>Editors of the document</label>
+                    <?php 
+                        $query="SELECT * FROM person_edits_document WHERE PERSON_ID='$person_ID' AND isAdmin='1'";
+                         $resultAdmin = mysqli_query($con, $query);
+                        if(mysqli_num_rows ( $resultAdmin )==1){
+                            echo '<input class="w3-check w3-margin-top" id="adminCheck" name="adminCheck" type="checkbox">
+                            <label for="adminCheck">Admin of document</label><br>';
+                        }
+                    ?>
+              
 
-                <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableEditors">
-                <tr>
-                    <th>Name</th>
-                    <th>Surname</th>
-                    <th>Email</th>
-                    <th>Admin</th>
-                    <th>Invitation</th>
-                </tr>
-                </table><br>
+                    <button id="addEditor" type="submit" name="addEditor" class="w3-button w3-border w3-margin-top w3-green transmission">
+                        Add</button><br><br>
 
-                <label>Teams that can edit the document</label>
-                <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableTeamsWrite">
+                    <label>Editors of the document</label>
+
+                    <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableEditors">
                     <tr>
-                        <th>Teams</th>
-                        <th>Add</th>
+                        <th>Name</th>
+                        <th>Surname</th>
+                        <th>Email</th>
+                        <th>Admin</th>
+                        <th>Invitation</th>
                     </tr>
-                    <tr>
-                        <td>Team 1</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="teamT1" type="button" name="btnAddTeam"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                </table><br>
+                    </table><br>
+
+                    <label>Teams that can edit the document</label>
+                    <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableTeamsWrite">
+                        <tr>
+                            <th>Teams</th>
+                            <th>Add</th>
+                        </tr>
+                        <tr>
+                            <td>Team 1</td>
+                            <td><button class="w3-button w3-green w3-circle transmission" id="teamT1" type="button" name="btnAddTeam"><i class="fa fa-plus"></i></button></td>
+                        </tr>
+                    </table><br>
+
+                </form>
 
             </div>
         </div>
     </div>
+    <?php
+
+}?>
+
+
+
+
 </div>
 </body>
 </html>
