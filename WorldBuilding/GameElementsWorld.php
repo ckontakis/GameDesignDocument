@@ -520,5 +520,11 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
 
     <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue transmission" type="button" value="Submit">
 </form>
+
+<div class="w3-container continueAssets">
+    <h3 style="">Continue with editing Assets of World Building</h3>
+    <?php echo "<a href=\"AssetsWorld.php?id=$idOfDocument\""; ?> class="w3-bar-item w3-button w3-margin-top transmission w3-text-blue w3-border w3-xxlarge w3-round w3-hover-blue">
+        Assets <i class="fa fa-angle-double-right"></i></a>
+</div>
 </body>
 </html>

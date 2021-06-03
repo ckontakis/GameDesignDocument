@@ -196,6 +196,16 @@ Style for write-login page content
      text-align: center;
 }
 
+/*
+Style for the text and button for game elements world file that says to continue with editing
+Assets
+*/
+.continueAssets{
+     margin-top: 3%;
+     text-align: center;
+     margin-bottom: 1%;
+}
+
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 991px) {
      .showSideBar{

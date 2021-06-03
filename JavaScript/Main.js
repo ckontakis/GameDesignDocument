@@ -1,21 +1,14 @@
 /*
-Function to confirm if a user wants to delete a document or not.
- */
-function confirmDelete(message){
-    return confirm(message);
-}
-
-/*
 Function that shows and hides categories from write page.
  */
-function showCategories(el, fontArrow){
+function showCategories(el, fontArrow) {
     let x = document.getElementById(el);
     let y = document.getElementById(fontArrow);
 
-    if(x.style.display === 'block'){
+    if (x.style.display === 'block') {
         x.style.display = 'none';
         y.className = 'fa fa-chevron-down'
-    }else{
+    } else {
         x.style.display = 'block';
         y.className = 'fa fa-chevron-up'
     }
@@ -36,7 +29,7 @@ function showPassword(el) {
 /*
 Function to show elements.
  */
-function showElement(el){
+function showElement(el) {
     let x = document.getElementById(el);
     x.style.display = 'block';
 }
@@ -44,7 +37,7 @@ function showElement(el){
 /*
 Function to hide elements.
  */
-function hideElement(el){
+function hideElement(el) {
     let x = document.getElementById(el);
     x.style.display = 'none';
 }

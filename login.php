@@ -1,13 +1,6 @@
 <?php
-	if (session_status() == PHP_SESSION_NONE) {
-    	session_start();
-	}
-	
-	$con = mysqli_connect("localhost","root","","thesis2021");
-	mysqli_set_charset($con,"utf8");
-	if($con === false){
-		die("ERROR: Could not connect. " . mysqli_connect_error());
-	}
+require 'connect.php'; // connecting to database
+$con = $_SESSION["conn"]; // variable that connected to database
 
 	if(isset($_SESSION['logged_in'])){
 	    header('Location:index.php');

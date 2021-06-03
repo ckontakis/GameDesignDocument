@@ -68,9 +68,10 @@ $conn = $_SESSION["conn"];
 <h2 class="headers w3-border w3-hover-border-blue w3-round">Create your own Game Design Document now!</h2>
 <p class="textInMain">This page is created from two students that study at Aristotle University of Thessaloniki.
     With this page you can create your own game design document for your game. If you want to create a game design document you
-    have to create an account and login with it. Also, you can create a team that can edit a game design document. There are
-    two categories when you edit a document: 1. Mechanics of game and 2. World building of game. If you have questions you
-    can contact with us at <a href="contact.php" class="w3-hover-text-blue">contact page</a>.
+    have to create an account and login with it. Also, you can create a team that can edit a game design document and you can
+    invite more people to edit your document. There are three categories when you edit a document: 1. Summary of game, 2. Mechanics of game
+    and 3. World building of game. If you have questions you can contact with us at
+    <a href="contact.php" class="w3-hover-text-blue">contact page</a>.
 </p>
 
 <img class="image" src="Images/logo.png" alt="logo">
