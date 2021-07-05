@@ -10,7 +10,6 @@ body{
   margin-top: 10%;
   padding: 16px;
   text-align: center;
-
 }
 
 input[type=text], input[type=password] {
@@ -20,7 +19,6 @@ input[type=text], input[type=password] {
   display: inline-block;
   border: 1px solid #ccc;
   box-sizing: border-box;
-  text-align: center;
 }
 
 button {

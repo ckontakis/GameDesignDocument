@@ -12,61 +12,82 @@ if (!isset($_SESSION['logged_in'])) {
 
 $person_ID = $_SESSION["id"]; // Getting the id of user
 
+$duplicateDoc = false; // boolean variable to show and hide error message for duplicate documents
+$genericErrDoc = false; // boolean variable to show and hide generic error message for documents
+
 /*
  * Actions when user creates a new document
  */
 if (isset($_POST['saveDocument'])) {
     $name = $_POST['nameDocument'];
     if (empty($_POST['nameDocument'])) {
-        $err = "Συμπληρώστε όλα τα πεδία";
+        $err = "Fill the name field for the document";
     } else {
 
         $query = "INSERT INTO document (name) 
                 VALUES ('$name')";
 
-        if (!mysqli_query($con, $query)) {
-            echo "Error: " . $query . "<br>" . $con->error;
-        }
+        if (mysqli_query($con, $query)) {
 
-        $document_last_id = mysqli_insert_id($con);
+            $document_last_id = mysqli_insert_id($con);
 
-        if (!$con->query("INSERT INTO world_building (DOCUMENT_ID) VALUES ('$document_last_id');")) {
-            echo "Error: " . "<br>" . $con->error;
-        }
-        $world_building_last_id = mysqli_insert_id($con);
+            if (!$con->query("INSERT INTO world_building (DOCUMENT_ID) VALUES ('$document_last_id');")) {
+                echo "Error: " . "<br>" . $con->error;
+            }
+            $world_building_last_id = mysqli_insert_id($con);
 
-        if (!$con->query("INSERT INTO mechanics (DOCUMENT_ID, combat) 
+            if (!$con->query("INSERT INTO mechanics (DOCUMENT_ID, combat) 
                         VALUES ('$document_last_id',NULL);")) {
-            echo "Error: " . "<br>" . $con->error;
-        }
-        $mechanics_last_id = mysqli_insert_id($con);
+                echo "Error: " . "<br>" . $con->error;
+            }
+            $mechanics_last_id = mysqli_insert_id($con);
 
-        if (!$con->query("INSERT INTO game_summary (DOCUMENT_ID,name, concept, genre, audience, system, type, setting, software, game_code) 
+            if (!$con->query("INSERT INTO game_summary (DOCUMENT_ID,name, concept, genre, audience, system, type, setting, software, game_code) 
                         VALUES ('$document_last_id',NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);")) {
-            echo "Error: " . "<br>" . $con->error;
-        }
-        $summary_last_id = mysqli_insert_id($con);
+                echo "Error: " . "<br>" . $con->error;
+            }
+            $summary_last_id = mysqli_insert_id($con);
 
-        // Creating game elements row
-        if (!$con->query("INSERT INTO game_elements (WORLD_BUILDING_ID,story_describe) VALUES ('$world_building_last_id',NULL);")) {
-            echo "Error: " . "<br>" . $con->error;
-        }
-        $game_elements_last_id = mysqli_insert_id($con);
+            // Creating game elements row
+            if (!$con->query("INSERT INTO game_elements (WORLD_BUILDING_ID,story_describe) VALUES ('$world_building_last_id',NULL);")) {
+                echo "Error: " . "<br>" . $con->error;
+            }
+            $game_elements_last_id = mysqli_insert_id($con);
 
-        // Creating assets row
-        if (!$con->query("INSERT INTO assets (WORLD_BUILDING_ID,describe_music) VALUES ('$world_building_last_id',NULL);")) {
-            echo "Error: " . "<br>" . $con->error;
-        }
-        $assets_last_id = mysqli_insert_id($con);
+            // Creating assets row
+            if (!$con->query("INSERT INTO assets (WORLD_BUILDING_ID,describe_music) VALUES ('$world_building_last_id',NULL);")) {
+                echo "Error: " . "<br>" . $con->error;
+            }
+            $assets_last_id = mysqli_insert_id($con);
 
-        $query = "INSERT INTO person_edits_document (PERSON_ID, DOCUMENT_ID, status_of_invitation, isAdmin) 
+            $query = "INSERT INTO person_edits_document (PERSON_ID, DOCUMENT_ID, status_of_invitation, isAdmin) 
                 VALUES ('$person_ID', '$document_last_id', 'accepted', '1')";
 
-        if (!mysqli_query($con, $query)) {
-            echo "Error: " . $query . "<br>" . $con->error;
+            if (!mysqli_query($con, $query)) {
+                echo "Error: " . $query . "<br>" . $con->error;
+            }
+
+            $docRoot = $_SERVER["DOCUMENT_ROOT"];
+
+            mkdir("$docRoot/ImagesFromUsers-GDD/$name/WorldBuilding/Characters", 0755 ,true);
+
+            header('Location:write.php');
+
+        }else{
+            // we are checking if there is already a document with that name
+            $resultAllDocs = mysqli_query($con, "SELECT name FROM document;");
+
+            while($rowDocs = $resultAllDocs->fetch_assoc()){
+                if($rowDocs["name"] === $name){
+                    $duplicateDoc = true;
+                }
+            }
+
+            if(!$duplicateDoc){ // if there is not duplicate document we show a generic error message
+                $genericErrDoc = true;
+            }
         }
 
-        header('Location:write.php');
     }
 }
 
@@ -78,7 +99,7 @@ if (isset($_POST['deleteDocument'])) {
     $queryDeleteDocument = "DELETE FROM document WHERE ID='$idOfDocumentToDel';";
 
     if ($con->query($queryDeleteDocument)) {
-        //header('Location:write.php');
+        header('Location:write.php');
     } else {
         echo "<script>alert('Something went wrong. Cannot delete document.')</script>";
         echo "Error: " . $queryDeleteDocument . "<br>" . $con->error;
@@ -287,6 +308,22 @@ function test_data($data)
         ?>
     </table>
     <br>
+
+    <div class="w3-panel w3-red" <?php if($duplicateDoc) {
+        echo 'style="display: block"';
+    }else{
+        echo 'style="display: none"';
+    }?>>
+        <p>There is already a document with that name. Please name your document with another name.</p>
+    </div>
+
+    <div class="w3-panel w3-red" <?php if($genericErrDoc) {
+        echo 'style="display: block"';
+    }else{
+        echo 'style="display: none"';
+    }?>>
+        <p>Error: cannot create a new document.</p>
+    </div>
 
 
     <?php

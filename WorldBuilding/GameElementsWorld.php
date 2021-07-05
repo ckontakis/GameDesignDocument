@@ -21,6 +21,13 @@ if(isset($_GET['id'])){
 }
 
 /*
+ * Getting the name of the document
+ */
+$resultNameDoc = mysqli_query($conn, "SELECT name FROM document WHERE ID='$idOfDocument';");
+$rowDocName = $resultNameDoc->fetch_assoc();
+$nameOfDoc = $rowDocName["name"];
+
+/*
  * Checking if user does not have access to the document that is typing at the url. If user does not have access
  * we redirect user to write page
  */
@@ -62,14 +69,131 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
         }else{
             header("Location:../write.php");
         }
-
-
     }else{
         header("Location:../write.php");
     }
 }
 
+/*
+ * Getting the value of story describe to load text
+ */
+$queryLoadStory = "SELECT story_describe from game_elements WHERE ID='$gameElementsId';";
+$resLoadStory = $conn->query($queryLoadStory);
 
+if($resLoadStory->num_rows === 1){
+    $rowLoadStory = $resLoadStory->fetch_assoc();
+    $gameStoryValue = $rowLoadStory['story_describe'];
+}
+
+
+/*
+ * Actions when user submits the story of the game
+ */
+$successUpdateStory = false; // variable to show success message
+$somethingWrongStory = false; // variable to show failure message
+if(isset($_POST["mainSubmit"])){
+    if(isset($gameElementsId)){
+        $describeStory = $_POST["story"]; // getting the text with post method
+        // query to update the database array
+        $updateStoryQuery = "UPDATE game_elements SET story_describe='$describeStory' WHERE ID='$gameElementsId';";
+
+        if($conn->query($updateStoryQuery)){ // if query executed successfully
+            $successUpdateStory = true;
+            $gameStoryValue = $describeStory;
+            header('Location:./GameElementsWorld.php?id=' . $idOfDocument);
+        }else{
+            $somethingWrongStory = true;
+        }
+    }
+}
+
+$docRoot = $_SERVER["DOCUMENT_ROOT"]; // the path for the root of document
+/*
+ * Actions when user adds a character
+ */
+if(isset($_POST["saveCharacter"])){
+    $nameOfChar = test_data($_POST["charName"]); // getting the name of the character
+    $charType = test_data($_POST["charType"]); // getting the type of the character
+    $charDescription = test_data($_POST["charDescription"]); // getting the description of the character
+
+    $uploadedImage = false;
+
+    if($_FILES["imgChar"]["name"] !== ""){
+        $filename = $_FILES["imgChar"]["name"];
+        $tempname = $_FILES["imgChar"]["tmp_name"];
+        $folder = "$docRoot/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Characters/".$filename;
+
+        if (mysqli_query($conn, "INSERT INTO image (filename) VALUES ('$filename');") && move_uploaded_file($tempname, $folder)) {
+            $uploadedImage = true;
+            $image_id = mysqli_insert_id($conn);
+
+            // query to add a new character in game_character table  with image
+            $queryAddChar = "INSERT INTO game_character (GAME_ELEMENTS_ID, IMAGE_ID, name, type_char, describe_char) 
+                     VALUES ('$gameElementsId', '$image_id' ,'$nameOfChar', '$charType', '$charDescription');";
+
+            //executing the query
+            if($conn->query($queryAddChar)){
+                //header("Refresh:0"); // if query is executed successfully we refresh the page
+            }else{
+                echo "<script>alert('Error: cannot add character')</script>"; // else we show an error message
+            }
+        }else{
+            echo "<script>alert('Error: cannot upload image of character')</script>"; // else we show an error message
+        }
+    }else{
+        // query to add a new character in game_character table without image
+        $queryAddChar = "INSERT INTO game_character (GAME_ELEMENTS_ID, name, type_char, describe_char) 
+                     VALUES ('$gameElementsId' ,'$nameOfChar', '$charType', '$charDescription');";
+
+        //executing the query
+        if($conn->query($queryAddChar)){
+            header("Refresh:0"); // if query is executed successfully we refresh the page
+        }else{
+            echo "<script>alert('Error: cannot add character')</script>"; // else we show an error message
+        }
+    }
+
+}
+
+/*
+ * Actions when user updates information for an character
+ */
+if(isset($_POST["editCharacter"])){
+    $idOfChar = $_POST["keyIdChar"];
+    $nameOfChar = test_data($_POST["charName"]); // getting the name of the character
+    $charType = test_data($_POST["charType"]); // getting the type of the character
+    $charDescription = test_data($_POST["charDescription"]); // getting the description of the character
+
+    $queryUpdateCharacter = "UPDATE game_character SET name='$nameOfChar', type_char='$charType', describe_char='$charDescription'
+                             WHERE ID='$idOfChar';";
+    if($conn->query($queryUpdateCharacter)){
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    }else{
+        echo "<script>alert('Error: cannot update character')</script>"; // else we show an error message
+    }
+}
+
+/*
+ * Actions when user deletes a character
+ */
+if(isset($_POST["deleteCharacter"])){
+    $idOfCharToDelete = $_POST["keyIdChar"];
+
+    $queryDeleteChar = "DELETE FROM game_character WHERE ID='$idOfCharToDelete';";
+    if($conn->query($queryDeleteChar)){
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    }else{
+        echo "<script>alert('Error: cannot delete character')</script>";
+    }
+}
+
+/*
+ * Function to filter data.
+ */
+function test_data($data)
+{
+    return htmlspecialchars(stripslashes($data));
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -79,6 +203,7 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
     <link rel="icon" href="../Images/favicon-new.ico">
 
     <script src="../JavaScript/Main.js"></script>
+    <script src="../JavaScript/WorldBuilding.js"></script>
 </head>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -86,13 +211,14 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
 
 <body>
 
+<!--- Bar for big screens -->
 <div class="w3-bar w3-blue showBar">
     <a href="../index.php" class="w3-bar-item w3-button"><img src="../Images/favicon-new.ico" alt="logo"> Start Page</a>
     <a href="../write.php" class="w3-bar-item w3-button">Write GDD</a>
     <a href="../contact.php" class="w3-bar-item w3-button">Contact</a>
     <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
     <div class="w3-dropdown-hover w3-right">
-        <button class="w3-button"><b>Profile</b> <i class="fa fa-user-circle"></i></button>
+        <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
             <a href="../profile.php" class="w3-bar-item w3-button">Settings</a>
             <a href="../logout.php" class="w3-bar-item w3-button">Logout</a>
@@ -100,7 +226,7 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
     </div>
 </div>
 
-
+<!--- Side bar for small screens -->
 <div class="w3-sidebar w3-blue w3-bar-block w3-border-right w3-animate-left" id="sideBar" style="display: none;">
     <button onclick="hideElement('sideBar')" class="w3-bar-item w3-large">Close <i class="fa fa-close"></i></button>
     <a href="../index.php" class="w3-bar-item w3-button"><img src="../Images/favicon-new.ico" alt="logo"> Start Page</a>
@@ -108,7 +234,7 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
     <a href="../contact.php" class="w3-bar-item w3-button">Contact</a>
     <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
     <div class="w3-dropdown-hover w3-right">
-        <button class="w3-button"><b>Profile</b> <i class="fa fa-user-circle"></i></button>
+        <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
             <a href="../profile.php" class="w3-bar-item w3-button">Settings</a>
             <a href="../logout.php" class="w3-bar-item w3-button">Logout</a>
@@ -116,6 +242,7 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
     </div>
 </div>
 
+<!--- Button to show side bar on click -->
 <button class="w3-button w3-blue w3-xlarge showSideBar" onclick="showElement('sideBar')"><i class="fa fa-bars"></i></button>
 
 <div class="w3-container pathPosition">
@@ -124,6 +251,7 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
     <a href="GameElementsWorld.php?id=<?php if(isset($idOfDocument)) echo $idOfDocument ?>" class="w3-hover-text-blue">Game Elements</a>
 </div>
 
+<!--- Panel of the form -->
 <div class="w3-container w3-blue panelInFormWorld">
     <h3 class="headerPanel">Fill the characteristics for game elements</h3>
 </div>
@@ -131,54 +259,40 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
 <!--- Content of characters modal -->
 <div id="characters-modal" class="w3-modal">
     <div class="w3-modal-content w3-animate-zoom">
-        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" class="w3-container" style="text-align: center;">
+        <form method="post" action="" enctype="multipart/form-data" class="w3-container" style="text-align: center;">
                 <span onclick="hideElement('characters-modal')" class="w3-button w3-display-topright w3-hover-red">
                         <i class="fa fa-close"></i></span>
             <h3 class="headerForModal">Add a character</h3><br>
 
-            <label for="imgChar" class="w3-margin-top" id="labelImChar">Choose an image of the character</label><br>
+            <label for="imgChar" class="w3-margin-top">Choose an image of the character</label><br>
             <input type="file" id="imgChar" class="w3-margin-top" name="imgChar" accept="image/*"><br><br>
 
-            <label for="charAdd" class="w3-margin-top">Write the name of the character *</label>
-            <input class="w3-input w3-border w3-margin-top" type="text" id="charAdd" name="charAdd" required><br>
+            <label for="charName<?php echo $gameElementsId; ?>" class="w3-margin-top">Write the name of the character *</label>
+            <input class="w3-input w3-border w3-margin-top" type="text" id="charName<?php echo $gameElementsId; ?>" name="charName" required><br>
 
-            <label for="charType" class="w3-margin-top">Write the type of the character *</label>
-            <input class="w3-input w3-border w3-margin-top" type="text" id="charType" name="charType"
+            <label for="charType<?php echo $gameElementsId; ?>" class="w3-margin-top">Write the type of the character *</label>
+            <input class="w3-input w3-border w3-margin-top" type="text" id="charType<?php echo $gameElementsId; ?>" name="charType"
                    placeholder="e.g human, animal" required><br>
 
-            <label for="charDescription">Describe the character</label>
-            <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="charDescription"
+            <label for="charDescription<?php echo $gameElementsId; ?>">Describe the character</label>
+            <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="charDescription<?php echo $gameElementsId; ?>"
                       name="charDescription"></textarea><br>
             <div class="w3-container w3-padding-16">
-                <button class="w3-button w3-green transmission" id="saveCharacter" type="submit"
-                        name="saveCharacter">Save</button>
+                <button class="w3-button w3-green transmission" type="submit" name="saveCharacter">Save</button>
             </div>
         </form>
     </div>
 </div>
 
-<form class="w3-container w3-border w3-hover-shadow w3-padding-16 formWorldBuilding">
-    <label for="story">Describe the story of the game</label>
-    <textarea class="w3-input w3-border w3-margin-top" rows="2" type="text" id="story" name="story"></textarea><br>
-
-    <label for="characters">Add characters of the game</label>
-    <button onclick="showElement('characters-modal')" class="w3-button w3-circle w3-border
-    w3-border-blue w3-hover-blue w3-margin-left transmission" id="characters" type="button" name="characters">
-        <i class="fa fa-plus"></i></button><br><br>
-
-
-    <label for="objects">Add objects that are in the game</label>
-    <button onclick="showElement('objects-modal')" class="w3-button w3-circle w3-border
-    w3-border-blue w3-hover-blue w3-margin-left transmission" id="objects" type="button" name="characters">
-        <i class="fa fa-plus"></i></button><br><br>
-
-    <div id="objects-modal" class="w3-modal">
-        <div class="w3-modal-content w3-animate-zoom">
-            <div class="w3-container">
+<!--- Modal for objects -->
+<div id="objects-modal" class="w3-modal">
+    <div class="w3-modal-content w3-animate-zoom">
+        <div class="w3-container">
                 <span onclick="hideElement('objects-modal')" class="w3-button w3-display-topright w3-hover-red">
                     <i class="fa fa-close"></i></span>
-                <h3 class="headerForModal">Add an object</h3><br>
+            <h3 class="headerForModal">Add an object</h3><br>
 
+            <form method="post" action="" class="w3-container" style="text-align: center;">
                 <label for="imgObject" class="w3-margin-top" id="labelImObj">Choose an image of the object</label><br>
                 <input type="file" id="imgObject" class="w3-margin-top" name="imgObject" accept="image/*"><br><br>
 
@@ -196,22 +310,20 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
                 <div class="w3-container w3-padding-16">
                     <button class="w3-button w3-green transmission" id="saveObject" type="submit" name="saveObject">Save</button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+</div>
 
-    <label for="locations">Add locations of the game</label>
-    <button onclick="showElement('locations-modal')" class="w3-button w3-circle w3-border
-    w3-border-blue w3-hover-blue w3-margin-left transmission" id="locations" type="button" name="locations">
-        <i class="fa fa-plus"></i></button><br><br>
-
-    <div id="locations-modal" class="w3-modal w3-padding-16">
-        <div class="w3-modal-content w3-animate-zoom">
-            <div class="w3-container">
+<!--- Modal for locations -->
+<div id="locations-modal" class="w3-modal w3-padding-16">
+    <div class="w3-modal-content w3-animate-zoom">
+        <div class="w3-container">
                 <span onclick="hideElement('locations-modal')" class="w3-button w3-display-topright w3-hover-red">
                     <i class="fa fa-close"></i></span>
-                <h3 class="headerForModal">Add a location</h3><br>
+            <h3 class="headerForModal">Add a location</h3><br>
 
+            <form method="post" action="" class="w3-container" style="text-align: center;">
                 <label for="imgLocation" class="w3-margin-top" id="labelImLoc">Choose an image of the location</label><br>
                 <input type="file" id="imgLocation" class="w3-margin-top" name="imgLocation" accept="image/*"><br><br>
 
@@ -271,22 +383,20 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
                 <div class="w3-container w3-padding-16">
                     <button class="w3-button w3-green transmission" id="saveLocation" type="submit" name="saveLocation">Save</button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+</div>
 
-    <label for="dialogs">Add dialogs between characters of the game</label>
-    <button onclick="showElement('dialogs-modal')" class="w3-button w3-circle w3-border
-    w3-border-blue w3-hover-blue w3-margin-left transmission" id="dialogs" type="button" name="dialogs">
-        <i class="fa fa-plus"></i></button><br><br>
-
-    <div id="dialogs-modal" class="w3-modal">
-        <div class="w3-modal-content w3-animate-zoom">
-            <div class="w3-container">
+<!--- Modal for dialogs -->
+<div id="dialogs-modal" class="w3-modal">
+    <div class="w3-modal-content w3-animate-zoom">
+        <div class="w3-container">
                 <span onclick="hideElement('dialogs-modal')" class="w3-button w3-display-topright w3-hover-red">
                     <i class="fa fa-close"></i></span>
-                <h3 class="headerForModal">Add a dialog</h3><br>
+            <h3 class="headerForModal">Add a dialog</h3><br>
 
+            <form method="post" action="" class="w3-container" style="text-align: center;">
                 <label for="selectFromChar">Choose a character that talks to others *</label>
                 <select class="w3-select w3-border w3-margin-top" id="selectFromChar" name="selectFromChar" required>
                     <option value="" disabled selected>Choose a character</option>
@@ -325,22 +435,20 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
                 <div class="w3-container w3-padding-16">
                     <button class="w3-button w3-green transmission" id="saveDialog" type="submit" name="saveDialog">Save</button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+</div>
 
-    <label for="scenes">Add scenes of the game</label>
-    <button onclick="showElement('scenes-modal')" class="w3-button w3-circle w3-border
-    w3-border-blue w3-hover-blue w3-margin-left transmission" id="scenes" type="button" name="scenes">
-        <i class="fa fa-plus"></i></button><br><br>
-
-    <div id="scenes-modal" class="w3-modal w3-padding-16">
-        <div class="w3-modal-content w3-animate-zoom">
-            <div class="w3-container">
+<!--- Modal for scenes -->
+<div id="scenes-modal" class="w3-modal w3-padding-16">
+    <div class="w3-modal-content w3-animate-zoom">
+        <div class="w3-container">
                 <span onclick="hideElement('scenes-modal')" class="w3-button w3-display-topright w3-hover-red">
                     <i class="fa fa-close"></i></span>
-                <h3 class="headerForModal">Add a scene</h3><br>
+            <h3 class="headerForModal">Add a scene</h3><br>
 
+            <form method="post" action="" class="w3-container" style="text-align: center;">
                 <label for="sceneName" class="w3-margin-top">Write the name of the scene *</label>
                 <input class="w3-input w3-border w3-margin-top" type="text" id="sceneName" name="sceneName" required><br>
 
@@ -419,22 +527,20 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
                 <div class="w3-container w3-padding-16">
                     <button class="w3-button w3-green transmission" id="saveScene" type="submit" name="saveScene">Save</button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+</div>
 
-    <label for="objectives">Add an objective of the game</label>
-    <button onclick="showElement('objectives-modal')" class="w3-button w3-circle w3-border
-    w3-border-blue w3-hover-blue w3-margin-left transmission" id="objectives" type="button" name="objectives">
-        <i class="fa fa-plus"></i></button><br><br>
-
-    <div id="objectives-modal" class="w3-modal w3-padding-16">
-        <div class="w3-modal-content w3-animate-zoom">
-            <div class="w3-container">
+<!--- Modal for objectives -->
+<div id="objectives-modal" class="w3-modal w3-padding-16">
+    <div class="w3-modal-content w3-animate-zoom">
+        <div class="w3-container">
                 <span onclick="hideElement('objectives-modal')" class="w3-button w3-display-topright w3-hover-red">
                     <i class="fa fa-close"></i></span>
-                <h3 class="headerForModal">Add an objective</h3><br>
+            <h3 class="headerForModal">Add an objective</h3><br>
 
+            <form method="post" action="" class="w3-container" style="text-align: center;">
                 <label for="objTitle" class="w3-margin-top">Write the title of the objective *</label>
                 <input class="w3-input w3-border w3-margin-top" type="text" id="objTitle" name="objTitle" required><br>
 
@@ -514,17 +620,163 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
                 <div class="w3-container w3-padding-16">
                     <button class="w3-button w3-green transmission" id="saveObjective" type="submit" name="saveObjective">Save</button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+</div>
 
-    <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue transmission" type="button" value="Submit">
+
+<?php
+    // query to load all characters
+    $queryLoadAllCharacters = "SELECT * FROM game_character WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+    //$resultLoadAllCharacters = $conn->query($queryLoadAllCharacters); // executing the query
+    $resultLoadAllCharacters = mysqli_query($conn, $queryLoadAllCharacters); // executing the query
+
+    while($rowLoadChar = $resultLoadAllCharacters->fetch_assoc()){
+        $idOfChar = $rowLoadChar["ID"];
+        $nameOfChar = $rowLoadChar["name"];
+        $typeOfChar = $rowLoadChar["type_char"];
+        $charDescribe = $rowLoadChar["describe_char"];
+        $idOfImage = $rowLoadChar["IMAGE_ID"];
+
+        if(isset($idOfImage)){
+            $resultImage = $conn->query("SELECT filename FROM image WHERE ID='$idOfImage';");
+
+            if($rowImage = $resultImage->fetch_assoc()){
+                $imgFilename = $rowImage["filename"];
+            }
+        }
+
+        echo "<div id=\"characters-modal-edit$idOfChar\" class=\"w3-modal w3-padding-16\">
+    <div class=\"w3-modal-content w3-animate-zoom\">
+        <form method=\"post\" action=\"\" class=\"w3-container\" style=\"text-align: center;\">
+                <span onclick=\"hideElement('characters-modal-edit$idOfChar')\" class=\"w3-button w3-display-topright w3-hover-red\">
+                        <i class=\"fa fa-close\"></i></span>
+            <h3 class=\"headerForModal\">Edit character $nameOfChar</h3><br>";
+
+            if(isset($imgFilename)){
+                echo "<img src='$docRoot/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Characters/$imgFilename' style='width: 50%; height: auto;'><br><br>";
+            }
+
+            echo "<label for=\"imgCharEdit$idOfChar\" class=\"w3-margin-top\" id=\"labelImChar\">Choose an image of the character</label><br>
+            <input type=\"file\" id=\"imgCharEdit$idOfChar\" class=\"w3-margin-top\" name=\"imgChar\" accept=\"image/*\"><br><br>
+            
+            <input type=\"hidden\"  name=\"keyIdChar\" value=\"$idOfChar\" />
+
+            <label for=\"charNameEdit$idOfChar\" class=\"w3-margin-top\">Write the name of the character *</label>
+            <input class=\"w3-input w3-border w3-margin-top\" type=\"text\" id=\"charNameEdit$idOfChar\" value=\"$nameOfChar\" name=\"charName\" required><br>
+
+            <label for=\"charTypeEdit$idOfChar\" class=\"w3-margin-top\">Write the type of the character *</label>
+            <input class=\"w3-input w3-border w3-margin-top\" type=\"text\" id=\"charTypeEdit$idOfChar\" name=\"charType\"
+                   placeholder=\"e.g human, animal\" value=\"$typeOfChar\" required><br>
+
+            <label for=\"charDescriptionEdit$idOfChar\">Describe the character</label>
+            <textarea class=\"w3-input w3-border w3-margin-top\" rows=\"3\" type=\"text\" id=\"charDescriptionEdit$idOfChar\"
+                      name=\"charDescription\">$charDescribe</textarea><br>
+            <div class=\"w3-container w3-padding-16\">
+                <button class=\"w3-button w3-green transmission\" type=\"submit\" name=\"editCharacter\">Save</button>
+            </div>
+        </form>
+    </div>
+</div>";
+    }
+?>
+
+<!--- The form of game elements where user can add characters, objects, etc -->
+<form class="w3-container w3-border w3-hover-shadow w3-padding-16 formWorldBuilding" method="post"
+      action="">
+    <label for="story">Describe the story of the game</label>
+    <textarea class="w3-input w3-border w3-margin-top" rows="2" type="text" id="story" name="story"><?php if(isset($gameStoryValue)) echo $gameStoryValue; ?></textarea><br>
+
+    <label for="characters">Add characters of the game</label>
+    <button onclick="showElement('characters-modal')" class="w3-button w3-circle w3-border
+    w3-border-blue w3-hover-blue w3-margin-left transmission" id="characters" type="button" name="characters">
+        <i class="fa fa-plus"></i></button><br><br>
+
+    <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableLoadCharacters">
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+
+        <?php
+            $queryLoadAllCharactersV2 = "SELECT * FROM game_character WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+            //$resultLoadAllCharactersV2 = $conn->query($queryLoadAllCharactersV2); // executing the query
+            $resultLoadAllCharactersV2 = mysqli_query($conn, $queryLoadAllCharactersV2); // executing the query
+
+            // Loading all entered characters
+            while($rowLoadChar = $resultLoadAllCharactersV2->fetch_assoc()){
+                $idOfCharLoad = $rowLoadChar["ID"];
+                $nameCharLoad = $rowLoadChar["name"];
+
+                echo "<tr><td>" . $nameCharLoad . "</td><td>" . $rowLoadChar["type_char"] .
+                    "</td><td><button class=\"w3-button w3-border transmission\" type=\"button\" onclick=\"showElement('characters-modal-edit$idOfCharLoad')\">
+                     <i class=\"fa fa-edit\"></i></button></td>" . "<td><button class=\"w3-button w3-border transmission\" 
+                          onclick=\"return confirm('Are you sure that you want to delete the character $nameCharLoad')\" type=\"submit\"
+                                    name=\"deleteCharacter\"><i class=\"fa fa-trash\"></i></button></td>
+                                    <input type=\"hidden\"  name=\"keyIdChar\" value=\"$idOfCharLoad\" /></tr>";
+            }
+        ?>
+    </table><br>
+
+
+    <label for="objects">Add objects that are in the game</label>
+    <button onclick="showElement('objects-modal')" class="w3-button w3-circle w3-border
+    w3-border-blue w3-hover-blue w3-margin-left transmission" id="objects" type="button" name="characters">
+        <i class="fa fa-plus"></i></button><br><br>
+
+
+    <label for="locations">Add locations of the game</label>
+    <button onclick="showElement('locations-modal')" class="w3-button w3-circle w3-border
+    w3-border-blue w3-hover-blue w3-margin-left transmission" id="locations" type="button" name="locations">
+        <i class="fa fa-plus"></i></button><br><br>
+
+
+    <label for="dialogs">Add dialogs between characters of the game</label>
+    <button onclick="showElement('dialogs-modal')" class="w3-button w3-circle w3-border
+    w3-border-blue w3-hover-blue w3-margin-left transmission" id="dialogs" type="button" name="dialogs">
+        <i class="fa fa-plus"></i></button><br><br>
+
+
+    <label for="scenes">Add scenes of the game</label>
+    <button onclick="showElement('scenes-modal')" class="w3-button w3-circle w3-border
+    w3-border-blue w3-hover-blue w3-margin-left transmission" id="scenes" type="button" name="scenes">
+        <i class="fa fa-plus"></i></button><br><br>
+
+    <label for="objectives">Add an objective of the game</label>
+    <button onclick="showElement('objectives-modal')" class="w3-button w3-circle w3-border
+    w3-border-blue w3-hover-blue w3-margin-left transmission" id="objectives" type="button" name="objectives">
+        <i class="fa fa-plus"></i></button><br><br>
+
+    <!--- A message to inform the user that updated the story of the game successfully -->
+    <div class="w3-panel w3-green" <?php if($successUpdateStory) {
+        echo 'style="display: block"';
+    }else{
+        echo 'style="display: none"';
+    }?>>
+        <p>You have successfully updated the story of the game!</p>
+    </div>
+
+    <!--- A message to inform the user that there was an error and didn't update the story of the game -->
+    <div class="w3-panel w3-red" <?php if($somethingWrongStory) {
+        echo 'style="display: block"';
+    }else{
+        echo 'style="display: none"';
+    }?>>
+        <p>Something went wrong. Unable to update the story of the game.</p>
+    </div>
+
+    <!--- Submit button for the form -->
+    <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue transmission" type="submit" name="mainSubmit" value="Submit">
 </form>
 
+<!--- A connection to assets of world building that says that the user can continue with editing the assets -->
 <div class="w3-container continueAssets">
     <h3 style="">Continue with editing Assets of World Building</h3>
-    <?php echo "<a href=\"AssetsWorld.php?id=$idOfDocument\""; ?> class="w3-bar-item w3-button w3-margin-top transmission w3-text-blue w3-border w3-xxlarge w3-round w3-hover-blue">
-        Assets <i class="fa fa-angle-double-right"></i></a>
+    <?php echo "<a href=\"AssetsWorld.php?id=$idOfDocument\" class=\"w3-bar-item w3-button w3-margin-top transmission w3-text-blue w3-border w3-xxlarge w3-round w3-hover-blue\">
+        Assets <i class=\"fa fa-angle-double-right\"></i></a>"?>
 </div>
 </body>
 </html>
