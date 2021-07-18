@@ -70,6 +70,7 @@ if (isset($_POST['saveDocument'])) {
             $docRoot = $_SERVER["DOCUMENT_ROOT"];
 
             mkdir("$docRoot/ImagesFromUsers-GDD/$name/WorldBuilding/Characters", 0755 ,true);
+            mkdir("$docRoot/ImagesFromUsers-GDD/$name/WorldBuilding/Objects", 0755 ,true);
 
             header('Location:write.php');
 

@@ -108,17 +108,18 @@ if(isset($_POST["mainSubmit"])){
 }
 
 $docRoot = $_SERVER["DOCUMENT_ROOT"]; // the path for the root of document
+
 /*
  * Actions when user adds a character
  */
-if(isset($_POST["saveCharacter"])){
+if (isset($_POST["saveCharacter"])) {
     $nameOfChar = test_data($_POST["charName"]); // getting the name of the character
     $charType = test_data($_POST["charType"]); // getting the type of the character
     $charDescription = test_data($_POST["charDescription"]); // getting the description of the character
 
     $uploadedImage = false;
 
-    if($_FILES["imgChar"]["name"] !== ""){
+    if ($_FILES["imgChar"]["name"] !== "") {
         $filename = $_FILES["imgChar"]["name"];
         $tempname = $_FILES["imgChar"]["tmp_name"];
         $folder = "$docRoot/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Characters/".$filename;
@@ -152,7 +153,6 @@ if(isset($_POST["saveCharacter"])){
             echo "<script>alert('Error: cannot add character')</script>"; // else we show an error message
         }
     }
-
 }
 
 /*
@@ -164,12 +164,56 @@ if(isset($_POST["editCharacter"])){
     $charType = test_data($_POST["charType"]); // getting the type of the character
     $charDescription = test_data($_POST["charDescription"]); // getting the description of the character
 
-    $queryUpdateCharacter = "UPDATE game_character SET name='$nameOfChar', type_char='$charType', describe_char='$charDescription'
+    // If user submits a picture for the character
+    if ($_FILES["imgCharEdit"]["name"] !== "") {
+        $filename = $_FILES["imgCharEdit"]["name"]; // getting the filename of the image
+        $tempname = $_FILES["imgCharEdit"]["tmp_name"];
+
+        // Finding if character has a submitted picture
+        $queryFindIfCharHasPicture = "SELECT IMAGE_ID FROM game_character WHERE ID = '$idOfChar';";
+        $resultFindPicture = $conn->query($queryFindIfCharHasPicture);
+
+        if ($rowFindPicture = $resultFindPicture->fetch_assoc()) {
+            if (isset($rowFindPicture["IMAGE_ID"])) {
+                $idOfPictureToDel = $rowFindPicture["IMAGE_ID"]; // getting the id of the image row
+
+                // getting the filename for the selected row from table image
+                $resultFindFilenameOfPic = $conn->query("SELECT filename FROM image WHERE ID = '$idOfPictureToDel';");
+                if ($rowFilename = $resultFindFilenameOfPic->fetch_assoc()) {
+                    // the url of the image that we want to delete
+                    $filenameUrlDel = "$docRoot/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Characters/".$rowFilename["filename"];
+                    unlink($filenameUrlDel); // deletes the picture
+
+                    // the url to add the new image
+                    $folder = "$docRoot/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Characters/".$filename;
+
+                    // moving the new image to the correct path
+                    if (move_uploaded_file($tempname, $folder)) {
+                        // query to update the filename of character's image
+                        if ($conn->query("UPDATE image SET filename='$filename' WHERE ID='$idOfPictureToDel';")) {
+                            // query to update other information of the character
+                            $queryUpdateChar = "UPDATE game_character SET name='$nameOfChar', type_char='$charType', describe_char='$charDescription' WHERE ID='$idOfChar';";
+
+                            //executing the query
+                            if ($conn->query($queryUpdateChar)) {
+                                header("Refresh:0"); // if query is executed successfully we refresh the page
+                            } else {
+                                echo "<script>alert('Error: cannot update character')</script>"; // else we show an error message
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    } else {
+        // query to update information about the character
+        $queryUpdateCharacter = "UPDATE game_character SET name='$nameOfChar', type_char='$charType', describe_char='$charDescription'
                              WHERE ID='$idOfChar';";
-    if($conn->query($queryUpdateCharacter)){
-        header("Refresh:0"); // if query is executed successfully we refresh the page
-    }else{
-        echo "<script>alert('Error: cannot update character')</script>"; // else we show an error message
+        if($conn->query($queryUpdateCharacter)){
+            header("Refresh:0"); // if query is executed successfully we refresh the page
+        }else{
+            echo "<script>alert('Error: cannot update character')</script>"; // else we show an error message
+        }
     }
 }
 
@@ -184,6 +228,85 @@ if(isset($_POST["deleteCharacter"])){
         header("Refresh:0"); // if query is executed successfully we refresh the page
     }else{
         echo "<script>alert('Error: cannot delete character')</script>";
+    }
+}
+
+/*
+ * Actions when user adds an object
+ */
+if (isset($_POST["saveObject"])) {
+    $nameOfObj = test_data($_POST["objName"]);
+    $typeOfObj = test_data($_POST["typeOfObj"]);
+    $descriptionOfObj = test_data($_POST["objDescription"]);
+
+    $uploadedImage = false;
+
+    if ($_FILES["imgObject"]["name"] !== "") {
+        $filename = $_FILES["imgObject"]["name"];
+        $tempname = $_FILES["imgObject"]["tmp_name"];
+        $folder = "$docRoot/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Objects/".$filename;
+
+        if (mysqli_query($conn, "INSERT INTO image (filename) VALUES ('$filename');") && move_uploaded_file($tempname, $folder)) {
+            $uploadedImage = true;
+            $image_id = mysqli_insert_id($conn);
+
+            // query to add a new object in game_object table with image
+            $queryAddObj = "INSERT INTO game_object (GAME_ELEMENTS_ID, IMAGE_ID, name, type_obj, describe_obj) 
+                     VALUES ('$gameElementsId', '$image_id', '$nameOfObj', '$typeOfObj', '$descriptionOfObj');";
+
+            //executing the query
+            if($conn->query($queryAddObj)){
+                //header("Refresh:0"); // if query is executed successfully we refresh the page
+            }else{
+                //echo "<script>alert('Error: cannot add object')</script>"; // else we show an error message
+                echo "Error: " . $queryAddObj . "<br>" . $conn->error;
+            }
+        }else{
+            echo "<script>alert('Error: cannot upload image of object')</script>"; // else we show an error message
+        }
+    }else{
+        // query to add a new object in game_object table without image
+        $queryAddObj = "INSERT INTO game_object (GAME_ELEMENTS_ID, name, type_obj, describe_obj) 
+                     VALUES ('$gameElementsId', '$nameOfObj', '$typeOfObj', '$descriptionOfObj');";
+
+        //executing the query
+        if($conn->query($queryAddObj)){
+            header("Refresh:0"); // if query is executed successfully we refresh the page
+        }else{
+            echo "<script>alert('Error: cannot add object')</script>"; // else we show an error message
+        }
+    }
+}
+
+/*
+ * Actions when user updates information for an object
+ */
+if(isset($_POST["editObject"])){
+    $idOfObj = $_POST["keyIdObj"];
+    $nameOfObj = test_data($_POST["objName"]); // getting the name of the object
+    $objType = test_data($_POST["objType"]); // getting the type of the object
+    $objDescription = test_data($_POST["objDescription"]); // getting the description of the object
+
+    $queryUpdateObject = "UPDATE game_object SET name='$nameOfObj', type_obj='$objType', describe_obj='$objDescription'
+                             WHERE ID='$idOfObj';";
+    if($conn->query($queryUpdateObject)){
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    }else{
+        echo "<script>alert('Error: cannot update the object')</script>"; // else we show an error message
+    }
+}
+
+/*
+ * Actions when user deletes an object
+ */
+if(isset($_POST["deleteObject"])){
+    $idOfObjToDelete = $_POST["keyIdObj"];
+
+    $queryDeleteObj = "DELETE FROM game_object WHERE ID='$idOfObjToDelete';";
+    if($conn->query($queryDeleteObj)){
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    }else{
+        echo "<script>alert('Error: cannot delete object')</script>";
     }
 }
 
@@ -264,8 +387,8 @@ function test_data($data)
                         <i class="fa fa-close"></i></span>
             <h3 class="headerForModal">Add a character</h3><br>
 
-            <label for="imgChar" class="w3-margin-top">Choose an image of the character</label><br>
-            <input type="file" id="imgChar" class="w3-margin-top" name="imgChar" accept="image/*"><br><br>
+            <label for="imgChar<?php echo $gameElementsId; ?>" class="w3-margin-top">Choose an image of the character</label><br>
+            <input type="file" id="imgChar<?php echo $gameElementsId; ?>" class="w3-margin-top" name="imgChar" accept="image/*"><br><br>
 
             <label for="charName<?php echo $gameElementsId; ?>" class="w3-margin-top">Write the name of the character *</label>
             <input class="w3-input w3-border w3-margin-top" type="text" id="charName<?php echo $gameElementsId; ?>" name="charName" required><br>
@@ -292,19 +415,19 @@ function test_data($data)
                     <i class="fa fa-close"></i></span>
             <h3 class="headerForModal">Add an object</h3><br>
 
-            <form method="post" action="" class="w3-container" style="text-align: center;">
-                <label for="imgObject" class="w3-margin-top" id="labelImObj">Choose an image of the object</label><br>
-                <input type="file" id="imgObject" class="w3-margin-top" name="imgObject" accept="image/*"><br><br>
+            <form method="post" action="" enctype="multipart/form-data" class="w3-container" style="text-align: center;">
+                <label for="imgObject<?php echo $gameElementsId; ?>" class="w3-margin-top" id="labelImObj">Choose an image of the object</label><br>
+                <input type="file" id="imgObject<?php echo $gameElementsId; ?>" class="w3-margin-top" name="imgObject" accept="image/*"><br><br>
 
-                <label for="objName" class="w3-margin-top">Write the name of the object *</label>
-                <input class="w3-input w3-border w3-margin-top" type="text" id="objName" name="objName" required><br>
+                <label for="objName<?php echo $gameElementsId; ?>" class="w3-margin-top">Write the name of the object *</label>
+                <input class="w3-input w3-border w3-margin-top" type="text" id="objName<?php echo $gameElementsId; ?>" name="objName" required><br>
 
-                <label for="typeOfObj" class="w3-margin-top">Write the type of the object *</label>
-                <input class="w3-input w3-border w3-margin-top" type="text" id="typeOfObj" name="typeOfObj"
+                <label for="typeOfObj<?php echo $gameElementsId; ?>" class="w3-margin-top">Write the type of the object *</label>
+                <input class="w3-input w3-border w3-margin-top" type="text" id="typeOfObj<?php echo $gameElementsId; ?>" name="typeOfObj"
                        placeholder="e.g table, car, gun" required><br>
 
-                <label for="objDescription">Describe the object</label>
-                <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="objDescription"
+                <label for="objDescription<?php echo $gameElementsId; ?>">Describe the object</label>
+                <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="objDescription<?php echo $gameElementsId; ?>"
                           name="objDescription"></textarea><br>
 
                 <div class="w3-container w3-padding-16">
@@ -649,17 +772,17 @@ function test_data($data)
 
         echo "<div id=\"characters-modal-edit$idOfChar\" class=\"w3-modal w3-padding-16\">
     <div class=\"w3-modal-content w3-animate-zoom\">
-        <form method=\"post\" action=\"\" class=\"w3-container\" style=\"text-align: center;\">
+        <form method=\"post\" action=\"\" enctype=\"multipart/form-data\" class=\"w3-container\" style=\"text-align: center;\">
                 <span onclick=\"hideElement('characters-modal-edit$idOfChar')\" class=\"w3-button w3-display-topright w3-hover-red\">
                         <i class=\"fa fa-close\"></i></span>
             <h3 class=\"headerForModal\">Edit character $nameOfChar</h3><br>";
 
             if(isset($imgFilename)){
-                echo "<img src='$docRoot/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Characters/$imgFilename' style='width: 50%; height: auto;'><br><br>";
+                echo "<img src='/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Characters/$imgFilename' alt='Image of character' style='width: 50%; height: auto;'><br><br>";
             }
 
             echo "<label for=\"imgCharEdit$idOfChar\" class=\"w3-margin-top\" id=\"labelImChar\">Choose an image of the character</label><br>
-            <input type=\"file\" id=\"imgCharEdit$idOfChar\" class=\"w3-margin-top\" name=\"imgChar\" accept=\"image/*\"><br><br>
+            <input type=\"file\" id=\"imgCharEdit$idOfChar\" class=\"w3-margin-top\" name=\"imgCharEdit\" accept=\"image/*\"><br><br>
             
             <input type=\"hidden\"  name=\"keyIdChar\" value=\"$idOfChar\" />
 
@@ -680,6 +803,59 @@ function test_data($data)
     </div>
 </div>";
     }
+
+// query to load all objects
+$queryLoadAllObjects = "SELECT * FROM game_object WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+$resultLoadAllObjects = mysqli_query($conn, $queryLoadAllObjects); // executing the query
+
+while($rowLoadObj = $resultLoadAllObjects->fetch_assoc()){
+    $idOfObj = $rowLoadObj["ID"];
+    $nameOfObj = $rowLoadObj["name"];
+    $typeOfObj = $rowLoadObj["type_obj"];
+    $objDescribe = $rowLoadObj["describe_obj"];
+    $idOfImage = $rowLoadObj["IMAGE_ID"];
+
+    if(isset($idOfImage)){
+        $resultImage = $conn->query("SELECT filename FROM image WHERE ID='$idOfImage';");
+
+        if($rowImage = $resultImage->fetch_assoc()){
+            $imgFilename = $rowImage["filename"];
+        }
+    }
+
+    echo "<div id=\"objects-modal-edit$idOfObj\" class=\"w3-modal w3-padding-16\">
+    <div class=\"w3-modal-content w3-animate-zoom\">
+        <form method=\"post\" action=\"\" class=\"w3-container\" style=\"text-align: center;\">
+                <span onclick=\"hideElement('objects-modal-edit$idOfObj')\" class=\"w3-button w3-display-topright w3-hover-red\">
+                        <i class=\"fa fa-close\"></i></span>
+            <h3 class=\"headerForModal\">Edit object $nameOfObj</h3><br>";
+
+    if(isset($imgFilename)){
+        echo "<img src='/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Objects/$imgFilename' alt='Image of object' style='width: 50%; height: auto;'><br><br>";
+    }
+
+    echo "<label for=\"imgObjEdit$idOfObj\" class=\"w3-margin-top\" id=\"labelImObj\">Choose an image of the object</label><br>
+            <input type=\"file\" id=\"imgObjEdit$idOfObj\" class=\"w3-margin-top\" name=\"imgObj\" accept=\"image/*\"><br><br>
+            
+            <input type=\"hidden\"  name=\"keyIdObj\" value=\"$idOfObj\" />
+
+            <label for=\"objNameEdit$idOfObj\" class=\"w3-margin-top\">Write the name of the object *</label>
+            <input class=\"w3-input w3-border w3-margin-top\" type=\"text\" id=\"objNameEdit$idOfObj\" value=\"$nameOfObj\" name=\"objName\" required><br>
+
+            <label for=\"objTypeEdit$idOfObj\" class=\"w3-margin-top\">Write the type of the object *</label>
+            <input class=\"w3-input w3-border w3-margin-top\" type=\"text\" id=\"objTypeEdit$idOfObj\" name=\"objType\"
+                   placeholder=\"e.g table, car, gun\" value=\"$typeOfObj\" required><br>
+
+            <label for=\"objDescriptionEdit$idOfObj\">Describe the object</label>
+            <textarea class=\"w3-input w3-border w3-margin-top\" rows=\"3\" type=\"text\" id=\"objDescriptionEdit$idOfObj\"
+                      name=\"objDescription\">$objDescribe</textarea><br>
+            <div class=\"w3-container w3-padding-16\">
+                <button class=\"w3-button w3-green transmission\" type=\"submit\" name=\"editObject\">Save</button>
+            </div>
+        </form>
+    </div>
+</div>";
+}
 ?>
 
 <!--- The form of game elements where user can add characters, objects, etc -->
@@ -721,11 +897,37 @@ function test_data($data)
         ?>
     </table><br>
 
-
     <label for="objects">Add objects that are in the game</label>
     <button onclick="showElement('objects-modal')" class="w3-button w3-circle w3-border
     w3-border-blue w3-hover-blue w3-margin-left transmission" id="objects" type="button" name="characters">
         <i class="fa fa-plus"></i></button><br><br>
+
+    <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableLoadObjects">
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+
+        <?php
+        $queryLoadAllObjectsV2 = "SELECT * FROM game_object WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+        $resultLoadAllObjectsV2 = mysqli_query($conn, $queryLoadAllObjectsV2); // executing the query
+
+        // Loading all entered objects
+        while($rowLoadObj = $resultLoadAllObjectsV2->fetch_assoc()){
+            $idOfObjLoad = $rowLoadObj["ID"];
+            $nameObjLoad = $rowLoadObj["name"];
+
+            echo "<tr><td>" . $nameObjLoad . "</td><td>" . $rowLoadObj["type_obj"] .
+                "</td><td><button class=\"w3-button w3-border transmission\" type=\"button\" onclick=\"showElement('objects-modal-edit$idOfObjLoad')\">
+                     <i class=\"fa fa-edit\"></i></button></td>" . "<td><button class=\"w3-button w3-border transmission\" 
+                          onclick=\"return confirm('Are you sure that you want to delete the object $nameObjLoad')\" type=\"submit\"
+                                    name=\"deleteObject\"><i class=\"fa fa-trash\"></i></button></td>
+                                    <input type=\"hidden\"  name=\"keyIdObj\" value=\"$idOfObjLoad\" /></tr>";
+        }
+        ?>
+    </table><br>
 
 
     <label for="locations">Add locations of the game</label>
