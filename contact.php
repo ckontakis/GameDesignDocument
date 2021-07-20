@@ -132,16 +132,20 @@ function test_data($data){
     </div>
 
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" class="w3-container w3-padding-16 contactRegisterForm">
-        <input class="w3-input w3-border w3-margin-top" id="firstName" name="firstName"
-               value="<?php if(isset($namePrev)) echo $namePrev?>" type="text" placeholder="Name *" required><br>
+        <label for="firstName">Name *</label>
+        <input class="w3-input w3-border" id="firstName" name="firstName"
+               value="<?php if(isset($namePrev)) echo $namePrev?>" type="text" required><br>
 
-        <input class="w3-input w3-border w3-margin-top" id="lastName" name="lastName" type="text"
-               value="<?php if(isset($surnamePrev)) echo $surnamePrev?>" placeholder="Surname *" required><br>
+        <label for="lastName">Surname *</label>
+        <input class="w3-input w3-border" id="lastName" name="lastName" type="text"
+               value="<?php if(isset($surnamePrev)) echo $surnamePrev?>" required><br>
 
-        <input class="w3-input w3-border w3-margin-top" id="email" name="email" type="email"
-               value="<?php if(isset($emailPrev)) echo $emailPrev?>" placeholder="Email *" required><br>
+        <label for="email">Email *</label>
+        <input class="w3-input w3-border" id="email" name="email" type="email"
+               value="<?php if(isset($emailPrev)) echo $emailPrev?>" required><br>
 
-        <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="message" name="message" placeholder="Message *" required></textarea><br>
+        <label for="message">Message *</label>
+        <textarea class="w3-input w3-border" rows="3" type="text" id="message" name="message" required></textarea><br>
 
         <div class="w3-panel w3-green" <?php if($showDivSuccess === TRUE) {
             echo 'style="display: block"';

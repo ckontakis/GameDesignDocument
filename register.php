@@ -103,7 +103,7 @@ $conn->close(); // closing the connection of database
 </button>
 
 <!--- Panel of the register form -->
-<div class="w3-card w3-border contactRegisterPanel">
+<div class="w3-card w3-border contactRegisterPanel w3-margin-bottom">
     <div class="w3-container w3-blue">
         <h3 class="headerPanel">Register</h3>
     </div>
@@ -111,24 +111,29 @@ $conn->close(); // closing the connection of database
     <!--- Register form -->
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>"
           class="w3-container w3-padding-16 contactRegisterForm">
+
+        <!--- Label for input of name -->
+        <label for="firstName">Name *</label>
         <!--- Required input text for name -->
-        <input class="w3-input w3-border w3-margin-top" id="firstName" name="firstName" type="text" placeholder="Name *"
-               required><br>
+        <input class="w3-input w3-border" id="firstName" name="firstName" type="text" required><br>
 
+        <!--- Label for input of surname -->
+        <label for="lastName">Surname *</label>
         <!--- Required input text for surname  -->
-        <input class="w3-input w3-border w3-margin-top" id="lastName" name="lastName" type="text"
-               placeholder="Surname *" required><br>
+        <input class="w3-input w3-border" id="lastName" name="lastName" type="text" required><br>
 
+        <!--- Label for input of email -->
+        <label for="email">Email *</label>
         <!--- Required input text for email -->
-        <input class="w3-input w3-border w3-margin-top" id="email" name="email" type="email" placeholder="Email *"
-               required><br>
+        <input class="w3-input w3-border" id="email" name="email" type="email" required><br>
 
+        <!--- Label for input of email -->
+        <label for="password">Password *</label>
         <!--- Required input text for password -->
-        <input class="w3-input w3-border w3-margin-top" id="password" name="password" type="password"
-               placeholder="Password *" required>
+        <input class="w3-input w3-border" id="password" name="password" type="password" required>
 
         <!--- Checkbox to show and hide password -->
-        <input id="labelShow" class="w3-check w3-margin-top" type="checkbox" onclick="showPassword('password')">
+        <input id="labelShow" class="w3-check" type="checkbox" onclick="showPassword('password')">
         <label for="labelShow">Show password</label><br><br>
 
         <div class="w3-panel w3-green" <?php /* if variable showDivSuccess is true we show a success message */

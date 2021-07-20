@@ -21,6 +21,13 @@ if(isset($_GET['id'])){
 }
 
 /*
+ * Getting the name of the document
+ */
+$resultNameDoc = mysqli_query($conn, "SELECT name FROM document WHERE ID='$idOfDocument';");
+$rowDocName = $resultNameDoc->fetch_assoc();
+$nameOfDoc = $rowDocName["name"];
+
+/*
  * Checking if user does not have access to the document that is typing at the url. If user does not have access
  * we redirect user to write page
  */
@@ -122,6 +129,8 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
 
 <div class="w3-container pathPosition">
     <a href="../write.php" class="w3-hover-text-blue">Write GDD</a>
+    <i class="fa fa-angle-double-right"></i>
+    <span><?php echo $nameOfDoc ?></span>
     <i class="fa fa-angle-double-right"></i>
     <a href="AssetsWorld.php?id=<?php if(isset($idOfDocument)) echo $idOfDocument ?>" class="w3-hover-text-blue">Assets</a>
 </div>

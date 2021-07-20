@@ -168,6 +168,8 @@ if(isset($_POST["editCharacter"])){
     if ($_FILES["imgCharEdit"]["name"] !== "") {
         $filename = $_FILES["imgCharEdit"]["name"]; // getting the filename of the image
         $tempname = $_FILES["imgCharEdit"]["tmp_name"];
+        // the url to add the new image
+        $folder = "$docRoot/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Characters/".$filename;
 
         // Finding if character has a submitted picture
         $queryFindIfCharHasPicture = "SELECT IMAGE_ID FROM game_character WHERE ID = '$idOfChar';";
@@ -184,9 +186,6 @@ if(isset($_POST["editCharacter"])){
                     $filenameUrlDel = "$docRoot/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Characters/".$rowFilename["filename"];
                     unlink($filenameUrlDel); // deletes the picture
 
-                    // the url to add the new image
-                    $folder = "$docRoot/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Characters/".$filename;
-
                     // moving the new image to the correct path
                     if (move_uploaded_file($tempname, $folder)) {
                         // query to update the filename of character's image
@@ -201,6 +200,19 @@ if(isset($_POST["editCharacter"])){
                                 echo "<script>alert('Error: cannot update character')</script>"; // else we show an error message
                             }
                         }
+                    }
+                }
+            } else {
+                // actions if user adds first time image
+                if (mysqli_query($conn, "INSERT INTO image (filename) VALUES ('$filename');") && move_uploaded_file($tempname, $folder)) {
+                    $uploadedImage = true;
+                    $image_id = mysqli_insert_id($conn);
+
+                    $queryUpdateCharWithImage = "UPDATE game_character SET IMAGE_ID='$image_id' WHERE ID='$idOfChar';";
+                    if ($conn->query($queryUpdateCharWithImage)) {
+                        header("Refresh:0"); // if query is executed successfully we refresh the page
+                    } else {
+                        echo "<script>alert('Error: cannot update character')</script>"; // else we show an error message
                     }
                 }
             }
@@ -222,6 +234,23 @@ if(isset($_POST["editCharacter"])){
  */
 if(isset($_POST["deleteCharacter"])){
     $idOfCharToDelete = $_POST["keyIdChar"];
+
+    // Finding if character has a submitted picture
+    $queryFindIfCharHasPicture = "SELECT IMAGE_ID FROM game_character WHERE ID = '$idOfCharToDelete';";
+    $resultFindPicture = $conn->query($queryFindIfCharHasPicture);
+
+    // If there is a picture we delete it
+    if ($rowDelPic = $resultFindPicture->fetch_assoc()) {
+        $idOfPictureToDel = $rowDelPic["IMAGE_ID"];
+
+        $queryFindFilenameOfPic = "SELECT filename FROM image WHERE ID='$idOfPictureToDel'";
+        $resultFindFilename = $conn->query($queryFindFilenameOfPic);
+
+        if ($rowFindFilename = $resultFindFilename->fetch_assoc()) {
+            $filenameUrlDel = "$docRoot/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Characters/".$rowFindFilename["filename"];
+            unlink($filenameUrlDel); // deletes the picture
+        }
+    }
 
     $queryDeleteChar = "DELETE FROM game_character WHERE ID='$idOfCharToDelete';";
     if($conn->query($queryDeleteChar)){
@@ -287,12 +316,69 @@ if(isset($_POST["editObject"])){
     $objType = test_data($_POST["objType"]); // getting the type of the object
     $objDescription = test_data($_POST["objDescription"]); // getting the description of the object
 
-    $queryUpdateObject = "UPDATE game_object SET name='$nameOfObj', type_obj='$objType', describe_obj='$objDescription'
+    if ($_FILES["imgObj"]["name"] !== "") {
+        $filename = $_FILES["imgObj"]["name"];
+        $tempname = $_FILES["imgObj"]["tmp_name"];
+        // the url to add the new image
+        $folder = "$docRoot/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Objects/".$filename;
+
+        // Finding if object has a submitted image
+        $queryFindIfObjHasPicture = "SELECT IMAGE_ID FROM game_object WHERE ID = '$idOfObj';";
+        $resultFindPicture = $conn->query($queryFindIfObjHasPicture);
+
+        if ($rowFindPicture = $resultFindPicture->fetch_assoc()) {
+            if (isset($rowFindPicture["IMAGE_ID"])) {
+                $idOfPictureToDel = $rowFindPicture["IMAGE_ID"]; // getting the id of the image row
+
+                // getting the filename for the selected row from table image
+                $resultFindFilenameOfPic = $conn->query("SELECT filename FROM image WHERE ID = '$idOfPictureToDel';");
+                if ($rowFilename = $resultFindFilenameOfPic->fetch_assoc()) {
+                    // the url of the image that we want to delete
+                    $filenameUrlDel = "$docRoot/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Objects/".$rowFilename["filename"];
+                    unlink($filenameUrlDel); // deletes the picture
+
+                    // moving the new image to the correct path
+                    if (move_uploaded_file($tempname, $folder)) {
+                        // query to update the filename of object's image
+                        if ($conn->query("UPDATE image SET filename='$filename' WHERE ID='$idOfPictureToDel';")) {
+                            // query to update other information of the object
+                            $queryUpdateObj = "UPDATE game_object SET name='$nameOfObj', type_obj='$objType', describe_obj='$objDescription'
+                                                WHERE ID='$idOfObj';";
+
+                            //executing the query
+                            if ($conn->query($queryUpdateObj)) {
+                                //header("Refresh:0"); // if query is executed successfully we refresh the page
+                            } else {
+                                echo "<script>alert('Error: cannot update the object')</script>"; // else we show an error message
+                            }
+                        }
+                    }
+                }
+            } else {
+                // actions if user adds first time an image
+                if (mysqli_query($conn, "INSERT INTO image (filename) VALUES ('$filename');") && move_uploaded_file($tempname, $folder)) {
+                    $uploadedImage = true;
+                    $image_id = mysqli_insert_id($conn);
+
+                    $queryUpdateObjWithImage = "UPDATE game_object SET IMAGE_ID='$image_id' WHERE ID='$idOfObj';";
+                    //executing the query
+                    if ($conn->query($queryUpdateObjWithImage)) {
+                        header("Refresh:0"); // if query is executed successfully we refresh the page
+                    } else {
+                        echo "<script>alert('Error: cannot add object')</script>"; // else we show an error message
+                        //echo "Error: " . $queryAddObj . "<br>" . $conn->error;
+                    }
+                }
+            }
+        }
+    } else {
+        $queryUpdateObject = "UPDATE game_object SET name='$nameOfObj', type_obj='$objType', describe_obj='$objDescription'
                              WHERE ID='$idOfObj';";
-    if($conn->query($queryUpdateObject)){
-        header("Refresh:0"); // if query is executed successfully we refresh the page
-    }else{
-        echo "<script>alert('Error: cannot update the object')</script>"; // else we show an error message
+        if($conn->query($queryUpdateObject)){
+            //header("Refresh:0"); // if query is executed successfully we refresh the page
+        }else{
+            echo "<script>alert('Error: cannot update the object')</script>"; // else we show an error message
+        }
     }
 }
 
@@ -301,6 +387,23 @@ if(isset($_POST["editObject"])){
  */
 if(isset($_POST["deleteObject"])){
     $idOfObjToDelete = $_POST["keyIdObj"];
+
+    // Finding if object has a submitted picture
+    $queryFindIfObjHasPicture = "SELECT IMAGE_ID FROM game_object WHERE ID = '$idOfObjToDelete';";
+    $resultFindPicture = $conn->query($queryFindIfObjHasPicture);
+
+    // If there is a picture we delete it
+    if ($rowDelPic = $resultFindPicture->fetch_assoc()) {
+        $idOfPictureToDel = $rowDelPic["IMAGE_ID"];
+
+        $queryFindFilenameOfPic = "SELECT filename FROM image WHERE ID='$idOfPictureToDel'";
+        $resultFindFilename = $conn->query($queryFindFilenameOfPic);
+
+        if ($rowFindFilename = $resultFindFilename->fetch_assoc()) {
+            $filenameUrlDel = "$docRoot/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Objects/".$rowFindFilename["filename"];
+            unlink($filenameUrlDel); // deletes the picture
+        }
+    }
 
     $queryDeleteObj = "DELETE FROM game_object WHERE ID='$idOfObjToDelete';";
     if($conn->query($queryDeleteObj)){
@@ -370,6 +473,8 @@ function test_data($data)
 
 <div class="w3-container pathPosition">
     <a href="../write.php" class="w3-hover-text-blue">Write GDD</a>
+    <i class="fa fa-angle-double-right"></i>
+    <span><?php echo $nameOfDoc ?></span>
     <i class="fa fa-angle-double-right"></i>
     <a href="GameElementsWorld.php?id=<?php if(isset($idOfDocument)) echo $idOfDocument ?>" class="w3-hover-text-blue">Game Elements</a>
 </div>
@@ -766,7 +871,7 @@ function test_data($data)
             $resultImage = $conn->query("SELECT filename FROM image WHERE ID='$idOfImage';");
 
             if($rowImage = $resultImage->fetch_assoc()){
-                $imgFilename = $rowImage["filename"];
+                $imgFilenameChar = $rowImage["filename"];
             }
         }
 
@@ -777,8 +882,8 @@ function test_data($data)
                         <i class=\"fa fa-close\"></i></span>
             <h3 class=\"headerForModal\">Edit character $nameOfChar</h3><br>";
 
-            if(isset($imgFilename)){
-                echo "<img src='/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Characters/$imgFilename' alt='Image of character' style='width: 50%; height: auto;'><br><br>";
+            if(isset($imgFilenameChar)){
+                echo "<img src='/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Characters/$imgFilenameChar' alt='Image of character' style='width: 50%; height: auto;'><br><br>";
             }
 
             echo "<label for=\"imgCharEdit$idOfChar\" class=\"w3-margin-top\" id=\"labelImChar\">Choose an image of the character</label><br>
@@ -813,25 +918,26 @@ while($rowLoadObj = $resultLoadAllObjects->fetch_assoc()){
     $nameOfObj = $rowLoadObj["name"];
     $typeOfObj = $rowLoadObj["type_obj"];
     $objDescribe = $rowLoadObj["describe_obj"];
-    $idOfImage = $rowLoadObj["IMAGE_ID"];
 
-    if(isset($idOfImage)){
+    if (isset($rowLoadObj["IMAGE_ID"])) {
+        $idOfImage = $rowLoadObj["IMAGE_ID"];
+
         $resultImage = $conn->query("SELECT filename FROM image WHERE ID='$idOfImage';");
 
         if($rowImage = $resultImage->fetch_assoc()){
-            $imgFilename = $rowImage["filename"];
+            $imgFilenameObj = $rowImage["filename"];
         }
     }
 
     echo "<div id=\"objects-modal-edit$idOfObj\" class=\"w3-modal w3-padding-16\">
     <div class=\"w3-modal-content w3-animate-zoom\">
-        <form method=\"post\" action=\"\" class=\"w3-container\" style=\"text-align: center;\">
+        <form method=\"post\" action=\"\"  enctype=\"multipart/form-data\" class=\"w3-container\" style=\"text-align: center;\">
                 <span onclick=\"hideElement('objects-modal-edit$idOfObj')\" class=\"w3-button w3-display-topright w3-hover-red\">
                         <i class=\"fa fa-close\"></i></span>
             <h3 class=\"headerForModal\">Edit object $nameOfObj</h3><br>";
 
-    if(isset($imgFilename)){
-        echo "<img src='/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Objects/$imgFilename' alt='Image of object' style='width: 50%; height: auto;'><br><br>";
+    if(isset($imgFilenameObj)){
+        echo "<img src='/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Objects/$imgFilenameObj' alt='Image of object' style='width: 50%; height: auto;'><br><br>";
     }
 
     echo "<label for=\"imgObjEdit$idOfObj\" class=\"w3-margin-top\" id=\"labelImObj\">Choose an image of the object</label><br>
