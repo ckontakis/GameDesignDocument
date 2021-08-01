@@ -162,19 +162,19 @@ $personIsAdminOfSite = $rowPersonIsAdminOfSite['administrator'];
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" class="w3-container inputProfile" id="personalInfo">
 
         <label for="userName" id="userNameLabel">Name</label>
-        <input class="w3-input w3-border w3-margin-top" id="userName" name="userName" value="<?php echo $prevName?>" type="text" required><br>
+        <input class="w3-input w3-border" id="userName" name="userName" value="<?php echo $prevName?>" type="text" required><br>
 
         <label for="userSurname" id="userSurnameLabel">Surname</label>
-        <input class="w3-input w3-border w3-margin-top" id="userSurname" name="userSurname" value="<?php echo $prevSurname?>" type="text" required><br>
+        <input class="w3-input w3-border" id="userSurname" name="userSurname" value="<?php echo $prevSurname?>" type="text" required><br>
 
         <label for="userEmail" id="userEmailLabel">Email</label>
-        <input class="w3-input w3-border w3-margin-top" id="userEmail" name="userEmail" value="<?php echo $prevEmail?>" type="email" required><br>
+        <input class="w3-input w3-border" id="userEmail" name="userEmail" value="<?php echo $prevEmail?>" type="email" required><br>
 
         <label for="newPass" id="newPassLabel">New password</label>
-        <input class="w3-input w3-border w3-margin-top" id="newPass" name="newPass" type="password"><br>
+        <input class="w3-input w3-border" id="newPass" name="newPass" type="password"><br>
 
         <label for="confirmPass" id="confirmPassLabel">Confirm the new password</label>
-        <input class="w3-input w3-border w3-margin-top" id="confirmPass" name="confirmPass" type="password"><br>
+        <input class="w3-input w3-border" id="confirmPass" name="confirmPass" type="password"><br>
 
         <div class="w3-panel w3-green" <?php if($showDivSuccess === TRUE) {
             echo 'style="display: block"';

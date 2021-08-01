@@ -268,15 +268,12 @@ if (isset($_POST["saveObject"])) {
     $typeOfObj = test_data($_POST["typeOfObj"]);
     $descriptionOfObj = test_data($_POST["objDescription"]);
 
-    $uploadedImage = false;
-
     if ($_FILES["imgObject"]["name"] !== "") {
         $filename = $_FILES["imgObject"]["name"];
         $tempname = $_FILES["imgObject"]["tmp_name"];
         $folder = "$docRoot/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Objects/".$filename;
 
         if (mysqli_query($conn, "INSERT INTO image (filename) VALUES ('$filename');") && move_uploaded_file($tempname, $folder)) {
-            $uploadedImage = true;
             $image_id = mysqli_insert_id($conn);
 
             // query to add a new object in game_object table with image
@@ -285,10 +282,10 @@ if (isset($_POST["saveObject"])) {
 
             //executing the query
             if($conn->query($queryAddObj)){
-                //header("Refresh:0"); // if query is executed successfully we refresh the page
+                header("Refresh:0"); // if query is executed successfully we refresh the page
             }else{
-                //echo "<script>alert('Error: cannot add object')</script>"; // else we show an error message
-                echo "Error: " . $queryAddObj . "<br>" . $conn->error;
+                echo "<script>alert('Error: cannot add object')</script>"; // else we show an error message
+                //echo "Error: " . $queryAddObj . "<br>" . $conn->error;
             }
         }else{
             echo "<script>alert('Error: cannot upload image of object')</script>"; // else we show an error message
@@ -412,6 +409,189 @@ if(isset($_POST["deleteObject"])){
         echo "<script>alert('Error: cannot delete object')</script>";
     }
 }
+
+/*
+ * Actions when user adds a location
+ */
+if (isset($_POST["saveLocation"])) {
+   $nameOfLoc = test_data($_POST["locName"]);
+   $descriptionOfLoc = test_data($_POST["locDescription"]);
+
+    if ($_FILES["imgLocation"]["name"] !== "") {
+        $filename = $_FILES["imgLocation"]["name"];
+        $tempname = $_FILES["imgLocation"]["tmp_name"];
+        $folder = "$docRoot/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Locations/" . $filename;
+
+        if (mysqli_query($conn, "INSERT INTO image (filename) VALUES ('$filename');") && move_uploaded_file($tempname, $folder)) {
+            $image_id = mysqli_insert_id($conn);
+
+            // query to add a new location in game_location table with image
+            $queryAddLoc = "INSERT INTO game_location (GAME_ELEMENTS_ID, IMAGE_ID, name, describe_loc) 
+                     VALUES ('$gameElementsId', '$image_id', '$nameOfLoc', '$descriptionOfLoc');";
+
+            //executing the query
+            if($conn->query($queryAddLoc)){
+                header("Refresh:0"); // if query is executed successfully we refresh the page
+            }else{
+                echo "<script>alert('Error: cannot add location')</script>"; // else we show an error message
+                //echo "Error: " . $queryAddObj . "<br>" . $conn->error;
+            }
+        }else{
+            echo "<script>alert('Error: cannot upload image of location')</script>"; // else we show an error message
+        }
+    } else {
+        // query to add a new location in game_location table without image
+        $queryAddLoc = "INSERT INTO game_location (GAME_ELEMENTS_ID, name, describe_loc) 
+                     VALUES ('$gameElementsId', '$nameOfLoc', '$descriptionOfLoc');";
+
+        //executing the query
+        if($conn->query($queryAddLoc)){
+            header("Refresh:0"); // if query is executed successfully we refresh the page
+        }else{
+            echo "<script>alert('Error: cannot add location')</script>"; // else we show an error message
+        }
+    }
+}
+
+/*
+ * Actions when user updates information for a location
+ */
+if(isset($_POST["editLocation"])){
+    $idOfLoc = $_POST["keyIdLoc"];
+    $nameOfLoc = test_data($_POST["locName"]); // getting the name of the location
+    $locDescription = test_data($_POST["locDescription"]); // getting the description of the location
+
+    if ($_FILES["imgLoc"]["name"] !== "") {
+        $filename = $_FILES["imgLoc"]["name"];
+        $tempname = $_FILES["imgLoc"]["tmp_name"];
+        // the url to add the new image
+        $folder = "$docRoot/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Locations/".$filename;
+
+        // Finding if location has a submitted image
+        $queryFindIfLocHasPicture = "SELECT IMAGE_ID FROM game_location WHERE ID = '$idOfLoc';";
+        $resultFindPicture = $conn->query($queryFindIfLocHasPicture);
+
+        if ($rowFindPicture = $resultFindPicture->fetch_assoc()) {
+            if (isset($rowFindPicture["IMAGE_ID"])) {
+                $idOfPictureToDel = $rowFindPicture["IMAGE_ID"]; // getting the id of the image row
+
+                // getting the filename for the selected row from table image
+                $resultFindFilenameOfPic = $conn->query("SELECT filename FROM image WHERE ID = '$idOfPictureToDel';");
+                if ($rowFilename = $resultFindFilenameOfPic->fetch_assoc()) {
+                    // the url of the image that we want to delete
+                    $filenameUrlDel = "$docRoot/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Locations/".$rowFilename["filename"];
+                    unlink($filenameUrlDel); // deletes the picture
+
+                    // moving the new image to the correct path
+                    if (move_uploaded_file($tempname, $folder)) {
+                        // query to update the filename of location's image
+                        if ($conn->query("UPDATE image SET filename='$filename' WHERE ID='$idOfPictureToDel';")) {
+                            // query to update other information of the location
+                            $queryUpdateLoc = "UPDATE game_location SET name='$nameOfLoc', describe_loc='$locDescription'
+                                                WHERE ID='$idOfLoc';";
+
+                            //executing the query
+                            if ($conn->query($queryUpdateLoc)) {
+                                header("Refresh:0"); // if query is executed successfully we refresh the page
+                            } else {
+                                echo "<script>alert('Error: cannot update the location')</script>"; // else we show an error message
+                            }
+                        }
+                    }
+                }
+            } else {
+                // actions if user adds first time an image
+                if (mysqli_query($conn, "INSERT INTO image (filename) VALUES ('$filename');") && move_uploaded_file($tempname, $folder)) {
+                    $image_id = mysqli_insert_id($conn);
+
+                    $queryUpdateLocWithImage = "UPDATE game_location SET IMAGE_ID='$image_id' WHERE ID='$idOfLoc';";
+                    //executing the query
+                    if ($conn->query($queryUpdateLocWithImage)) {
+                        header("Refresh:0"); // if query is executed successfully we refresh the page
+                    } else {
+                        echo "<script>alert('Error: cannot update the location')</script>"; // else we show an error message
+                        //echo "Error: " . $queryAddObj . "<br>" . $conn->error;
+                    }
+                }
+            }
+        }
+    } else {
+        $queryUpdateLocation = "UPDATE game_location SET name='$nameOfLoc', describe_loc='$locDescription'
+                             WHERE ID='$idOfLoc';";
+        if($conn->query($queryUpdateLocation)){
+            header("Refresh:0"); // if query is executed successfully we refresh the page
+        }else{
+            echo "<script>alert('Error: cannot update the location')</script>"; // else we show an error message
+        }
+    }
+}
+
+/*
+ * Actions when user deletes a location
+ */
+if(isset($_POST["deleteLocation"])){
+    $idOfLocToDelete = $_POST["keyIdLoc"];
+
+    // Finding if location has a submitted picture
+    $queryFindIfLocHasPicture = "SELECT IMAGE_ID FROM game_location WHERE ID = '$idOfLocToDelete';";
+    $resultFindPicture = $conn->query($queryFindIfLocHasPicture);
+
+    // If there is a picture we delete it
+    if ($rowDelPic = $resultFindPicture->fetch_assoc()) {
+        $idOfPictureToDel = $rowDelPic["IMAGE_ID"];
+
+        $queryFindFilenameOfPic = "SELECT filename FROM image WHERE ID='$idOfPictureToDel'";
+        $resultFindFilename = $conn->query($queryFindFilenameOfPic);
+
+        if ($rowFindFilename = $resultFindFilename->fetch_assoc()) {
+            $filenameUrlDel = "$docRoot/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Locations/".$rowFindFilename["filename"];
+            unlink($filenameUrlDel); // deletes the picture
+        }
+    }
+
+    $queryDeleteLoc = "DELETE FROM game_location WHERE ID='$idOfLocToDelete';";
+    if($conn->query($queryDeleteLoc)){
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    }else{
+        echo "<script>alert('Error: cannot delete location')</script>";
+    }
+}
+
+/**
+ * Actions when user adds an object of a location
+ */
+if (isset($_POST["btnAddObjOfLoc"])) {
+    $idOfLoc = $_POST["locId"]; // getting the id of the location
+    $idOfObj = $_POST["objId"]; // getting the id of the object
+
+    // query to add the object of the location
+    $queryToAddObjectToLoc = "INSERT INTO game_location_has_game_object (GAME_LOCATION_ID, GAME_OBJECT_ID) 
+                              VALUES ('$idOfLoc', '$idOfObj')";
+    if ($conn->query($queryToAddObjectToLoc)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot add object of the location')</script>";
+    }
+}
+
+/**
+ * Actions when user removes an object from a location
+ */
+if (isset($_POST["delObjOfLoc"])) {
+    $idOfLoc = $_POST["locId"]; // getting the id of the location
+    $idOfObj = $_POST["objId"]; // getting the id of the object
+
+    // query to remove an object from a location
+    $queryToDelObjFromLoc = "DELETE FROM game_location_has_game_object WHERE GAME_LOCATION_ID = '$idOfLoc' AND 
+                             GAME_OBJECT_ID = '$idOfObj';";
+
+    if ($conn->query($queryToDelObjFromLoc)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot remove the object from the location')</script>";
+    }
+}
+
 
 /*
  * Function to filter data.
@@ -551,7 +731,7 @@ function test_data($data)
                     <i class="fa fa-close"></i></span>
             <h3 class="headerForModal">Add a location</h3><br>
 
-            <form method="post" action="" class="w3-container" style="text-align: center;">
+            <form method="post" action="" enctype="multipart/form-data" class="w3-container" style="text-align: center;">
                 <label for="imgLocation" class="w3-margin-top" id="labelImLoc">Choose an image of the location</label><br>
                 <input type="file" id="imgLocation" class="w3-margin-top" name="imgLocation" accept="image/*"><br><br>
 
@@ -562,50 +742,28 @@ function test_data($data)
                 <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="locDescription"
                           name="locDescription"></textarea><br>
 
-                <label>Add objects that are at the location</label>
-                <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableObjects">
-                    <tr>
-                        <th>Objects</th>
-                        <th>Add</th>
-                    </tr>
-                    <tr>
-                        <td>Object 1</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="obj1" type="button"
-                                    name="btnAddObj"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Object 2</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="obj2" type="button"
-                                    name="btnAddObj"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Object 3</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="obj3" type="button"
-                                    name="btnAddObj"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                </table><br>
-
                 <label>Add characters that are at the location</label>
                 <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableCharacters">
                     <tr>
                         <th>Characters</th>
                         <th>Add</th>
                     </tr>
-                    <tr>
-                        <td>Character 1</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="char1" type="button"
-                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Character 2</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="char2" type="button"
-                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Character 3</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="char3" type="button"
-                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
-                    </tr>
+                    <?php
+                    // query to load all characters
+                    $queryLoadAllCharsForLocs = "SELECT ID, name FROM game_character WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+                    $resultLoadAllCharsForLocs = mysqli_query($conn, $queryLoadAllCharsForLocs); // executing the query
+
+                    while ($rowLoadCharForLoc = $resultLoadAllCharsForLocs->fetch_assoc()) {
+                        $rowIdChar = $rowLoadCharForLoc["ID"];
+                        $rowNameChar = $rowLoadCharForLoc["name"];
+
+                        echo "<tr>
+                        <td>$rowNameChar</td>
+                        <td><button class=\"w3-button w3-green w3-circle transmission\" id=\"char1\" type=\"button\"
+                                    name=\"btnAddChar\"><i class=\"fa fa-plus\"></i></button></td>
+                    </tr>";
+                    }
+                    ?>
                 </table>
 
                 <div class="w3-container w3-padding-16">
@@ -880,7 +1038,7 @@ function test_data($data)
         <form method=\"post\" action=\"\" enctype=\"multipart/form-data\" class=\"w3-container\" style=\"text-align: center;\">
                 <span onclick=\"hideElement('characters-modal-edit$idOfChar')\" class=\"w3-button w3-display-topright w3-hover-red\">
                         <i class=\"fa fa-close\"></i></span>
-            <h3 class=\"headerForModal\">Edit character $nameOfChar</h3><br>";
+            <h3 class=\"headerForModal\">Edit character <b>$nameOfChar</b></h3><br>";
 
             if(isset($imgFilenameChar)){
                 echo "<img src='/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Characters/$imgFilenameChar' alt='Image of character' style='width: 50%; height: auto;'><br><br>";
@@ -934,7 +1092,7 @@ while($rowLoadObj = $resultLoadAllObjects->fetch_assoc()){
         <form method=\"post\" action=\"\"  enctype=\"multipart/form-data\" class=\"w3-container\" style=\"text-align: center;\">
                 <span onclick=\"hideElement('objects-modal-edit$idOfObj')\" class=\"w3-button w3-display-topright w3-hover-red\">
                         <i class=\"fa fa-close\"></i></span>
-            <h3 class=\"headerForModal\">Edit object $nameOfObj</h3><br>";
+            <h3 class=\"headerForModal\">Edit object <b>$nameOfObj</b></h3><br>";
 
     if(isset($imgFilenameObj)){
         echo "<img src='/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Objects/$imgFilenameObj' alt='Image of object' style='width: 50%; height: auto;'><br><br>";
@@ -962,7 +1120,105 @@ while($rowLoadObj = $resultLoadAllObjects->fetch_assoc()){
     </div>
 </div>";
 }
+
+// query to load all locations
+$queryLoadAllLocations = "SELECT * FROM game_location WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+$resultLoadAllLocations = mysqli_query($conn, $queryLoadAllLocations); // executing the query
+
+while($rowLoadLoc = $resultLoadAllLocations->fetch_assoc()){
+    $idOfLoc = $rowLoadLoc["ID"];
+    $nameOfLoc = $rowLoadLoc["name"];
+    $locDescribe = $rowLoadLoc["describe_loc"];
+
+    if (isset($rowLoadLoc["IMAGE_ID"])) {
+        $idOfImage = $rowLoadLoc["IMAGE_ID"];
+
+        $resultImage = $conn->query("SELECT filename FROM image WHERE ID='$idOfImage';");
+
+        if($rowImage = $resultImage->fetch_assoc()){
+            $imgFilenameLoc = $rowImage["filename"];
+        }
+    }
+
+    echo "<div id=\"locations-modal-edit$idOfLoc\" class=\"w3-modal w3-padding-16\">
+    <div class=\"w3-modal-content w3-animate-zoom\">
+        <form method=\"post\" action=\"\"  enctype=\"multipart/form-data\" class=\"w3-container\" style=\"text-align: center;\">
+                <span onclick=\"hideElement('locations-modal-edit$idOfLoc')\" class=\"w3-button w3-display-topright w3-hover-red\">
+                        <i class=\"fa fa-close\"></i></span>
+            <h3 class=\"headerForModal\">Edit location <b>$nameOfLoc</b></h3><br>";
+
+    if(isset($imgFilenameLoc)){
+        echo "<img src='/ImagesFromUsers-GDD/$nameOfDoc/WorldBuilding/Locations/$imgFilenameLoc' alt='Image of location' style='width: 50%; height: auto;'><br><br>";
+    }
+
+    echo "<label for=\"imgLocEdit$idOfLoc\" class=\"w3-margin-top\" id=\"labelImLoc\">Choose an image of the location</label><br>
+            <input type=\"file\" id=\"imgLocEdit$idOfLoc\" class=\"w3-margin-top\" name=\"imgLoc\" accept=\"image/*\"><br><br>
+            
+            <input type=\"hidden\"  name=\"keyIdLoc\" value=\"$idOfLoc\" />
+
+            <label for=\"locNameEdit$idOfLoc\" class=\"w3-margin-top\">Write the name of the location *</label>
+            <input class=\"w3-input w3-border w3-margin-top\" type=\"text\" id=\"locNameEdit$idOfLoc\" value=\"$nameOfLoc\" name=\"locName\" required><br>
+
+            <label for=\"locDescriptionEdit$idOfLoc\">Describe the location</label>
+            <textarea class=\"w3-input w3-border w3-margin-top\" rows=\"3\" type=\"text\" id=\"locDescriptionEdit$idOfLoc\"
+                      name=\"locDescription\">$locDescribe</textarea><br>
+            <div class=\"w3-container w3-padding-16\">
+                <button class=\"w3-button w3-green transmission\" type=\"submit\" name=\"editLocation\">Save</button>
+            </div>
+        </form>
+    </div>
+</div>";
+
+    echo "<div id=\"locations-add-objects$idOfLoc\" class=\"w3-modal w3-padding-16\">
+    <div class=\"w3-modal-content w3-animate-zoom w3-padding-16\" style=\"text-align: center;\">
+                <span onclick=\"hideElement('locations-add-objects$idOfLoc')\" class=\"w3-button w3-display-topright w3-hover-red\">
+                        <i class=\"fa fa-close\"></i></span>
+            <h3 class=\"headerForModal\">Add objects of the location <b>$nameOfLoc</b></h3><br>";
+    ?>
+
+    <table class="w3-table w3-border w3-centered w3-striped">
+                    <tr>
+                        <th>Objects</th>
+                        <th>Add/Remove</th>
+                    </tr>
+                    <?php
+                    // query to load all objects
+                    $queryLoadAllObjectsForLocs = "SELECT ID, name FROM game_object WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+                    $resultLoadAllObjectsForLocs = mysqli_query($conn, $queryLoadAllObjectsForLocs); // executing the query
+
+                    while ($rowLoadObjForLoc = $resultLoadAllObjectsForLocs->fetch_assoc()) {
+                        $rowIdObj = $rowLoadObjForLoc["ID"];
+                        $rowNameObj = $rowLoadObjForLoc["name"];
+
+                        $queryToCheckIfObjectIsAdded = "SELECT * FROM game_location_has_game_object WHERE 
+                                                        GAME_LOCATION_ID='$idOfLoc' AND GAME_OBJECT_ID='$rowIdObj';";
+                        $resultCheckIfObjIsAdded = mysqli_query($conn, $queryToCheckIfObjectIsAdded);
+
+                        if ($resultCheckIfObjIsAdded->num_rows === 0) {
+                            echo "<tr>
+                        <td>$rowNameObj</td>
+                        <td><form method=\"post\" action=\"\"><button class=\"w3-button w3-green w3-circle transmission\" 
+                        id=\"$idOfLoc\" type=\"submit\" name=\"btnAddObjOfLoc\"><i class=\"fa fa-plus\"></i></button>
+                        <input type=\"hidden\" name=\"locId\" value=\"$idOfLoc\"/>
+                        <input type=\"hidden\" name=\"objId\" value=\"$rowIdObj\"/></form></td>
+                    </tr>";
+                        } else {
+                            echo "<tr>
+                        <td>$rowNameObj</td>
+                        <td><form method=\"post\" action=\"\"><button class=\"w3-button w3-red w3-circle transmission\" 
+                        id=\"$idOfLoc\" type=\"submit\" name=\"delObjOfLoc\"><i class=\"fa fa-minus\"></i></button>
+                        <input type=\"hidden\" name=\"locId\" value=\"$idOfLoc\"/>
+                        <input type=\"hidden\" name=\"objId\" value=\"$rowIdObj\"/></form></td>
+                    </tr>";
+                        }
+                    }
+                    ?>
+    </table><br>
+    <?php echo "</div></div>" ?>
+<?php
+}
 ?>
+
 
 <!--- The form of game elements where user can add characters, objects, etc -->
 <form class="w3-container w3-border w3-hover-shadow w3-padding-16 formWorldBuilding" method="post"
@@ -1040,6 +1296,35 @@ while($rowLoadObj = $resultLoadAllObjects->fetch_assoc()){
     <button onclick="showElement('locations-modal')" class="w3-button w3-circle w3-border
     w3-border-blue w3-hover-blue w3-margin-left transmission" id="locations" type="button" name="locations">
         <i class="fa fa-plus"></i></button><br><br>
+
+    <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableLoadLocations">
+        <tr>
+            <th>Name</th>
+            <th>Edit</th>
+            <th>Add objects</th>
+            <th>Add characters</th>
+            <th>Delete</th>
+        </tr>
+
+        <?php
+        $queryLoadAllLocationsV2 = "SELECT * FROM game_location WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+        $resultLoadAllLocationsV2 = mysqli_query($conn, $queryLoadAllLocationsV2); // executing the query
+
+        // Loading all entered locations
+        while($rowLoadLoc = $resultLoadAllLocationsV2->fetch_assoc()){
+            $idOfLocLoad = $rowLoadLoc["ID"];
+            $nameLocLoad = $rowLoadLoc["name"];
+
+            echo "<tr><td>" . $nameLocLoad . "</td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
+                    onclick=\"showElement('locations-modal-edit$idOfLocLoad')\"><i class=\"fa fa-edit\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
+                    onclick=\"showElement('locations-add-objects$idOfLocLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
+                    onclick=\"showElement('')\"><i class=\"fa fa-plus\"></i></button></td>" . "<td><button class=\"w3-button
+                    w3-border transmission\" onclick=\"return confirm('Are you sure that you want to delete the location $nameLocLoad')\" type=\"submit\"
+                    name=\"deleteLocation\"><i class=\"fa fa-trash\"></i></button></td><input type=\"hidden\"  name=\"keyIdLoc\"
+                    value=\"$idOfLocLoad\" /></tr>";
+        }
+        ?>
+    </table><br>
 
 
     <label for="dialogs">Add dialogs between characters of the game</label>
