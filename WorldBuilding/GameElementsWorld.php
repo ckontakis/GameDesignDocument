@@ -592,6 +592,41 @@ if (isset($_POST["delObjOfLoc"])) {
     }
 }
 
+/**
+ * Actions when user adds a character of a location
+ */
+if (isset($_POST["btnAddCharOfLoc"])) {
+    $idOfLoc = $_POST["locId"]; // getting the id of the location
+    $idOfChar = $_POST["charId"]; // getting the id of the character
+
+    // query to add the character of the location
+    $queryToAddCharacterToLoc = "INSERT INTO game_location_has_game_character (GAME_LOCATION_ID, GAME_CHARACTER_ID) 
+                              VALUES ('$idOfLoc', '$idOfChar')";
+    if ($conn->query($queryToAddCharacterToLoc)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot add character of the location')</script>";
+    }
+}
+
+/**
+ * Actions when user removes a character from a location
+ */
+if (isset($_POST["delCharOfLoc"])) {
+    $idOfLoc = $_POST["locId"]; // getting the id of the location
+    $idOfChar = $_POST["charId"]; // getting the id of the character
+
+    // query to remove a character from a location
+    $queryToDelCharFromLoc = "DELETE FROM game_location_has_game_character WHERE GAME_LOCATION_ID = '$idOfLoc' AND 
+                             GAME_CHARACTER_ID = '$idOfChar';";
+
+    if ($conn->query($queryToDelCharFromLoc)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot remove the character from the location')</script>";
+    }
+}
+
 
 /*
  * Function to filter data.
@@ -741,30 +776,6 @@ function test_data($data)
                 <label for="locDescription">Describe the location</label>
                 <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="locDescription"
                           name="locDescription"></textarea><br>
-
-                <label>Add characters that are at the location</label>
-                <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableCharacters">
-                    <tr>
-                        <th>Characters</th>
-                        <th>Add</th>
-                    </tr>
-                    <?php
-                    // query to load all characters
-                    $queryLoadAllCharsForLocs = "SELECT ID, name FROM game_character WHERE GAME_ELEMENTS_ID='$gameElementsId';";
-                    $resultLoadAllCharsForLocs = mysqli_query($conn, $queryLoadAllCharsForLocs); // executing the query
-
-                    while ($rowLoadCharForLoc = $resultLoadAllCharsForLocs->fetch_assoc()) {
-                        $rowIdChar = $rowLoadCharForLoc["ID"];
-                        $rowNameChar = $rowLoadCharForLoc["name"];
-
-                        echo "<tr>
-                        <td>$rowNameChar</td>
-                        <td><button class=\"w3-button w3-green w3-circle transmission\" id=\"char1\" type=\"button\"
-                                    name=\"btnAddChar\"><i class=\"fa fa-plus\"></i></button></td>
-                    </tr>";
-                    }
-                    ?>
-                </table>
 
                 <div class="w3-container w3-padding-16">
                     <button class="w3-button w3-green transmission" id="saveLocation" type="submit" name="saveLocation">Save</button>
@@ -1215,6 +1226,54 @@ while($rowLoadLoc = $resultLoadAllLocations->fetch_assoc()){
                     ?>
     </table><br>
     <?php echo "</div></div>" ?>
+
+    <?php
+    echo "<div id=\"locations-add-characters$idOfLoc\" class=\"w3-modal w3-padding-16\">
+    <div class=\"w3-modal-content w3-animate-zoom w3-padding-16\" style=\"text-align: center;\">
+    <span onclick=\"hideElement('locations-add-characters$idOfLoc')\" class=\"w3-button w3-display-topright w3-hover-red\">
+    <i class=\"fa fa-close\"></i></span>
+    <h3 class=\"headerForModal\">Add characters of the location <b>$nameOfLoc</b></h3><br>";
+    ?>
+
+    <table class="w3-table w3-border w3-centered w3-striped">
+        <tr>
+            <th>Characters</th>
+            <th>Add/Remove</th>
+        </tr>
+        <?php
+        // query to load all objects
+        $queryLoadAllCharactersForLocs = "SELECT ID, name FROM game_character WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+        $resultLoadAllCharactersForLocs = mysqli_query($conn, $queryLoadAllCharactersForLocs); // executing the query
+
+        while ($rowLoadCharForLoc = $resultLoadAllCharactersForLocs->fetch_assoc()) {
+            $rowIdChar = $rowLoadCharForLoc["ID"];
+            $rowNameChar = $rowLoadCharForLoc["name"];
+
+            $queryToCheckIfCharacterIsAdded = "SELECT * FROM game_location_has_game_character WHERE 
+                                                        GAME_LOCATION_ID='$idOfLoc' AND GAME_CHARACTER_ID='$rowIdChar';";
+            $resultCheckIfCharIsAdded = mysqli_query($conn, $queryToCheckIfCharacterIsAdded);
+
+            if ($resultCheckIfCharIsAdded->num_rows === 0) {
+                echo "<tr>
+                        <td>$rowNameChar</td>
+                        <td><form method=\"post\" action=\"\"><button class=\"w3-button w3-green w3-circle transmission\" 
+                        id=\"$idOfLoc\" type=\"submit\" name=\"btnAddCharOfLoc\"><i class=\"fa fa-plus\"></i></button>
+                        <input type=\"hidden\" name=\"locId\" value=\"$idOfLoc\"/>
+                        <input type=\"hidden\" name=\"charId\" value=\"$rowIdChar\"/></form></td>
+                    </tr>";
+            } else {
+                echo "<tr>
+                        <td>$rowNameChar</td>
+                        <td><form method=\"post\" action=\"\"><button class=\"w3-button w3-red w3-circle transmission\" 
+                        id=\"$idOfLoc\" type=\"submit\" name=\"delCharOfLoc\"><i class=\"fa fa-minus\"></i></button>
+                        <input type=\"hidden\" name=\"locId\" value=\"$idOfLoc\"/>
+                        <input type=\"hidden\" name=\"charId\" value=\"$rowIdChar\"/></form></td>
+                    </tr>";
+            }
+        }
+        ?>
+    </table><br>
+    <?php echo "</div></div>" ?>
 <?php
 }
 ?>
@@ -1318,7 +1377,7 @@ while($rowLoadLoc = $resultLoadAllLocations->fetch_assoc()){
             echo "<tr><td>" . $nameLocLoad . "</td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('locations-modal-edit$idOfLocLoad')\"><i class=\"fa fa-edit\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('locations-add-objects$idOfLocLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
-                    onclick=\"showElement('')\"><i class=\"fa fa-plus\"></i></button></td>" . "<td><button class=\"w3-button
+                    onclick=\"showElement('locations-add-characters$idOfLocLoad')\"><i class=\"fa fa-plus\"></i></button></td>" . "<td><button class=\"w3-button
                     w3-border transmission\" onclick=\"return confirm('Are you sure that you want to delete the location $nameLocLoad')\" type=\"submit\"
                     name=\"deleteLocation\"><i class=\"fa fa-trash\"></i></button></td><input type=\"hidden\"  name=\"keyIdLoc\"
                     value=\"$idOfLocLoad\" /></tr>";
