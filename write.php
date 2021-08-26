@@ -232,7 +232,7 @@ function test_data($data)
             <th>Game Design Document</th>
             <th>Edit</th>
             <th>Delete</th>
-            <th>Download</th>
+            <th>Print</th>
             <th>Teams</th>
         </tr>
 
@@ -290,8 +290,8 @@ function test_data($data)
                         </td>
                         <td>
                             <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                                <button class="w3-button w3-round w3-border w3-border-black transmission" type="submit"
-                                        name="download"><i class="fa fa-download"></i></button>
+                                <a href="print.php?id=<?php echo $rowDocument['ID']; ?>" class="w3-button w3-round w3-border w3-border-black transmission" type="submit"
+                                        id="download"><i class="fa fa-print"></i></a>
                                 <input type="hidden" name="keyIdDocument" value="<?php echo $rowDocument['ID']; ?>"/>
                             </form>
                         </td>

@@ -100,7 +100,6 @@ if(isset($_POST["mainSubmit"])){
         if($conn->query($updateStoryQuery)){ // if query executed successfully
             $successUpdateStory = true;
             $gameStoryValue = $describeStory;
-            header('Location:./GameElementsWorld.php?id=' . $idOfDocument);
         }else{
             $somethingWrongStory = true;
         }
@@ -627,6 +626,379 @@ if (isset($_POST["delCharOfLoc"])) {
     }
 }
 
+/**
+ * Actions when user adds a scene
+ */
+if (isset($_POST["saveScene"])) {
+    $sceneName = test_data($_POST["sceneName"]); // getting the name of the scene
+    $sceneDescription = test_data($_POST["sceneDescription"]); // getting the description of the scene
+
+    $queryToAddScene = "INSERT INTO scene (GAME_ELEMENTS_ID, name, describe_scene) 
+        VALUES ('$gameElementsId', '$sceneName', '$sceneDescription')";
+
+    if ($conn->query($queryToAddScene)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot add scene')</script>";
+    }
+}
+
+/**
+ * Actions when user edits a scene
+ */
+if (isset($_POST["editScene"])) {
+    $idOfScene = $_POST["keyIdScene"];
+    $nameOfScene = $_POST["sceneName"];
+    $descriptionOfScene = $_POST["sceneDescription"];
+
+    $queryToEditScene = "UPDATE scene SET name='$nameOfScene', describe_scene='$descriptionOfScene' 
+                         WHERE ID='$idOfScene'";
+
+    if ($conn->query($queryToEditScene)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    }else {
+        echo "<script>alert('Error: cannot edit scene')</script>";
+    }
+}
+
+/**
+ * Actions when user deletes a scene
+ */
+if (isset($_POST["deleteScene"])) {
+    $idOfScene = $_POST["keyIdScene"];
+
+    if ($conn->query("DELETE FROM scene WHERE ID='$idOfScene'")) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    }else {
+        echo "<script>alert('Error: cannot edit scene')</script>";
+    }
+}
+
+/**
+ * Actions when user adds a character of a scene
+ */
+if (isset($_POST["btnAddCharOfScene"])) {
+    $idOfScene = $_POST["sceneId"]; // getting the id of the scene
+    $idOfChar = $_POST["charId"]; // getting the id of the character
+
+    // query to add the character of the scene
+    $queryToAddCharacterToScene = "INSERT INTO game_character_has_scene (GAME_CHARACTER_ID, SCENE_ID) 
+                              VALUES ('$idOfChar', '$idOfScene')";
+    if ($conn->query($queryToAddCharacterToScene)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot add character of the scene')</script>";
+    }
+}
+
+/**
+ * Actions when user removes a character from a scene
+ */
+if (isset($_POST["delCharOfScene"])) {
+    $idOfScene = $_POST["sceneId"]; // getting the id of the scene
+    $idOfChar = $_POST["charId"]; // getting the id of the character
+
+    // query to remove a character from a scene
+    $queryToDelCharFromScene = "DELETE FROM game_character_has_scene WHERE SCENE_ID = '$idOfScene' AND 
+                             GAME_CHARACTER_ID = '$idOfChar';";
+
+    if ($conn->query($queryToDelCharFromScene)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot remove the character from the scene')</script>";
+    }
+}
+
+/**
+ * Actions when user adds an object of a scene
+ */
+if (isset($_POST["btnAddObjOfScene"])) {
+    $idOfScene = $_POST["sceneId"]; // getting the id of the scene
+    $idOfObj = $_POST["objId"]; // getting the id of the object
+
+    // query to add the object of the scene
+    $queryToAddObjectToScene = "INSERT INTO game_object_has_scene (GAME_OBJECT_ID, SCENE_ID) 
+                              VALUES ('$idOfObj', '$idOfScene')";
+    if ($conn->query($queryToAddObjectToScene)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot add object of the scene')</script>";
+    }
+}
+
+/**
+ * Actions when user removes an object from a scene
+ */
+if (isset($_POST["delObjOfScene"])) {
+    $idOfScene = $_POST["sceneId"]; // getting the id of the scene
+    $idOfObj = $_POST["objId"]; // getting the id of the object
+
+    // query to remove an object from a scene
+    $queryToDelObjFromScene = "DELETE FROM game_object_has_scene WHERE SCENE_ID = '$idOfScene' AND 
+                             GAME_OBJECT_ID = '$idOfObj';";
+
+    if ($conn->query($queryToDelObjFromScene)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot remove the object from the scene')</script>";
+    }
+}
+
+/**
+ * Actions when user adds a location of a scene
+ */
+if (isset($_POST["btnAddLocOfScene"])) {
+    $idOfScene = $_POST["sceneId"]; // getting the id of the scene
+    $idOfLoc = $_POST["locId"]; // getting the id of the location
+
+    // query to add the location of the scene
+    $queryToAddLocationToScene = "INSERT INTO game_location_has_scene (GAME_LOCATION_ID, SCENE_ID) 
+                              VALUES ('$idOfLoc', '$idOfScene')";
+    if ($conn->query($queryToAddLocationToScene)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot add location of the scene')</script>";
+    }
+}
+
+/**
+ * Actions when user removes a location from a scene
+ */
+if (isset($_POST["delLocOfScene"])) {
+    $idOfScene = $_POST["sceneId"]; // getting the id of the scene
+    $idOfLoc = $_POST["locId"]; // getting the id of the location
+
+    // query to remove a location from a scene
+    $queryToDelLocFromScene = "DELETE FROM game_location_has_scene WHERE SCENE_ID = '$idOfScene' AND 
+                             GAME_LOCATION_ID = '$idOfLoc';";
+
+    if ($conn->query($queryToDelLocFromScene)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot remove the location from the scene')</script>";
+    }
+}
+
+/**
+ * Actions when user adds a new objective
+ */
+if (isset($_POST["saveObjective"])) {
+    $titleOfObjective = $_POST["objTitle"];
+    $descriptionOfObjective = $_POST["objDescription"];
+
+    $queryToAddObjective = "INSERT INTO game_objective (GAME_ELEMENTS_ID, title, description) 
+                            VALUES ('$gameElementsId', '$titleOfObjective', '$descriptionOfObjective')";
+
+    if ($conn->query($queryToAddObjective)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot add objective')</script>";
+    }
+}
+
+/**
+ * Actions when user deletes an objective
+ */
+if (isset($_POST["deleteObjective"])) {
+    $idOfObjectiveToDel = $_POST["keyIdObjective"];
+
+    if ($conn->query("DELETE FROM game_objective WHERE ID='$idOfObjectiveToDel'")) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot delete the objective')</script>";
+    }
+}
+
+/**
+ * Actions when user edits an objective
+ */
+if (isset($_POST["editObjective"])) {
+    $idOfObjectiveToEdit = $_POST["keyIdObjective"];
+    $titleOfObjective = $_POST["objectiveTitle"];
+    $descriptionOfObjective = $_POST["objectiveDescription"];
+
+    $queryToUpdateObjective = "UPDATE game_objective SET title='$titleOfObjective', description='$descriptionOfObjective'
+                               WHERE ID='$idOfObjectiveToEdit';";
+
+    if ($conn->query($queryToUpdateObjective)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot update the objective')</script>";
+    }
+}
+
+/**
+ * Actions when user adds a character to an objective
+ */
+if (isset($_POST["btnAddCharOfObjective"])) {
+    $idOfObjective = $_POST["objectiveId"];
+    $idOfChar = $_POST["charId"];
+
+    $queryToAddCharacterToObjective = "INSERT INTO game_objective_has_game_character (GAME_OBJECTIVE_ID, GAME_CHARACTER_ID)
+                                       VALUES ('$idOfObjective', '$idOfChar')";
+
+    if ($conn->query($queryToAddCharacterToObjective)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot add character to the objective')</script>";
+    }
+}
+
+/**
+ * Actions when user deletes a character from an objective
+ */
+if (isset($_POST["delCharOfObjective"])) {
+    $idOfObjective = $_POST["objectiveId"];
+    $idOfChar = $_POST["charId"];
+
+    $queryToDeleteCharFromObjective = "DELETE FROM game_objective_has_game_character WHERE GAME_OBJECTIVE_ID='$idOfObjective' 
+                                        AND GAME_CHARACTER_ID='$idOfChar';";
+
+    if ($conn->query($queryToDeleteCharFromObjective)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot delete character from the objective')</script>";
+    }
+}
+
+/**
+ * Actions when user adds an object to an objective
+ */
+if (isset($_POST["btnAddObjOfObjective"])) {
+    $idOfObjective = $_POST["objectiveId"];
+    $idOfObject = $_POST["objId"];
+
+    $queryToAddObjectToObjective = "INSERT INTO game_objective_has_game_object (GAME_OBJECTIVE_ID, GAME_OBJECT_ID) 
+                                    VALUES ('$idOfObjective', '$idOfObject');";
+
+    if ($conn->query($queryToAddObjectToObjective)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot add object to the objective')</script>";
+    }
+}
+
+/**
+ * Actions when user removes an object from an objective
+ */
+if (isset($_POST["delObjOfObjective"])) {
+    $idOfObjective = $_POST["objectiveId"];
+    $idOfObject = $_POST["objId"];
+
+    $queryToRemoveObjectFromObjective = "DELETE FROM game_objective_has_game_object WHERE GAME_OBJECTIVE_ID='$idOfObjective'
+                                         AND GAME_OBJECT_ID='$idOfObject';";
+
+    if ($conn->query($queryToRemoveObjectFromObjective)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot delete object from the objective')</script>";
+    }
+}
+
+/**
+ * Actions when user adds a scene to an objective
+ */
+if (isset($_POST["btnAddSceneOfObjective"])) {
+    $idOfObjective = $_POST["objectiveId"];
+    $idOfScene = $_POST["sceneId"];
+
+    $queryToAddSceneToObjective = "INSERT INTO game_objective_has_scene (GAME_OBJECTIVE_ID, SCENE_ID) 
+                                    VALUES ('$idOfObjective', '$idOfScene');";
+
+    if ($conn->query($queryToAddSceneToObjective)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot add scene to the objective')</script>";
+    }
+}
+
+/**
+ * Actions when user removes a scene from an objective
+ */
+if (isset($_POST["delSceneOfObjective"])) {
+    $idOfObjective = $_POST["objectiveId"];
+    $idOfScene = $_POST["sceneId"];
+
+    $queryToRemoveSceneFromObjective = "DELETE FROM game_objective_has_scene WHERE GAME_OBJECTIVE_ID='$idOfObjective'
+                                         AND SCENE_ID='$idOfScene';";
+
+    if ($conn->query($queryToRemoveSceneFromObjective)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot delete scene from the objective')</script>";
+    }
+}
+
+/**
+ * Actions when user adds a dialog
+ */
+if (isset($_POST["saveDialog"])) {
+    $charTalksId = $_POST["selectFromChar"];
+    $dialogName = test_data($_POST["dialogName"]);
+    $dialogText = test_data($_POST["dialogText"]);
+
+    $queryToAddDialog = "INSERT INTO game_dialog (GAME_ELEMENTS_ID, GAME_CHARACTER_TALKS, name, text) VALUES ('$gameElementsId', '$charTalksId', '$dialogName', '$dialogText');";
+
+    if ($conn->query($queryToAddDialog)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot add dialog')</script>";
+    }
+}
+
+/**
+ * Actions when user edits a dialog
+ */
+if (isset($_POST["editDialog"])) {
+    $idOfDialog = $_POST["keyIdDialog"];
+    $nameOfDialog = $_POST["dialogName"];
+    $textOfDialog = $_POST["dialogText"];
+    $talkerChar = $_POST["selectFromChar"];
+
+    $queryToUpdateDialog = "UPDATE game_dialog SET name='$nameOfDialog', GAME_CHARACTER_TALKS='$talkerChar', text='$textOfDialog' WHERE ID='$idOfDialog';";
+
+    if ($conn->query($queryToUpdateDialog)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot update dialog')</script>";
+    }
+}
+
+/**
+ * Actions when user adds a character that listens a dialog
+ */
+if (isset($_POST["btnAddListenCharOfDialog"])) {
+    $characterTalksId = $_POST["characterTalksId"];
+    $characterListensId = $_POST["characterListensId"];
+    $dialogId = $_POST["dialogId"];
+
+    $queryToAddCharListenDialog = "INSERT INTO character_dialogs_character (CHARACTER_TALKS_ID, CHARACTER_LISTENS_ID, DIALOG_ID)
+                                    VALUES ('$characterTalksId', '$characterListensId', '$dialogId')";
+
+    if ($conn->query($queryToAddCharListenDialog)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot add character that listens the dialog')</script>";
+    }
+}
+/**
+ * Actions when user removes a character that listens a dialog
+ */
+if (isset($_POST["delCharListensFromDialog"])) {
+    $characterTalksId = $_POST["characterTalksId"];
+    $characterListensId = $_POST["characterListensId"];
+    $dialogId = $_POST["dialogId"];
+
+    $queryToRemoveCharThatListenDialog = "DELETE FROM character_dialogs_character WHERE CHARACTER_TALKS_ID='$characterTalksId'
+                                           AND CHARACTER_LISTENS_ID='$characterListensId' AND DIALOG_ID='$dialogId';";
+
+    if ($conn->query($queryToRemoveCharThatListenDialog)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot remove character that listens the dialog')</script>";
+    }
+}
+
 
 /*
  * Function to filter data.
@@ -794,36 +1166,24 @@ function test_data($data)
             <h3 class="headerForModal">Add a dialog</h3><br>
 
             <form method="post" action="" class="w3-container" style="text-align: center;">
+                <label for="dialogName" class="w3-margin-top">Write the name of the dialog *</label>
+                <input class="w3-input w3-border w3-margin-top" type="text" id="dialogName" name="dialogName" required><br>
+
                 <label for="selectFromChar">Choose a character that talks to others *</label>
                 <select class="w3-select w3-border w3-margin-top" id="selectFromChar" name="selectFromChar" required>
                     <option value="" disabled selected>Choose a character</option>
-                    <option value="1">Character 1</option>
-                    <option value="2">Character 2</option>
-                    <option value="3">Character 3</option>
-                </select><br><br>
+                    <?php
+                    // query to load all characters
+                    $queryLoadAllCharactersForDialogs = "SELECT * FROM game_character WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+                    $resultLoadAllCharactersForDialogs = mysqli_query($conn, $queryLoadAllCharactersForDialogs); // executing the query
 
-                <label>Choose a character or more that the character above talks to</label>
-                <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableCharacters-dialogs">
-                    <tr>
-                        <th>Characters</th>
-                        <th>Add</th>
-                    </tr>
-                    <tr>
-                        <td>Character 1</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="char1-dialogs" type="button"
-                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Character 2</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="char2-dialogs" type="button"
-                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Character 3</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="char3-dialogs" type="button"
-                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                </table><br>
+                    while($rowLoadChar = $resultLoadAllCharactersForDialogs->fetch_assoc()) {
+                        $idOfChar = $rowLoadChar["ID"];
+                        $nameOfChar = $rowLoadChar["name"];
+                        echo "<option value=\"$idOfChar\">$nameOfChar</option>";
+                    }
+                    ?>
+                </select><br><br>
 
                 <label for="dialogText">Write the dialog *</label>
                 <textarea id="dialogText" class="w3-input w3-border w3-margin-top" rows="3" type="text"
@@ -853,74 +1213,6 @@ function test_data($data)
                 <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="sceneDescription"
                           name="sceneDescription"></textarea><br>
 
-                <label>Add characters that take part in the scene</label>
-                <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableCharacters-scenes">
-                    <tr>
-                        <th>Characters</th>
-                        <th>Add</th>
-                    </tr>
-                    <tr>
-                        <td>Character 1</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="char1-scene" type="button"
-                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Character 2</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="char2-scene" type="button"
-                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Character 3</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="char3-scene" type="button"
-                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                </table><br>
-
-                <label>Add locations of the scene</label>
-                <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableLocations-scenes">
-                    <tr>
-                        <th>Locations</th>
-                        <th>Add</th>
-                    </tr>
-                    <tr>
-                        <td>Location 1</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="loc1-scene" type="button"
-                                    name="btnAddLoc"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Location 2</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="loc2-scene" type="button"
-                                    name="btnAddLoc"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Location 3</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="loc3-scene" type="button"
-                                    name="btnAddLoc"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                </table><br>
-
-                <label>Add objects of the scene</label>
-                <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableObjects-scenes">
-                    <tr>
-                        <th>Object</th>
-                        <th>Add</th>
-                    </tr>
-                    <tr>
-                        <td>Object 1</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="obj1-scene" type="button"
-                                    name="btnAddObj"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Object 2</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="obj2-scene" type="button"
-                                    name="btnAddObj"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Object 3</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="obj3-scene" type="button"
-                                    name="btnAddObj"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                </table><br>
                 <div class="w3-container w3-padding-16">
                     <button class="w3-button w3-green transmission" id="saveScene" type="submit" name="saveScene">Save</button>
                 </div>
@@ -944,75 +1236,6 @@ function test_data($data)
                 <label for="objectiveDescription">Describe the objective</label>
                 <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="objectiveDescription"
                           name="objDescription"></textarea><br>
-
-                <label>Add scenes of the objective</label>
-                <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableScenes">
-                    <tr>
-                        <th>Scenes</th>
-                        <th>Add</th>
-                    </tr>
-                    <tr>
-                        <td>Scene 1</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="scene1" type="button"
-                                    name="btnAddScene"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Scene 2</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="scene2" type="button"
-                                    name="btnAddScene"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Scene 3</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="scene3" type="button"
-                                    name="btnAddScene"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                </table><br>
-
-                <label>Add other characters that take part in the objective</label>
-                <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableCharactersObjective">
-                    <tr>
-                        <th>Characters</th>
-                        <th>Add</th>
-                    </tr>
-                    <tr>
-                        <td>Character 1</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="charObj1" type="button"
-                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Character 2</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="charObj2" type="button"
-                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Character 3</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="charObj3" type="button"
-                                    name="btnAddChar"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                </table><br>
-
-                <label>Add other objects that are used for the objective</label>
-                <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableObjectsObjectives">
-                    <tr>
-                        <th>Objects</th>
-                        <th>Add</th>
-                    </tr>
-                    <tr>
-                        <td>Object 1</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="objObjective1" type="button"
-                                    name="btnAddObj"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Object 2</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="objObjective2" type="button"
-                                    name="btnAddObj"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td>Object 3</td>
-                        <td><button class="w3-button w3-green w3-circle transmission" id="objObjective3" type="button"
-                                    name="btnAddObj"><i class="fa fa-plus"></i></button></td>
-                    </tr>
-                </table><br>
 
                 <div class="w3-container w3-padding-16">
                     <button class="w3-button w3-green transmission" id="saveObjective" type="submit" name="saveObjective">Save</button>
@@ -1241,7 +1464,7 @@ while($rowLoadLoc = $resultLoadAllLocations->fetch_assoc()){
             <th>Add/Remove</th>
         </tr>
         <?php
-        // query to load all objects
+        // query to load all characters
         $queryLoadAllCharactersForLocs = "SELECT ID, name FROM game_character WHERE GAME_ELEMENTS_ID='$gameElementsId';";
         $resultLoadAllCharactersForLocs = mysqli_query($conn, $queryLoadAllCharactersForLocs); // executing the query
 
@@ -1276,6 +1499,457 @@ while($rowLoadLoc = $resultLoadAllLocations->fetch_assoc()){
     <?php echo "</div></div>" ?>
 <?php
 }
+
+// query to load all scenes
+$queryLoadAllScenes = "SELECT * FROM scene WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+$resultLoadAllScenes = mysqli_query($conn, $queryLoadAllScenes); // executing the query
+
+while($rowLoadScene = $resultLoadAllScenes->fetch_assoc()){
+    $idOfScene = $rowLoadScene["ID"];
+    $nameOfScene = $rowLoadScene["name"];
+    $descriptionOfScene = $rowLoadScene["describe_scene"];
+
+    echo "<div id=\"scenes-modal-edit$idOfScene\" class=\"w3-modal w3-padding-16\">
+    <div class=\"w3-modal-content w3-animate-zoom\">
+        <form method=\"post\" action=\"\" class=\"w3-container\" style=\"text-align: center;\">
+                <span onclick=\"hideElement('scenes-modal-edit$idOfScene')\" class=\"w3-button w3-display-topright w3-hover-red\">
+                        <i class=\"fa fa-close\"></i></span>
+            <h3 class=\"headerForModal\">Edit scene <b>$nameOfScene</b></h3><br>";
+
+    echo "<label for=\"sceneNameEdit$idOfScene\" class=\"w3-margin-top\">Write the name of the scene *</label>
+            <input class=\"w3-input w3-border w3-margin-top\" type=\"text\" id=\"sceneNameEdit$idOfScene\" value=\"$nameOfScene\" name=\"sceneName\" required><br>
+            <input type=\"hidden\"  name=\"keyIdScene\" value=\"$idOfScene\" />
+            <label for=\"sceneDescriptionEdit$idOfScene\">Describe the scene</label>
+            <textarea class=\"w3-input w3-border w3-margin-top\" rows=\"3\" type=\"text\" id=\"sceneDescriptionEdit$idOfScene\"
+                      name=\"sceneDescription\">$descriptionOfScene</textarea><br>
+            <div class=\"w3-container w3-padding-16\">
+                <button class=\"w3-button w3-green transmission\" type=\"submit\" name=\"editScene\">Save</button>
+            </div>
+        </form>
+    </div>
+</div>";
+
+    echo "<div id=\"scenes-add-characters$idOfScene\" class=\"w3-modal w3-padding-16\">
+    <div class=\"w3-modal-content w3-animate-zoom w3-padding-16\" style=\"text-align: center;\">
+    <span onclick=\"hideElement('scenes-add-characters$idOfScene')\" class=\"w3-button w3-display-topright w3-hover-red\">
+    <i class=\"fa fa-close\"></i></span>
+    <h3 class=\"headerForModal\">Add characters of the scene <b>$nameOfScene</b></h3><br>";
+    ?>
+
+<table class="w3-table w3-border w3-centered w3-striped">
+    <tr>
+        <th>Characters</th>
+        <th>Add/Remove</th>
+    </tr>
+    <?php
+    // query to load all characters
+    $queryLoadAllCharactersForScenes = "SELECT ID, name FROM game_character WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+    $resultLoadAllCharactersForScenes = mysqli_query($conn, $queryLoadAllCharactersForScenes); // executing the query
+
+    while ($rowLoadCharForScenes = $resultLoadAllCharactersForScenes->fetch_assoc()) {
+        $rowIdChar = $rowLoadCharForScenes["ID"];
+        $rowNameChar = $rowLoadCharForScenes["name"];
+
+        $queryToCheckIfCharacterIsAdded = "SELECT * FROM game_character_has_scene WHERE 
+                                                        SCENE_ID='$idOfScene' AND GAME_CHARACTER_ID='$rowIdChar';";
+        $resultCheckIfCharIsAdded = mysqli_query($conn, $queryToCheckIfCharacterIsAdded);
+
+        if ($resultCheckIfCharIsAdded->num_rows === 0) {
+            echo "<tr>
+                        <td>$rowNameChar</td>
+                        <td><form method=\"post\" action=\"\"><button class=\"w3-button w3-green w3-circle transmission\" 
+                        id=\"$idOfScene\" type=\"submit\" name=\"btnAddCharOfScene\"><i class=\"fa fa-plus\"></i></button>
+                        <input type=\"hidden\" name=\"sceneId\" value=\"$idOfScene\"/>
+                        <input type=\"hidden\" name=\"charId\" value=\"$rowIdChar\"/></form></td>
+                    </tr>";
+        } else {
+            echo "<tr>
+                        <td>$rowNameChar</td>
+                        <td><form method=\"post\" action=\"\"><button class=\"w3-button w3-red w3-circle transmission\" 
+                        id=\"$idOfScene\" type=\"submit\" name=\"delCharOfScene\"><i class=\"fa fa-minus\"></i></button>
+                        <input type=\"hidden\" name=\"sceneId\" value=\"$idOfScene\"/>
+                        <input type=\"hidden\" name=\"charId\" value=\"$rowIdChar\"/></form></td>
+                    </tr>";
+        }
+    }
+    ?>
+</table><br>
+<?php echo "</div></div>"; ?>
+
+    <?php echo "<div id=\"scenes-add-objects$idOfScene\" class=\"w3-modal w3-padding-16\">
+    <div class=\"w3-modal-content w3-animate-zoom w3-padding-16\" style=\"text-align: center;\">
+    <span onclick=\"hideElement('scenes-add-objects$idOfScene')\" class=\"w3-button w3-display-topright w3-hover-red\">
+    <i class=\"fa fa-close\"></i></span>
+    <h3 class=\"headerForModal\">Add objects of the scene <b>$nameOfScene</b></h3><br>";
+                                                                                         ?>
+
+    <table class="w3-table w3-border w3-centered w3-striped">
+        <tr>
+            <th>Objects</th>
+            <th>Add/Remove</th>
+        </tr>
+        <?php
+        // query to load all objects
+        $queryLoadAllObjectsForScenes = "SELECT ID, name FROM game_object WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+        $resultLoadAllObjectsForScenes = mysqli_query($conn, $queryLoadAllObjectsForScenes); // executing the query
+
+        while ($rowLoadObjForScenes = $resultLoadAllObjectsForScenes->fetch_assoc()) {
+            $rowIdObj = $rowLoadObjForScenes["ID"];
+            $rowNameObj = $rowLoadObjForScenes["name"];
+
+            $queryToCheckIfObjIsAdded = "SELECT * FROM game_object_has_scene WHERE 
+                                                        SCENE_ID='$idOfScene' AND GAME_OBJECT_ID='$rowIdObj';";
+            $resultCheckIfObjIsAdded = mysqli_query($conn, $queryToCheckIfObjIsAdded);
+
+            if ($resultCheckIfObjIsAdded->num_rows === 0) {
+                echo "<tr>
+                        <td>$rowNameObj</td>
+                        <td><form method=\"post\" action=\"\"><button class=\"w3-button w3-green w3-circle transmission\" 
+                        id=\"$idOfScene\" type=\"submit\" name=\"btnAddObjOfScene\"><i class=\"fa fa-plus\"></i></button>
+                        <input type=\"hidden\" name=\"sceneId\" value=\"$idOfScene\"/>
+                        <input type=\"hidden\" name=\"objId\" value=\"$rowIdObj\"/></form></td>
+                    </tr>";
+            } else {
+                echo "<tr>
+                        <td>$rowNameObj</td>
+                        <td><form method=\"post\" action=\"\"><button class=\"w3-button w3-red w3-circle transmission\" 
+                        id=\"$idOfScene\" type=\"submit\" name=\"delObjOfScene\"><i class=\"fa fa-minus\"></i></button>
+                        <input type=\"hidden\" name=\"sceneId\" value=\"$idOfScene\"/>
+                        <input type=\"hidden\" name=\"objId\" value=\"$rowIdObj\"/></form></td>
+                    </tr>";
+            }
+        }
+        ?>
+    </table><br>
+    <?php echo "</div></div>"; ?>
+
+    <?php echo "<div id=\"scenes-add-locations$idOfScene\" class=\"w3-modal w3-padding-16\">
+    <div class=\"w3-modal-content w3-animate-zoom w3-padding-16\" style=\"text-align: center;\">
+    <span onclick=\"hideElement('scenes-add-locations$idOfScene')\" class=\"w3-button w3-display-topright w3-hover-red\">
+    <i class=\"fa fa-close\"></i></span>
+    <h3 class=\"headerForModal\">Add locations of the scene <b>$nameOfScene</b></h3><br>";
+    ?>
+
+    <table class="w3-table w3-border w3-centered w3-striped">
+        <tr>
+            <th>Locations</th>
+            <th>Add/Remove</th>
+        </tr>
+        <?php
+        // query to load all locations
+        $queryLoadAllLocationsForScenes = "SELECT ID, name FROM game_location WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+        $resultLoadAllLocationsForScenes = mysqli_query($conn, $queryLoadAllLocationsForScenes); // executing the query
+
+        while ($rowLoadLocForScenes = $resultLoadAllLocationsForScenes->fetch_assoc()) {
+            $rowIdLoc = $rowLoadLocForScenes["ID"];
+            $rowNameLoc = $rowLoadLocForScenes["name"];
+
+            $queryToCheckIfLocIsAdded = "SELECT * FROM game_location_has_scene WHERE 
+                                                        SCENE_ID='$idOfScene' AND GAME_LOCATION_ID='$rowIdLoc';";
+            $resultCheckIfLocIsAdded = mysqli_query($conn, $queryToCheckIfLocIsAdded);
+
+            if ($resultCheckIfLocIsAdded->num_rows === 0) {
+                echo "<tr>
+                        <td>$rowNameLoc</td>
+                        <td><form method=\"post\" action=\"\"><button class=\"w3-button w3-green w3-circle transmission\" 
+                        id=\"$idOfScene\" type=\"submit\" name=\"btnAddLocOfScene\"><i class=\"fa fa-plus\"></i></button>
+                        <input type=\"hidden\" name=\"sceneId\" value=\"$idOfScene\"/>
+                        <input type=\"hidden\" name=\"locId\" value=\"$rowIdLoc\"/></form></td>
+                    </tr>";
+            } else {
+                echo "<tr>
+                        <td>$rowNameLoc</td>
+                        <td><form method=\"post\" action=\"\"><button class=\"w3-button w3-red w3-circle transmission\" 
+                        id=\"$idOfScene\" type=\"submit\" name=\"delLocOfScene\"><i class=\"fa fa-minus\"></i></button>
+                        <input type=\"hidden\" name=\"sceneId\" value=\"$idOfScene\"/>
+                        <input type=\"hidden\" name=\"locId\" value=\"$rowIdLoc\"/></form></td>
+                    </tr>";
+            }
+        }
+        ?>
+    </table><br>
+    <?php echo "</div></div>";
+}
+?>
+
+    <?php
+    // query to load all objectives
+    $queryLoadAllObjectives = "SELECT * FROM game_objective WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+    $resultLoadAllObjectives = mysqli_query($conn, $queryLoadAllObjectives); // executing the query
+
+    while($rowLoadObjective = $resultLoadAllObjectives->fetch_assoc()) {
+        $idOfObjective = $rowLoadObjective["ID"];
+        $titleOfObjective = $rowLoadObjective["title"];
+        $descriptionOfObjective = $rowLoadObjective["description"];
+
+        echo "<div id=\"objectives-modal-edit$idOfObjective\" class=\"w3-modal w3-padding-16\">
+        <div class=\"w3-modal-content w3-animate-zoom\">
+        <form method=\"post\" action=\"\" class=\"w3-container\" style=\"text-align: center;\">
+        <span onclick=\"hideElement('objectives-modal-edit$idOfObjective')\" class=\"w3-button w3-display-topright w3-hover-red\">
+        <i class=\"fa fa-close\"></i></span>
+        <h3 class=\"headerForModal\">Edit objective <b>$titleOfObjective</b></h3><br>";
+
+            echo "<label for=\"objectiveTitleEdit$idOfObjective\" class=\"w3-margin-top\">Write the title of the objective *</label>
+        <input class=\"w3-input w3-border w3-margin-top\" type=\"text\" id=\"objectiveTitleEdit$idOfObjective\" value=\"$titleOfObjective\" name=\"objectiveTitle\" required><br>
+        <input type=\"hidden\"  name=\"keyIdObjective\" value=\"$idOfObjective\" />
+        <label for=\"objectiveDescriptionEdit$idOfObjective\">Describe the objective</label>
+        <textarea class=\"w3-input w3-border w3-margin-top\" rows=\"3\" type=\"text\" id=\"objectiveDescriptionEdit$idOfObjective\"
+                                                           name=\"objectiveDescription\">$descriptionOfObjective</textarea><br>
+        <div class=\"w3-container w3-padding-16\">
+        <button class=\"w3-button w3-green transmission\" type=\"submit\" name=\"editObjective\">Save</button>
+        </div>
+        </form>
+        </div>
+        </div>";
+
+    echo "<div id=\"objectives-add-characters$idOfObjective\" class=\"w3-modal w3-padding-16\">
+    <div class=\"w3-modal-content w3-animate-zoom w3-padding-16\" style=\"text-align: center;\">
+    <span onclick=\"hideElement('objectives-add-characters$idOfObjective')\" class=\"w3-button w3-display-topright w3-hover-red\">
+    <i class=\"fa fa-close\"></i></span>
+    <h3 class=\"headerForModal\">Add characters of the objective <b>$titleOfObjective</b></h3><br>";
+    ?>
+
+<table class="w3-table w3-border w3-centered w3-striped">
+    <tr>
+        <th>Characters</th>
+        <th>Add/Remove</th>
+    </tr>
+    <?php
+    // query to load all characters
+    $queryLoadAllCharactersForObjectives = "SELECT ID, name FROM game_character WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+    $resultLoadAllCharactersForObjectives = mysqli_query($conn, $queryLoadAllCharactersForObjectives); // executing the query
+
+    while ($rowLoadCharForObjectives = $resultLoadAllCharactersForObjectives->fetch_assoc()) {
+        $rowIdChar = $rowLoadCharForObjectives["ID"];
+        $rowNameChar = $rowLoadCharForObjectives["name"];
+
+        $queryToCheckIfCharacterIsAdded = "SELECT * FROM game_objective_has_game_character WHERE 
+                                                        GAME_OBJECTIVE_ID='$idOfObjective' AND GAME_CHARACTER_ID='$rowIdChar';";
+        $resultCheckIfCharIsAdded = mysqli_query($conn, $queryToCheckIfCharacterIsAdded);
+
+        if ($resultCheckIfCharIsAdded->num_rows === 0) {
+            echo "<tr>
+                        <td>$rowNameChar</td>
+                        <td><form method=\"post\" action=\"\"><button class=\"w3-button w3-green w3-circle transmission\" 
+                        id=\"$idOfObjective\" type=\"submit\" name=\"btnAddCharOfObjective\"><i class=\"fa fa-plus\"></i></button>
+                        <input type=\"hidden\" name=\"objectiveId\" value=\"$idOfObjective\"/>
+                        <input type=\"hidden\" name=\"charId\" value=\"$rowIdChar\"/></form></td>
+                    </tr>";
+        } else {
+            echo "<tr>
+                        <td>$rowNameChar</td>
+                        <td><form method=\"post\" action=\"\"><button class=\"w3-button w3-red w3-circle transmission\" 
+                        id=\"$idOfObjective\" type=\"submit\" name=\"delCharOfObjective\"><i class=\"fa fa-minus\"></i></button>
+                        <input type=\"hidden\" name=\"objectiveId\" value=\"$idOfObjective\"/>
+                        <input type=\"hidden\" name=\"charId\" value=\"$rowIdChar\"/></form></td>
+                    </tr>";
+        }
+    }
+    ?>
+</table><br>
+<?php echo "</div></div>"; ?>
+
+        <?php echo "<div id=\"objectives-add-objects$idOfObjective\" class=\"w3-modal w3-padding-16\">
+    <div class=\"w3-modal-content w3-animate-zoom w3-padding-16\" style=\"text-align: center;\">
+    <span onclick=\"hideElement('objectives-add-objects$idOfObjective')\" class=\"w3-button w3-display-topright w3-hover-red\">
+    <i class=\"fa fa-close\"></i></span>
+    <h3 class=\"headerForModal\">Add objects of the objective <b>$titleOfObjective</b></h3><br>";
+        ?>
+
+        <table class="w3-table w3-border w3-centered w3-striped">
+            <tr>
+                <th>Objects</th>
+                <th>Add/Remove</th>
+            </tr>
+            <?php
+            // query to load all objects
+            $queryLoadAllObjectsForObjectives = "SELECT ID, name FROM game_object WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+            $resultLoadAllObjectsForObjectives = mysqli_query($conn, $queryLoadAllObjectsForObjectives); // executing the query
+
+            while ($rowLoadObjForObjectives = $resultLoadAllObjectsForObjectives->fetch_assoc()) {
+                $rowIdObj = $rowLoadObjForObjectives["ID"];
+                $rowNameObj = $rowLoadObjForObjectives["name"];
+
+                $queryToCheckIfObjIsAdded = "SELECT * FROM game_objective_has_game_object WHERE 
+                                                        GAME_OBJECTIVE_ID='$idOfObjective' AND GAME_OBJECT_ID='$rowIdObj';";
+                $resultCheckIfObjIsAdded = mysqli_query($conn, $queryToCheckIfObjIsAdded);
+
+                if ($resultCheckIfObjIsAdded->num_rows === 0) {
+                    echo "<tr>
+                        <td>$rowNameObj</td>
+                        <td><form method=\"post\" action=\"\"><button class=\"w3-button w3-green w3-circle transmission\" 
+                        id=\"$idOfObjective\" type=\"submit\" name=\"btnAddObjOfObjective\"><i class=\"fa fa-plus\"></i></button>
+                        <input type=\"hidden\" name=\"objectiveId\" value=\"$idOfObjective\"/>
+                        <input type=\"hidden\" name=\"objId\" value=\"$rowIdObj\"/></form></td>
+                    </tr>";
+                } else {
+                    echo "<tr>
+                        <td>$rowNameObj</td>
+                        <td><form method=\"post\" action=\"\"><button class=\"w3-button w3-red w3-circle transmission\" 
+                        id=\"$idOfObjective\" type=\"submit\" name=\"delObjOfObjective\"><i class=\"fa fa-minus\"></i></button>
+                        <input type=\"hidden\" name=\"objectiveId\" value=\"$idOfObjective\"/>
+                        <input type=\"hidden\" name=\"objId\" value=\"$rowIdObj\"/></form></td>
+                    </tr>";
+                }
+            }
+            ?>
+        </table><br>
+        <?php echo "</div></div>"; ?>
+
+        <?php echo "<div id=\"objectives-add-scenes$idOfObjective\" class=\"w3-modal w3-padding-16\">
+    <div class=\"w3-modal-content w3-animate-zoom w3-padding-16\" style=\"text-align: center;\">
+    <span onclick=\"hideElement('objectives-add-scenes$idOfObjective')\" class=\"w3-button w3-display-topright w3-hover-red\">
+    <i class=\"fa fa-close\"></i></span>
+    <h3 class=\"headerForModal\">Add scenes of the objective <b>$titleOfObjective</b></h3><br>";
+        ?>
+
+        <table class="w3-table w3-border w3-centered w3-striped">
+            <tr>
+                <th>Scenes</th>
+                <th>Add/Remove</th>
+            </tr>
+            <?php
+            // query to load all scenes
+            $queryLoadAllScenesForObjectives = "SELECT ID, name FROM scene WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+            $resultLoadAllScenesForObjectives = mysqli_query($conn, $queryLoadAllScenesForObjectives); // executing the query
+
+            while ($rowLoadSceneForObjectives = $resultLoadAllScenesForObjectives->fetch_assoc()) {
+                $rowIdScene = $rowLoadSceneForObjectives["ID"];
+                $rowNameScene = $rowLoadSceneForObjectives["name"];
+
+                $queryToCheckIfSceneIsAdded = "SELECT * FROM game_objective_has_scene WHERE 
+                                                        GAME_OBJECTIVE_ID='$idOfObjective' AND SCENE_ID='$rowIdScene';";
+                $resultCheckIfSceneIsAdded = mysqli_query($conn, $queryToCheckIfSceneIsAdded);
+
+                if ($resultCheckIfSceneIsAdded->num_rows === 0) {
+                    echo "<tr>
+                        <td>$rowNameScene</td>
+                        <td><form method=\"post\" action=\"\"><button class=\"w3-button w3-green w3-circle transmission\" 
+                        id=\"$idOfObjective\" type=\"submit\" name=\"btnAddSceneOfObjective\"><i class=\"fa fa-plus\"></i></button>
+                        <input type=\"hidden\" name=\"objectiveId\" value=\"$idOfObjective\"/>
+                        <input type=\"hidden\" name=\"sceneId\" value=\"$rowIdScene\"/></form></td>
+                    </tr>";
+                } else {
+                    echo "<tr>
+                        <td>$rowNameScene</td>
+                        <td><form method=\"post\" action=\"\"><button class=\"w3-button w3-red w3-circle transmission\" 
+                        id=\"$idOfObjective\" type=\"submit\" name=\"delSceneOfObjective\"><i class=\"fa fa-minus\"></i></button>
+                        <input type=\"hidden\" name=\"objectiveId\" value=\"$idOfObjective\"/>
+                        <input type=\"hidden\" name=\"sceneId\" value=\"$rowIdScene\"/></form></td>
+                    </tr>";
+                }
+            }
+            ?>
+        </table><br>
+        <?php echo "</div></div>"; ?>
+<?php
+    }
+?>
+
+<?php
+    // query to load all dialogs
+    $queryLoadAllDialogs = "SELECT * FROM game_dialog WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+    $resultLoadAllDialogs = mysqli_query($conn, $queryLoadAllDialogs); // executing the query
+
+    while($rowLoadDialogs = $resultLoadAllDialogs->fetch_assoc()) {
+        $idOfDialog = $rowLoadDialogs["ID"];
+        $characterTalksId = $rowLoadDialogs["GAME_CHARACTER_TALKS"];
+        $nameOfDialog = $rowLoadDialogs["name"];
+        $textOfDialog = $rowLoadDialogs["text"];
+
+        echo "<div id=\"dialogs-modal-edit$idOfDialog\" class=\"w3-modal w3-padding-16\">
+        <div class=\"w3-modal-content w3-animate-zoom\">
+        <form method=\"post\" action=\"\" class=\"w3-container\" style=\"text-align: center;\">
+        <span onclick=\"hideElement('dialogs-modal-edit$idOfDialog')\" class=\"w3-button w3-display-topright w3-hover-red\">
+        <i class=\"fa fa-close\"></i></span>
+        <h3 class=\"headerForModal\">Edit dialog <b>$nameOfDialog</b></h3><br>";
+
+            echo "<label for=\"dialogNameEdit$idOfDialog\" class=\"w3-margin-top\">Write the name of the dialog *</label>
+        <input class=\"w3-input w3-border w3-margin-top\" type=\"text\" id=\"dialogNameEdit$idOfDialog\" value=\"$nameOfDialog\" name=\"dialogName\" required><br>
+        <input type=\"hidden\"  name=\"keyIdDialog\" value=\"$idOfDialog\" />
+        
+        <label for=\"selectFromChar$idOfDialog\">Choose a character that talks to others *</label>
+                <select class=\"w3-select w3-border w3-margin-top\" id=\"selectFromChar$idOfDialog\" name=\"selectFromChar\" required>
+                    <option value=\"\" disabled>Choose a character</option>";
+
+                    // query to load all characters
+                    $queryLoadAllCharactersForDialogs = "SELECT * FROM game_character WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+                    $resultLoadAllCharactersForDialogs = mysqli_query($conn, $queryLoadAllCharactersForDialogs); // executing the query
+
+                    while($rowLoadChar = $resultLoadAllCharactersForDialogs->fetch_assoc()) {
+                        $idOfChar = $rowLoadChar["ID"];
+                        $nameOfChar = $rowLoadChar["name"];
+                        if ($characterTalksId === $idOfChar) {
+                            echo "<option value=\"$idOfChar\" selected>$nameOfChar</option>";
+                        } else {
+                            echo "<option value=\"$idOfChar\">$nameOfChar</option>";
+                        }
+                    }
+
+echo "</select><br><br>
+
+        <label for=\"textDialogEdit$idOfDialog\">Write the dialog *</label>
+        <textarea class=\"w3-input w3-border w3-margin-top\" rows=\"3\" type=\"text\" id=\"textDialogEdit$idOfDialog\"
+                                                           name=\"dialogText\">$textOfDialog</textarea><br>
+        <div class=\"w3-container w3-padding-16\">
+        <button class=\"w3-button w3-green transmission\" type=\"submit\" name=\"editDialog\">Save</button>
+        </div>
+        </form>
+        </div>
+        </div>";
+
+echo "<div id=\"dialogs-add-characters$idOfDialog\" class=\"w3-modal w3-padding-16\">
+    <div class=\"w3-modal-content w3-animate-zoom w3-padding-16\" style=\"text-align: center;\">
+    <span onclick=\"hideElement('dialogs-add-characters$idOfDialog')\" class=\"w3-button w3-display-topright w3-hover-red\">
+    <i class=\"fa fa-close\"></i></span>
+    <h3 class=\"headerForModal\">Add characters that listen the dialog <b>$nameOfDialog</b></h3><br>";
+?>
+
+<table class="w3-table w3-border w3-centered w3-striped">
+    <tr>
+        <th>Characters</th>
+        <th>Add/Remove</th>
+    </tr>
+    <?php
+    // query to load all characters
+    $queryLoadAllCharactersForDialogsV2 = "SELECT ID, name FROM game_character WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+    $resultLoadAllCharactersForDialogsV2 = mysqli_query($conn, $queryLoadAllCharactersForDialogsV2); // executing the query
+
+    while ($rowLoadCharForDialogs = $resultLoadAllCharactersForDialogsV2->fetch_assoc()) {
+        $rowIdChar = $rowLoadCharForDialogs["ID"];
+        $rowNameChar = $rowLoadCharForDialogs["name"];
+
+        $queryToCheckIfCharacterIsAdded = "SELECT * FROM character_dialogs_character WHERE 
+                                                        CHARACTER_TALKS_ID='$characterTalksId' AND 
+                                                CHARACTER_LISTENS_ID='$rowIdChar' AND DIALOG_ID='$idOfDialog';";
+        $resultCheckIfCharIsAdded = mysqli_query($conn, $queryToCheckIfCharacterIsAdded);
+
+        if ($resultCheckIfCharIsAdded->num_rows === 0) {
+            echo "<tr>
+                        <td>$rowNameChar</td>
+                        <td><form method=\"post\" action=\"\"><button class=\"w3-button w3-green w3-circle transmission\" 
+                        id=\"$idOfDialog\" type=\"submit\" name=\"btnAddListenCharOfDialog\"><i class=\"fa fa-plus\"></i></button>
+                        <input type=\"hidden\" name=\"characterTalksId\" value=\"$characterTalksId\"/>
+                        <input type=\"hidden\" name=\"characterListensId\" value=\"$rowIdChar\"/>
+                        <input type=\"hidden\" name=\"dialogId\" value=\"$idOfDialog\"/></form></td>
+                        
+                    </tr>";
+        } else {
+            echo "<tr>
+                        <td>$rowNameChar</td>
+                        <td><form method=\"post\" action=\"\"><button class=\"w3-button w3-red w3-circle transmission\" 
+                        id=\"$idOfDialog\" type=\"submit\" name=\"delCharListensFromDialog\"><i class=\"fa fa-minus\"></i></button>
+                        <input type=\"hidden\" name=\"characterTalksId\" value=\"$characterTalksId\"/>
+                        <input type=\"hidden\" name=\"characterListensId\" value=\"$rowIdChar\"/>
+                        <input type=\"hidden\" name=\"dialogId\" value=\"$idOfDialog\"/></form></td>
+                    </tr>";
+        }
+    }
+    ?>
+</table><br>
+<?php echo "</div></div>"; ?>
+<?php
+    }
 ?>
 
 
@@ -1360,8 +2034,8 @@ while($rowLoadLoc = $resultLoadAllLocations->fetch_assoc()){
         <tr>
             <th>Name</th>
             <th>Edit</th>
-            <th>Add objects</th>
             <th>Add characters</th>
+            <th>Add objects</th>
             <th>Delete</th>
         </tr>
 
@@ -1376,8 +2050,8 @@ while($rowLoadLoc = $resultLoadAllLocations->fetch_assoc()){
 
             echo "<tr><td>" . $nameLocLoad . "</td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('locations-modal-edit$idOfLocLoad')\"><i class=\"fa fa-edit\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
-                    onclick=\"showElement('locations-add-objects$idOfLocLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
-                    onclick=\"showElement('locations-add-characters$idOfLocLoad')\"><i class=\"fa fa-plus\"></i></button></td>" . "<td><button class=\"w3-button
+                    onclick=\"showElement('locations-add-characters$idOfLocLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
+                    onclick=\"showElement('locations-add-objects$idOfLocLoad')\"><i class=\"fa fa-plus\"></i></button></td>" . "<td><button class=\"w3-button
                     w3-border transmission\" onclick=\"return confirm('Are you sure that you want to delete the location $nameLocLoad')\" type=\"submit\"
                     name=\"deleteLocation\"><i class=\"fa fa-trash\"></i></button></td><input type=\"hidden\"  name=\"keyIdLoc\"
                     value=\"$idOfLocLoad\" /></tr>";
@@ -1391,16 +2065,104 @@ while($rowLoadLoc = $resultLoadAllLocations->fetch_assoc()){
     w3-border-blue w3-hover-blue w3-margin-left transmission" id="dialogs" type="button" name="dialogs">
         <i class="fa fa-plus"></i></button><br><br>
 
+    <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableLoadDialogs">
+        <tr>
+            <th>Name</th>
+            <th>Edit</th>
+            <th>Add characters that listen</th>
+            <th>Delete</th>
+        </tr>
+
+        <?php
+        $queryLoadAllDialogsV2 = "SELECT * FROM game_dialog WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+        $resultLoadAllDialogsV2 = mysqli_query($conn, $queryLoadAllDialogsV2); // executing the query
+
+        // Loading all entered dialogs
+        while($rowLoadDialog = $resultLoadAllDialogsV2->fetch_assoc()){
+            $idOfDialogLoad = $rowLoadDialog["ID"];
+            $nameDialogLoad = $rowLoadDialog["name"];
+
+            echo "<tr><td>" . $nameDialogLoad . "</td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
+                    onclick=\"showElement('dialogs-modal-edit$idOfDialogLoad')\"><i class=\"fa fa-edit\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
+                    onclick=\"showElement('dialogs-add-characters$idOfDialogLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button
+                    w3-border transmission\" onclick=\"return confirm('Are you sure that you want to delete the dialog $nameDialogLoad')\" type=\"submit\"
+                    name=\"deleteDialog\"><i class=\"fa fa-trash\"></i></button></td><input type=\"hidden\"  name=\"keyIdDialog\"
+                    value=\"$idOfDialogLoad\" /></tr>";
+        }
+        ?>
+    </table><br>
 
     <label for="scenes">Add scenes of the game</label>
     <button onclick="showElement('scenes-modal')" class="w3-button w3-circle w3-border
     w3-border-blue w3-hover-blue w3-margin-left transmission" id="scenes" type="button" name="scenes">
         <i class="fa fa-plus"></i></button><br><br>
 
+    <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableLoadScenes">
+        <tr>
+            <th>Name</th>
+            <th>Edit</th>
+            <th>Add characters</th>
+            <th>Add objects</th>
+            <th>Add locations</th>
+            <th>Delete</th>
+        </tr>
+
+        <?php
+        $queryLoadAllScenesV2 = "SELECT * FROM scene WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+        $resultLoadAllScenesV2 = mysqli_query($conn, $queryLoadAllScenesV2); // executing the query
+
+        // Loading all entered scenes
+        while($rowLoadScene = $resultLoadAllScenesV2->fetch_assoc()){
+            $idOfSceneLoad = $rowLoadScene["ID"];
+            $nameSceneLoad = $rowLoadScene["name"];
+
+            echo "<tr><td>" . $nameSceneLoad . "</td><td><button class=\"w3-button w3-border transmission\" type=\"button\" onclick=\"showElement('scenes-modal-edit$idOfSceneLoad')\">
+                     <i class=\"fa fa-edit\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
+                    onclick=\"showElement('scenes-add-characters$idOfSceneLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
+                    onclick=\"showElement('scenes-add-objects$idOfSceneLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
+                    onclick=\"showElement('scenes-add-locations$idOfSceneLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" 
+                          onclick=\"return confirm('Are you sure that you want to delete the scene $nameSceneLoad')\" type=\"submit\"
+                                    name=\"deleteScene\"><i class=\"fa fa-trash\"></i></button></td>
+                                    <input type=\"hidden\"  name=\"keyIdScene\" value=\"$idOfSceneLoad\" /></tr>";
+        }
+        ?>
+    </table><br>
+
     <label for="objectives">Add an objective of the game</label>
     <button onclick="showElement('objectives-modal')" class="w3-button w3-circle w3-border
     w3-border-blue w3-hover-blue w3-margin-left transmission" id="objectives" type="button" name="objectives">
         <i class="fa fa-plus"></i></button><br><br>
+
+    <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableLoadObjectives">
+        <tr>
+            <th>Title</th>
+            <th>Edit</th>
+            <th>Add characters</th>
+            <th>Add objects</th>
+            <th>Add scenes</th>
+            <th>Delete</th>
+        </tr>
+
+        <?php
+        $queryLoadAllObjectivesV2 = "SELECT * FROM game_objective WHERE GAME_ELEMENTS_ID='$gameElementsId';";
+        $resultLoadAllObjectivesV2 = mysqli_query($conn, $queryLoadAllObjectivesV2); // executing the query
+
+        // Loading all entered objectives
+        while($rowLoadObjective = $resultLoadAllObjectivesV2->fetch_assoc()){
+            $idOfObjectiveLoad = $rowLoadObjective["ID"];
+            $titleObjectiveLoad = $rowLoadObjective["title"];
+
+            echo "<tr><td>" . $titleObjectiveLoad . "</td><td><button class=\"w3-button w3-border transmission\" type=\"button\" onclick=\"showElement('objectives-modal-edit$idOfObjectiveLoad')\">
+                     <i class=\"fa fa-edit\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
+                    onclick=\"showElement('objectives-add-characters$idOfObjectiveLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
+                    onclick=\"showElement('objectives-add-objects$idOfObjectiveLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
+                    onclick=\"showElement('objectives-add-scenes$idOfObjectiveLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" 
+                          onclick=\"return confirm('Are you sure that you want to delete the objective $titleObjectiveLoad')\" type=\"submit\"
+                                    name=\"deleteObjective\"><i class=\"fa fa-trash\"></i></button></td>
+                                    <input type=\"hidden\"  name=\"keyIdObjective\" value=\"$idOfObjectiveLoad\" /></tr>";
+        }
+        ?>
+    </table><br>
 
     <!--- A message to inform the user that updated the story of the game successfully -->
     <div class="w3-panel w3-green" <?php if($successUpdateStory) {

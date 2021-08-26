@@ -39,7 +39,6 @@ if (isset($_POST['submit'])) {
         // Executing query and if it returns true we set variable showDivSuccess true to show a success message
         if ($conn->query($query) === TRUE) {
             $showDivSuccess = TRUE;
-            echo mysqli_insert_id($conn);
         } else {
             // if query fails we check if there is a duplicate registered user
             $queryDuplicateEmail = "SELECT ID FROM Person WHERE email = '$email'";

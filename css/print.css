@@ -1,0 +1,40 @@
+/*
+Styling for the header at print page.
+ */
+.headerForPrint {
+    text-align: center;
+}
+
+/*
+Styling for sections at print page.
+ */
+.sections {
+    margin-left: 35rem;
+    margin-right: 35rem;
+    padding-bottom: 0.5rem;
+    text-align: center;
+    border-bottom: 1px solid lightgray;
+}
+
+/*
+Styling for content at print page.
+ */
+.contentForPrint {
+    margin-left: 6rem;
+    margin-right: 6rem;
+}
+
+/*
+Styling for elements at print page.
+ */
+.elementsInList {
+    margin-left: 3rem;
+}
+
+/*
+Styling for last fields of each element.
+ */
+.lastInfoInElements {
+    border-bottom: 1px solid lightgray;
+    padding-bottom: 0.2rem;
+}

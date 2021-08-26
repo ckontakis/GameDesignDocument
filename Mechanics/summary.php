@@ -156,17 +156,11 @@ if(isset($_POST["summarySubmit"])){
             $gameSummarySetting= $describeSetting;
             $gameSummarySoftware= $describeSoftware;
             $gameSummaryCode= $describeCode;
-            header('summary.php?id=' . $idOfDocument);
         }else{
             $somethingWrongSummary = true;
         }
     }
 }
-
-
-
-
-
 
 ?>
 
@@ -238,7 +232,7 @@ if(isset($_POST["summarySubmit"])){
 	    <h3 class="headerPanel">Create summary of the game</h3>
 	</div>
 
-	<form action="" method="post" enctype="multipart/form-data" class="w3-container w3-border w3-hover-shadow w3-padding-16 formWorldBuilding" >
+	<form action="" method="post" class="w3-container w3-border w3-hover-shadow w3-padding-16 formWorldBuilding" >
 
 		<label for="nameGame">Type the name of the game</label>
     	<textarea class="w3-input w3-border w3-margin-top" rows="1" type="text" id="nameGame" name="nameGame"><?php if(isset($gameSummaryName)) echo $gameSummaryName; ?></textarea><br>
