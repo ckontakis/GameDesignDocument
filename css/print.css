@@ -9,9 +9,9 @@ Styling for the header at print page.
 Styling for sections at print page.
  */
 .sections {
-    margin-left: 35rem;
-    margin-right: 35rem;
-    padding-bottom: 0.5rem;
+    margin-left: 30%;
+    margin-right: 30%;
+    padding-bottom: 1%;
     text-align: center;
     border-bottom: 1px solid lightgray;
 }
@@ -37,4 +37,45 @@ Styling for last fields of each element.
 .lastInfoInElements {
     border-bottom: 1px solid lightgray;
     padding-bottom: 0.2rem;
+}
+
+/*
+Styling for the print button
+ */
+.printButton {
+    margin-top: 3%;
+    text-align: center;
+}
+
+/*
+Styling when user prints the page
+ */
+@media print {
+    /*
+    Styling to hide the bar of the page
+     */
+    #bar {
+        display: none;
+    }
+
+    /*
+    Styling to hide the side bar of the page
+     */
+    #sideBar {
+        display: none;
+    }
+
+    /*
+    Styling to hide the show side button
+     */
+    #showSideBarButton {
+        display: none;
+    }
+
+    /*
+    Styling to hide the print button
+     */
+    #printButton {
+        display: none;
+    }
 }

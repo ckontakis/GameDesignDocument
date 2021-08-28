@@ -434,7 +434,7 @@ if(isset($_POST["summarySubmit"])){
         <div class="w3-container">
             <button class="w3-button w3-border w3-border-blue w3-hover-blue w3-round transmission" type="button"
                     id="chooseButtonSystem" onclick="showAndHide('checkType','fontChooseType')">
-                Choose one or more target systems <i id="fontChooseType" class="fa fa-plus"></i></button>
+                Choose one or more game types <i id="fontChooseType" class="fa fa-plus"></i></button>
         </div>
 
         <?php
@@ -530,7 +530,7 @@ if(isset($_POST["summarySubmit"])){
 
               <?php 
               if(in_array("other",$value))echo '<input class="w3-check" type="checkbox" name="checkType[]" value="other" checked >'; else echo '<input class="w3-check" type="checkbox" name="checkType[]" value="other">';?>
-              <label for="other">Party</label><br>
+              <label for="other">Other</label><br>
 
 		      <!--<input id="otherType" class="w3-check" type="checkbox" onclick="showFunction('otherT')" name=checkType[]>
               <label for="otherType">Other</label>

@@ -393,13 +393,13 @@ function test_data($data)
             if ($rowEditors["isAdmin"] === '1') {
                 echo " <td><span class='w3-text-green'>Yes</span></td>";
             } else {
-                echo " <td><span class='w3-text-green'>No</span></td>";
+                echo " <td><span class='w3-text-red'>No</span></td>";
             }
 
             if ($rowEditors["status_of_invitation"] === 'accepted') {
                 echo " <td><span class='w3-text-green'>Accepted</span></td> </tr>";
             } else {
-                echo " <td><span class='w3-text-green'>Pending</span></td> </tr>";
+                echo " <td><span class='w3-text-orange'>Pending</span></td> </tr>";
             }
         }
         echo "</table><br>

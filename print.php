@@ -41,6 +41,17 @@ if($resultAccessDoc = $conn->query("SELECT * from person_edits_document WHERE PE
 }
 
 /*
+ * Getting the id of the summary table
+ */
+$resultIdSummary = $conn->query("SELECT ID FROM game_summary WHERE DOCUMENT_ID='$idOfDocument';");
+if ($resultIdSummary->num_rows === 1) {
+    $rowIdSummary = $resultIdSummary->fetch_assoc();
+    $summaryId = $rowIdSummary["ID"];
+} else {
+    header("Location:../write.php");
+}
+
+/*
  * Getting the id of World Building, Game Elements and Assets to print the content of these sections to the page.
  * If there is a problem with the execution of queries we redirect user to write page.
  */
@@ -109,7 +120,7 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
 <link rel="stylesheet" href="css/print.css">
 
 <body>
-<div class="w3-bar w3-blue showBar">
+<div class="w3-bar w3-blue showBar" id="bar">
     <a href="index.php" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
     <a href="write.php" class="w3-bar-item w3-button">Write GDD</a>
     <a href="contact.php" class="w3-bar-item w3-button">Contact</a>
@@ -143,10 +154,215 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
     ?>
 </div>
 
+<button class="w3-button w3-blue w3-xlarge showSideBar" id="showSideBarButton" onclick="showElement('sideBar')"><i class="fa fa-bars"></i></button>
+
+<div class="printButton" id="printButton">
+<button class="w3-btn w3-large w3-center w3-round w3-border w3-border-blue w3-hover-blue transmission"
+        onclick="window.print()">Print <i class="fa fa-print"></i></button>
+</div>
 <h2 class="headerForPrint">Game Design Document for the game <b><?php echo $nameOfDoc?></b></h2>
 
 <div class="contentForPrint">
     <h3 class="sections">Summary</h3>
+
+    <?php
+    /*
+     * Loading all information about the summary of the game.
+     */
+    $resultInfoSummary = $conn->query("SELECT * FROM game_summary WHERE ID='$summaryId';");
+    $rowInfoSummary = $resultInfoSummary->fetch_assoc();
+
+    $nameOfTheGame = $rowInfoSummary["name"];
+    $conceptOfTheGame = $rowInfoSummary["concept"];
+    $genreOfTheGame = $rowInfoSummary["genre"];
+    $audienceOfTheGame = $rowInfoSummary["audience"];
+    $systemOfTheGame = $rowInfoSummary["system"];
+    $typeOfTheGame = $rowInfoSummary["type"];
+    $settingOfTheGame = $rowInfoSummary["setting"];
+    $softwareOfTheGame = $rowInfoSummary["software"];
+    $gameCodeOfTheGame = $rowInfoSummary["game_code"];
+
+    // Printing the name of the game
+    if (isset($nameOfTheGame) && $nameOfTheGame !== "") {
+        echo "<p><b>Name:</b> $nameOfTheGame</p>";
+    }
+
+    // Printing the concept of the game
+    if (isset($conceptOfTheGame) && $conceptOfTheGame !== "") {
+        echo "<p><b>Concept:</b> $conceptOfTheGame</p>";
+    }
+
+    // Printing the genre of the game
+    if (isset($genreOfTheGame) && $genreOfTheGame !== "") {
+        $genres = explode(",", $genreOfTheGame);
+
+        echo "<p><b>Genres</b></p>";
+        echo "<ul>";
+        foreach ($genres as $genre) {
+            if ($genre === "action") {
+                echo "<li>Action</li>";
+            } else if ($genre === "action_adventure") {
+                echo "<li>Action-Adventure</li>";
+            } else if ($genre === "adventure") {
+                echo "<li>Adventure</li>";
+            } else if ($genre === "fighting") {
+                echo "<li>Fighting</li>";
+            } else if ($genre === "platformer") {
+                echo "<li>Platformer</li>";
+            } else if ($genre === "role_playing") {
+                echo "<li>Role-playing</li>";
+            } else if ($genre === "simulation") {
+                echo "<li>Simulation</li>";
+            } else if ($genre === "puzzle") {
+                echo "<li>Puzzle</li>";
+            } else if($genre === "rhythm") {
+                echo "<li>Rhythm</li>";
+            } else if ($genre === "horror") {
+                echo "<li>Horror</li>";
+            } else if ($genre === "fps") {
+                echo "<li>FPS</li>";
+            } else if ($genre === "strategy") {
+                echo "<li>Strategy</li>";
+            } else if ($genre === "sports") {
+                echo "<li>Sports</li>";
+            } else if ($genre === "mmo") {
+                echo "<li>MMO</li>";
+            } else if ($genre === "gacha") {
+                echo "<li>Gacha</li>";
+            } else if ($genre === "other") {
+                echo "<li>Other</li>";
+            } else {
+                echo "<li>$genre</li>";
+            }
+        }
+        echo "</ul>";
+    }
+
+    // Printing the audience of the game
+    if (isset($audienceOfTheGame) && $audienceOfTheGame !== "") {
+        echo "<p><b>Audience:</b> ";
+        if ($audienceOfTheGame === "baby") {
+            echo "3+";
+        } else if ($audienceOfTheGame === "child") {
+            echo "7+";
+        } else if ($audienceOfTheGame === "youngteen") {
+            echo "12+";
+        } else if ($audienceOfTheGame === "lateteen") {
+            echo "16+";
+        } else if ($audienceOfTheGame === "adult") {
+            echo "18+";
+        }
+
+        echo "</p>";
+    }
+
+    // Printing the systems of the game
+    if (isset($systemOfTheGame) && $systemOfTheGame !== "") {
+        echo "<p><b>Target systems</b></p>";
+
+        echo "<ul>";
+        $systems = explode(",", $systemOfTheGame);
+        foreach ($systems as $system) {
+            if ($system === "pc") {
+                echo "<li>PC</li>";
+            } else if ($system === "mobile") {
+                echo "<li>Mobile</li>";
+            } else if ($system === "ps5") {
+                echo "<li>PlayStation 5</li>";
+            } else if ($system === "ps4") {
+                echo "<li>PlayStation 4</li>";
+            } else if ($system === "xbox") {
+                echo "<li>Xbox Series X/S</li>";
+            } else if ($system === "xboxOne") {
+                echo "<li>Xbox One</li>";
+            } else if ($system === "nintendoSwitch") {
+                echo "<li>Nintendo Switch</li>";
+            } else if ($system === "nintendo3ds") {
+                echo "<li>Nintendo 3DS</li>";
+            } else if ($system === "playVita") {
+                echo "<li>PlayStation Vita</li>";
+            } else if ($system === "wii") {
+                echo "<li>Wii U</li>";
+            } else if ($system === "other") {
+                echo "<li>Other</li>";
+            } else {
+                echo "<li>$system</li>";
+            }
+        }
+        echo "</ul>";
+    }
+
+    // Printing the types of the game
+    if (isset($typeOfTheGame) && $typeOfTheGame !== "") {
+        echo "<p><b>Game types</b></p>";
+        $types = explode(",", $typeOfTheGame);
+        echo "<ul>";
+        foreach ($types as $type) {
+            if ($type === "beatemup") {
+                echo "<li>Beat-em Up</li>";
+            } else if ($type === "hacknslash") {
+                echo "<li>Hack'n Slash</li>";
+            } else if ($type === "stealth") {
+                echo "<li>Stealth</li>";
+            } else if ($type === "survival") {
+                echo "<li>Survival</li>";
+            } else if ($type === "metroidvania") {
+                echo "<li>Metroidvania</li>";
+            } else if ($type === "textadventure") {
+                echo "<li>Text Adventure</li>";
+            } else if ($type === "graphicadventure") {
+                echo "<li>Graphic Adventure</li>";
+            } else if ($type === "visualnovel") {
+                echo "<li>Visual Novels</li>";
+            } else if ($type === "interactivemovie") {
+                echo "<li>Interactive Movie</li>";
+            } else if ($type === "rpg") {
+                echo "<li>RPG</li>";
+            } else if ($type === "roguelike") {
+                echo "<li>Roguelike</li>";
+            } else if ($type === "tacticalrole") {
+                echo "<li>Tactical RPG</li>";
+            } else if ($type === "sandboxrpg") {
+                echo "<li>Sandbox RPG</li>";
+            } else if ($type === "realtimestrategy") {
+                echo "<li>Real-time Strategy</li>";
+            } else if ($type === "realtimecombat") {
+                echo "<li>Real-time Combat</li>";
+            } else if ($type === "turnbased") {
+                echo "<li>Turn Based</li>";
+            } else if ($type === "towerdefence") {
+                echo "<li>Tower Defence</li>";
+            } else if ($type === "competitive") {
+                echo "<li>Competitive</li>";
+            } else if ($type === "trivia") {
+                echo "<li>Trivia</li>";
+            } else if ($type === "party") {
+                echo "<li>Party</li>";
+            } else if ($type === "other") {
+                echo "<li>Other</li>";
+            } else {
+                echo "<li>$type</li>";
+            }
+        }
+        echo "</ul>";
+    }
+
+    // Printing the setting of the game
+    if (isset($settingOfTheGame) && $settingOfTheGame !== "") {
+        echo "<p><b>Setting:</b> $settingOfTheGame</p>";
+    }
+
+    // Printing the software of the game
+    if (isset($softwareOfTheGame) && $softwareOfTheGame !== "") {
+        echo "<p><b>Software:</b> $softwareOfTheGame</p>";
+    }
+
+    // Printing the game code of the game
+    if (isset($gameCodeOfTheGame) && $gameCodeOfTheGame !== "") {
+        echo "<p><b>Game code:</b> $gameCodeOfTheGame</p>";
+    }
+
+    ?>
     <h3 class="sections">Mechanics</h3>
     <h3 class="sections">World Building</h3>
     <h4 class="sections">Game Elements</h4>
@@ -549,7 +765,5 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
     }
     ?>
 </div>
-
-<button class="w3-button w3-blue w3-xlarge showSideBar" onclick="showElement('sideBar')"><i class="fa fa-bars"></i></button>
 </body>
 </html>
