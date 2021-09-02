@@ -47,6 +47,12 @@ if (isset($_POST['saveDocument'])) {
                 echo "Error: " . "<br>" . $con->error;
             }
             $summary_last_id = mysqli_insert_id($con);
+            
+            if (!$con->query("INSERT INTO physics (MECH_ID,environment, weather, climate, humidity, gravity, lethality, simulations, particles, ragdoll) 
+                        VALUES ('$mechanics_last_id',NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);")) {
+                echo "Error: " . "<br>" . $con->error;
+            }
+            $physics_last_id = mysqli_insert_id($con);
 
             // Creating game elements row
             if (!$con->query("INSERT INTO game_elements (WORLD_BUILDING_ID,story_describe) VALUES ('$world_building_last_id',NULL);")) {
