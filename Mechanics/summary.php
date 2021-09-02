@@ -249,7 +249,7 @@ if(isset($_POST["summarySubmit"])){
         </div>
 
             <?php
-            if(isset($gameSummaryGenre)){
+            
                 $selectedGen[] = explode(',',$gameSummaryGenre);
                     foreach($selectedGen as $value) {
                         
@@ -326,11 +326,9 @@ if(isset($_POST["summarySubmit"])){
               <input id="otherGen" style="visibility: hidden" type="text" placeholder="Write a genre...">-->
      		</div>
             <?php
+            
             }
-            }
-            else{
-                $selectedGen[]= NULL;
-            }
+            
         ?>
     	</div><br/>
    
@@ -362,7 +360,7 @@ if(isset($_POST["summarySubmit"])){
         </div>
 
         <?php
-            if(isset($gameSummarySystem)){
+            
                 $selectedSys[] = explode(',',$gameSummarySystem);
                     foreach($selectedSys as $value) {
                         
@@ -421,11 +419,9 @@ if(isset($_POST["summarySubmit"])){
 
      		</div>
             <?php
+            
             }
-            }
-            else{
-                $selectedSys[]= NULL;
-            }
+            
         ?>
     	</div><br/>
 
@@ -438,7 +434,7 @@ if(isset($_POST["summarySubmit"])){
         </div>
 
         <?php
-            if(isset($gameSummaryType)){
+            
                 $selectedTyp[] = explode(',',$gameSummaryType);
                     foreach($selectedTyp as $value) {
                         
@@ -538,11 +534,9 @@ if(isset($_POST["summarySubmit"])){
      		</div>
 
              <?php
+            
             }
-            }
-            else{
-                $selectedTyp[]= NULL;
-            }
+          
         ?>
     	</div><br/>
 
