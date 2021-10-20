@@ -10,7 +10,7 @@ if(!isset($_SESSION['logged_in'])){
 
 $idOfPerson = $_SESSION['id']; // getting the id of user if is logged in
 
-/*
+/**
  Getting the id of the document with the GET method for the Assets page. If there is no id of document we
  redirect user to write page
 */
@@ -20,27 +20,49 @@ if(isset($_GET['id'])){
     header("Location:../write.php"); // redirects user to write page
 }
 
-/*
+/**
  * Getting the name of the document
  */
 $resultNameDoc = mysqli_query($conn, "SELECT name FROM document WHERE ID='$idOfDocument';");
 $rowDocName = $resultNameDoc->fetch_assoc();
 $nameOfDoc = $rowDocName["name"];
 
-/*
+/**
  * Checking if user does not have access to the document that is typing at the url. If user does not have access
  * we redirect user to write page
  */
 if($resultAccessDoc = $conn->query("SELECT * from person_edits_document WHERE PERSON_ID = '$idOfPerson' AND DOCUMENT_ID = '$idOfDocument' 
                                       AND status_of_invitation = 'accepted';")){
     if($resultAccessDoc->num_rows === 0){
-        header('Location:../write.php');
+        // Getting all team ids that can edit the document
+        $resultTeamsThatEditDoc = $conn->query("SELECT TEAM_ID FROM team_edits_document WHERE DOCUMENT_ID='$idOfDocument';");
+        // If there are teams that can edit the document
+        if ($resultTeamsThatEditDoc->num_rows > 0) {
+            $personEditDoc = false;
+
+            // Checking if person is member of a team that can edit the document
+            while ($rowTeamEditDoc = $resultTeamsThatEditDoc->fetch_assoc()) {
+                $idOfTeamThatEdits = $rowTeamEditDoc['TEAM_ID'];
+                $checkIfUserIsInTeam = $conn->query("SELECT * FROM person_is_in_team WHERE PERSON_ID='$idOfPerson' 
+                                  AND TEAM_ID='$idOfTeamThatEdits' AND status_of_invitation='accepted'");
+                if ($checkIfUserIsInTeam->num_rows > 0) {
+                    $personEditDoc = true;
+                }
+            }
+
+            // If person is not member of some team that can edit the document we redirect the user to the write page
+            if (!$personEditDoc) {
+                header('Location:../write.php');
+            }
+        } else {
+            header('Location:../write.php');
+        }
     }
 }else{
     header("Location:../write.php");
 }
 
-/*
+/**
  * Getting the id of Assets to connect elements (e.g music kind, track) with the assets of the document.
  * If there is a problem with the execution of queries we redirect user to write page.
  */
@@ -467,12 +489,7 @@ echo "<div id=\"music_tracks-add-music_kind$idOfMusicTrack\" class=\"w3-modal w3
 <?php echo "</div></div>";
 }
 ?>
-<form class="w3-container w3-border w3-hover-shadow w3-padding-16 formWorldBuilding" method="post"
-      action="">
-    <label for="musicDescription">Describe the music of the game</label>
-    <textarea class="w3-input w3-border w3-margin-top" rows="2" type="text" id="musicDescription"
-              name="musicDescription"><?php if(isset($descriptionOfMusicValue)) echo $descriptionOfMusicValue; ?></textarea><br>
-
+<div class="w3-container w3-border w3-hover-shadow w3-padding-16 formWorldBuilding">
     <label for="musicType">Add a kind of music that the game has</label>
 
     <button onclick="showElement('music-modal')" class="w3-button w3-circle w3-border
@@ -495,10 +512,10 @@ echo "<div id=\"music_tracks-add-music_kind$idOfMusicTrack\" class=\"w3-modal w3
         $nameOfMusicKind = $rowLoadMusicKind["name"];
 
         echo "<tr><td>" . $nameOfMusicKind . "</td><td><button class=\"w3-button w3-border transmission\" type=\"button\" onclick=\"showElement('music_kind-modal-edit$idOfMusicKind')\">
-                     <i class=\"fa fa-edit\"></i></button></td><td><button class=\"w3-button w3-border transmission\" 
+                     <i class=\"fa fa-edit\"></i></button></td><td><form method=\"post\" action=\"\"><button class=\"w3-button w3-border transmission\" 
                           onclick=\"return confirm('Are you sure that you want to delete the kind of music $nameOfMusicKind')\" type=\"submit\"
                                     name=\"deleteMusicKind\"><i class=\"fa fa-trash\"></i></button></td>
-                                    <input type=\"hidden\"  name=\"keyIdMusicKind\" value=\"$idOfMusicKind\" /></tr>";
+                                    <input type=\"hidden\"  name=\"keyIdMusicKind\" value=\"$idOfMusicKind\" /></form></tr>";
     }
     ?>
 
@@ -528,34 +545,40 @@ echo "<div id=\"music_tracks-add-music_kind$idOfMusicTrack\" class=\"w3-modal w3
 
             echo "<tr><td>" . $nameOfMusicTrack . "</td><td><button class=\"w3-button w3-border transmission\" type=\"button\" onclick=\"showElement('music_track-modal-edit$idOfMusicTrack')\">
                      <i class=\"fa fa-edit\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
-                    onclick=\"showElement('music_tracks-add-music_kind$idOfMusicTrack')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" 
+                    onclick=\"showElement('music_tracks-add-music_kind$idOfMusicTrack')\"><i class=\"fa fa-plus\"></i></button></td><td><form method=\"post\" action=\"\"><button class=\"w3-button w3-border transmission\" 
                           onclick=\"return confirm('Are you sure that you want to delete the music track $nameOfMusicTrack')\" type=\"submit\"
                                     name=\"deleteMusicTrack\"><i class=\"fa fa-trash\"></i></button></td>
-                                    <input type=\"hidden\"  name=\"keyIdMusicTrack\" value=\"$idOfMusicTrack\" /></tr>";
+                                    <input type=\"hidden\"  name=\"keyIdMusicTrack\" value=\"$idOfMusicTrack\" /></form></tr>";
         }
         ?>
 
     </table><br>
 
-    <!--- A message to inform the user that updated the music description of the game successfully -->
-    <div class="w3-panel w3-green" <?php if($successUpdateMusic) {
-        echo 'style="display: block"';
-    }else{
-        echo 'style="display: none"';
-    }?>>
-        <p>You have successfully updated the music description of the game!</p>
-    </div>
+    <form method="post" action="">
+        <label for="musicDescription">Describe the music of the game</label>
+        <textarea class="w3-input w3-border w3-margin-top" rows="2" type="text" id="musicDescription"
+                  name="musicDescription"><?php if(isset($descriptionOfMusicValue)) echo $descriptionOfMusicValue; ?></textarea><br>
 
-    <!--- A message to inform the user that there was an error and didn't update the music description of the game -->
-    <div class="w3-panel w3-red" <?php if($somethingWrongMusic) {
-        echo 'style="display: block"';
-    }else{
-        echo 'style="display: none"';
-    }?>>
-        <p>Something went wrong. Unable to update the music description of the game.</p>
-    </div>
+        <!--- A message to inform the user that updated the music description of the game successfully -->
+        <div class="w3-panel w3-green" <?php if($successUpdateMusic) {
+            echo 'style="display: block"';
+        }else{
+            echo 'style="display: none"';
+        }?>>
+            <p>You have successfully updated the music description of the game!</p>
+        </div>
 
-    <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue transmission" type="submit" name="saveAssets" value="Submit" />
-</form>
+        <!--- A message to inform the user that there was an error and didn't update the music description of the game -->
+        <div class="w3-panel w3-red" <?php if($somethingWrongMusic) {
+            echo 'style="display: block"';
+        }else{
+            echo 'style="display: none"';
+        }?>>
+            <p>Something went wrong. Unable to update the music description of the game.</p>
+        </div>
+
+        <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue transmission" type="submit" name="saveAssets" value="Submit" />
+    </form>
+</div>
 </body>
 </html>

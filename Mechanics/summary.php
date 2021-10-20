@@ -35,7 +35,29 @@ $nameOfDoc = $rowDocName["name"];
 if($resultAccessDoc = $conn->query("SELECT * from person_edits_document WHERE PERSON_ID = '$idOfPerson' AND DOCUMENT_ID = '$idOfDocument' 
                                       AND status_of_invitation = 'accepted';")){
     if($resultAccessDoc->num_rows === 0){
-        header('Location:../write.php');
+        // Getting all team ids that can edit the document
+        $resultTeamsThatEditDoc = $conn->query("SELECT TEAM_ID FROM team_edits_document WHERE DOCUMENT_ID='$idOfDocument';");
+        // If there are teams that can edit the document
+        if ($resultTeamsThatEditDoc->num_rows > 0) {
+            $personEditDoc = false;
+
+            // Checking if person is member of a team that can edit the document
+            while ($rowTeamEditDoc = $resultTeamsThatEditDoc->fetch_assoc()) {
+                $idOfTeamThatEdits = $rowTeamEditDoc['TEAM_ID'];
+                $checkIfUserIsInTeam = $conn->query("SELECT * FROM person_is_in_team WHERE PERSON_ID='$idOfPerson' 
+                                  AND TEAM_ID='$idOfTeamThatEdits' AND status_of_invitation='accepted'");
+                if ($checkIfUserIsInTeam->num_rows > 0) {
+                    $personEditDoc = true;
+                }
+            }
+
+            // If person is not member of some team that can edit the document we redirect the user to the write page
+            if (!$personEditDoc) {
+                header('Location:../write.php');
+            }
+        } else {
+            header('Location:../write.php');
+        }
     }
 }else{
     header("Location:../write.php");
@@ -248,6 +270,8 @@ if(isset($_POST["summarySubmit"])){
                 Choose one or more genres <i id="fontChoose" class="fa fa-plus"></i></button>
         </div>
 
+            <div class="w3-container w3-left-align w3-animate-opacity checkboxesPosition" id="checkGenre">
+
             <?php
             
                 $selectedGen[] = explode(',',$gameSummaryGenre);
@@ -255,7 +279,7 @@ if(isset($_POST["summarySubmit"])){
                         
             ?>
 		    
-		    <div class="w3-container w3-left-align w3-animate-opacity checkboxesPosition" id="checkGenre">
+
 		      <?php 
                 if(in_array("action",$value))echo '<input class="w3-check" type="checkbox" name="checkGenre[]" value="action" checked >'; else echo '<input class="w3-check" type="checkbox" name="checkGenre[]" value="action">';?>
               <label for="action">Action</label><br>
@@ -324,12 +348,13 @@ if(isset($_POST["summarySubmit"])){
 		      <!--<input id="other" class="w3-check" type="checkbox" onclick="showFunction('otherGen')" name=checkGenre[]>
               <label for="other">Other</label>
               <input id="otherGen" style="visibility: hidden" type="text" placeholder="Write a genre...">-->
-     		</div>
+
             <?php
             
             }
             
         ?>
+            </div>
     	</div><br/>
    
 

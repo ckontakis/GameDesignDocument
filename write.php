@@ -3,7 +3,7 @@
 require 'connect.php'; // connecting to database
 $con = $_SESSION["conn"]; // variable that connected to database
 
-/*
+/**
  * If user is not connected we redirect user to write page
  */
 if (!isset($_SESSION['logged_in'])) {
@@ -15,7 +15,7 @@ $person_ID = $_SESSION["id"]; // Getting the id of user
 $duplicateDoc = false; // boolean variable to show and hide error message for duplicate documents
 $genericErrDoc = false; // boolean variable to show and hide generic error message for documents
 
-/*
+/**
  * Actions when user creates a new document
  */
 if (isset($_POST['saveDocument'])) {
@@ -78,8 +78,7 @@ if (isset($_POST['saveDocument'])) {
             mkdir("$docRoot/ImagesFromUsers-GDD/$name/WorldBuilding/Characters", 0755 ,true);
             mkdir("$docRoot/ImagesFromUsers-GDD/$name/WorldBuilding/Objects", 0755 ,true);
             mkdir("$docRoot/ImagesFromUsers-GDD/$name/WorldBuilding/Locations", 0755 ,true);
-
-            header('Location:write.php');
+            mkdir("$docRoot/ImagesFromUsers-GDD/$name/Mechanics/Cutscenes", 0755 ,true);
 
         }else{
             // we are checking if there is already a document with that name
@@ -91,15 +90,14 @@ if (isset($_POST['saveDocument'])) {
                 }
             }
 
-            if(!$duplicateDoc){ // if there is not duplicate document we show a generic error message
+            if(!$duplicateDoc){ // if there is no duplicate document we show a generic error message
                 $genericErrDoc = true;
             }
         }
-
     }
 }
 
-/*
+/**
  * Actions when user deletes a document
  */
 if (isset($_POST['deleteDocument'])) {
@@ -142,7 +140,35 @@ if (isset($_POST['addEditor'])) {
     }
 }
 
-/*
+/**
+ * Actions when user adds a team to have permissions to edit the document
+ */
+if (isset($_POST["addTeamEditsDoc"])) {
+    $teamId = $_POST["teamID"];
+    $docId = $_POST["docID"];
+
+    if ($con->query("INSERT INTO team_edits_document (TEAM_ID, DOCUMENT_ID) VALUES ('$teamId', '$docId');")) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot add team to edit the document')</script>";
+    }
+}
+
+/**
+ * Actions when user deletes a team that has permissions to edit a document
+ */
+if (isset($_POST["deleteTeamEditsDoc"])) {
+    $teamId = $_POST["teamID"];
+    $docId = $_POST["docID"];
+
+    if ($con->query("DELETE FROM team_edits_document WHERE TEAM_ID='$teamId' AND DOCUMENT_ID='$docId';")) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot delete the permissions of team to edit the document')</script>";
+    }
+}
+
+/**
  * Function to filter data.
  */
 function test_data($data)
@@ -229,8 +255,34 @@ function test_data($data)
 
 
     <?php
+    $arrayWithDocumentIds = array();
+
     $query = "SELECT DOCUMENT_ID FROM person_edits_document WHERE PERSON_ID ='$person_ID' AND status_of_invitation='accepted' ORDER BY DOCUMENT_ID ASC";
     $resultDocForeign = mysqli_query($con, $query);
+    if (mysqli_num_rows($resultDocForeign) >= 1) {
+        while ($rowDocId = $resultDocForeign->fetch_assoc()) {
+            array_push($arrayWithDocumentIds, $rowDocId['DOCUMENT_ID']);
+        }
+    }
+
+    $queryToFindIfUserIsInTeams = "SELECT TEAM_ID FROM person_is_in_team WHERE PERSON_ID='$person_ID' AND 
+                                            status_of_invitation='accepted';";
+    $resultsCheckIfUserIsInTeams = mysqli_query($con, $queryToFindIfUserIsInTeams);
+    if (mysqli_num_rows($resultsCheckIfUserIsInTeams) >= 1) {
+        while ($rowUserInTeam = $resultsCheckIfUserIsInTeams->fetch_assoc()) {
+            $teamIdWithUser = $rowUserInTeam['TEAM_ID'];
+
+            $queryToFindDocsThatTeamEdits = "SELECT DOCUMENT_ID FROM team_edits_document WHERE TEAM_ID='$teamIdWithUser';";
+            $resultsFindDocsThatTeamEdits = mysqli_query($con, $queryToFindDocsThatTeamEdits);
+            if (mysqli_num_rows($resultsFindDocsThatTeamEdits) >= 1) {
+                while ($rowDocThatTeamEdits = $resultsFindDocsThatTeamEdits->fetch_assoc()) {
+                    if (!in_array($rowDocThatTeamEdits['DOCUMENT_ID'], $arrayWithDocumentIds)) {
+                        array_push($arrayWithDocumentIds, $rowDocThatTeamEdits['DOCUMENT_ID']);
+                    }
+                }
+            }
+        }
+    }
 
     ?>
     <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableGDD">
@@ -243,9 +295,8 @@ function test_data($data)
         </tr>
 
         <?php
-        if (mysqli_num_rows($resultDocForeign) >= 1) {
-            while ($rowDocForeign = mysqli_fetch_assoc($resultDocForeign)) {
-                $doc_id = $rowDocForeign['DOCUMENT_ID'];
+        if (count($arrayWithDocumentIds) >= 1) {
+            foreach ($arrayWithDocumentIds as $doc_id) {
                 $query = "SELECT * FROM document WHERE ID ='$doc_id' ORDER BY ID ASC";
                 $resultDocument = mysqli_query($con, $query);
                 if (mysqli_num_rows($resultDocument) == 1) {
@@ -279,6 +330,8 @@ function test_data($data)
                                         <?php echo '<a href="WorldBuilding/GameElementsWorld.php?id=' . $rowDocument['ID'] . '" class="w3-bar-item w3-button w3-center transmission">Game Elements</a>'; ?>
                                         <?php echo '<a href="WorldBuilding/AssetsWorld.php?id=' . $rowDocument['ID'] . '" class="w3-bar-item w3-button w3-center transmission">Assets</a>'; ?>
                                     </div>
+                                    <?php echo '<a href="./Umbra/charactermodel.php" class="w3-bar-item w3-button w3-border-bottom w3-center transmission">Character Model</a>'; ?>
+                                    <?php echo '<a href="./Umbra/flowchart.php" class="w3-bar-item w3-button w3-border-bottom w3-center transmission">Flowchart</a>'; ?>
                                 </div>
                             </div>
                         </td>
@@ -335,11 +388,7 @@ function test_data($data)
 
 
     <?php
-    $queryFindAllIdOfDoc = "SELECT * FROM person_edits_document WHERE PERSON_ID='$person_ID' AND status_of_invitation='accepted';";
-    $resultDocTeam = $con->query($queryFindAllIdOfDoc);
-
-    while ($rowResDocTeam = $resultDocTeam->fetch_assoc()) {
-    $idOfDocumentTeams = $rowResDocTeam['DOCUMENT_ID'];
+    foreach ($arrayWithDocumentIds as $idOfDocumentTeams) {
 
     echo "<div id=\"$idOfDocumentTeams\" class=\"w3-modal\">
             <div class=\"w3-modal-content w3-animate-zoom\" style=\"text-align: center;\">
@@ -361,14 +410,18 @@ function test_data($data)
                placeholder=\"Type the email of the person that you want to invite\"
                id=\"emailTeamMember$idOfDocumentTeams\" name=\"emailTeamMember\" required>";
 
-        if ($rowResDocTeam['isAdmin'] === '1') {
+        $queryFindAccessOfPerson = "SELECT isAdmin FROM person_edits_document WHERE PERSON_ID='$person_ID' AND 
+                                                DOCUMENT_ID='$idOfDocumentTeams' AND status_of_invitation='accepted'
+                                                AND isAdmin='1';";
+        $resultFindIfPersonHasAccess = $con->query($queryFindAccessOfPerson);
+        if (mysqli_num_rows($resultFindIfPersonHasAccess) === 1) {
             echo "<input class=\"w3-check w3-margin-top\" id=\"adminCheck$idOfDocumentTeams\" name=\"adminCheck\" type=\"checkbox\">
         <label for=\"adminCheck$idOfDocumentTeams\">Admin of document</label><br>";
         }
 
-
         echo "<button type=\"submit\" name=\"addEditor\" class=\"w3-button w3-border w3-margin-top w3-green transmission\">
             Add</button><br><br>
+       </form>
             
         <label>Editors of the document</label>
     
@@ -415,13 +468,39 @@ function test_data($data)
             <tr>
                 <th>Teams</th>
                 <th>Add</th>
-            </tr>
-            <tr>
-                <td>Team 1</td>
-                <td><button class=\"w3-button w3-green w3-circle transmission\" type=\"button\" name=\"btnAddTeam\"><i class=\"fa fa-plus\"></i></button></td>
-            </tr>
-        </table><br>
-        </form>
+            </tr>";
+        $queryToLoadTeams = "SELECT TEAM_ID FROM person_is_in_team WHERE PERSON_ID='$person_ID' AND status_of_invitation='accepted';";
+        $resultsLoadTeams = $con->query($queryToLoadTeams);
+
+        while ($rowLoadTeams = $resultsLoadTeams->fetch_assoc()) {
+            $idOfTeamToLoad = $rowLoadTeams["TEAM_ID"];
+            $queryToLoadATeam = "SELECT ID, name FROM team WHERE ID='$idOfTeamToLoad';";
+            $resultTeam = $con->query($queryToLoadATeam);
+            $rowLoadATeam = $resultTeam->fetch_assoc();
+
+            $nameOfTeam = $rowLoadATeam["name"];
+            $idOfTeam = $rowLoadATeam["ID"];
+
+            $queryToCheckIfTeamIsAdded = "SELECT * FROM team_edits_document WHERE TEAM_ID='$idOfTeam' AND DOCUMENT_ID='$idOfDocumentTeams';";
+            $resultsCheckIfTeamIsAdded = $con->query($queryToCheckIfTeamIsAdded);
+
+            if ($resultsCheckIfTeamIsAdded->num_rows === 0) {
+                echo "<tr><form method=\"post\" action=\"\">
+                <td>$nameOfTeam</td>
+                <td><button class=\"w3-button w3-green w3-circle transmission\" type=\"submit\" name=\"addTeamEditsDoc\"><i 
+                class=\"fa fa-plus\"></i></button><input type=\"hidden\"  name=\"teamID\"  value=\"$idOfTeam\" />
+                <input type=\"hidden\"  name=\"docID\"  value=\"$idOfDocumentTeams\" /></td>
+            </form></tr>";
+            } else {
+                echo "<tr><form method=\"post\" action=\"\">
+                <td>$nameOfTeam</td>
+                <td><button class=\"w3-button w3-red w3-circle transmission\" type=\"submit\" name=\"deleteTeamEditsDoc\"><i 
+                class=\"fa fa-minus\"></i></button><input type=\"hidden\"  name=\"teamID\"  value=\"$idOfTeam\" />
+                <input type=\"hidden\"  name=\"docID\"  value=\"$idOfDocumentTeams\" /></td>
+            </form></tr>";
+            }
+        }
+        echo "</table><br>
     </div>
     </div>
     </div>";

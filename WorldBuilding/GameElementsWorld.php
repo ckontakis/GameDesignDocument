@@ -34,7 +34,29 @@ $nameOfDoc = $rowDocName["name"];
 if($resultAccessDoc = $conn->query("SELECT * from person_edits_document WHERE PERSON_ID = '$idOfPerson' AND DOCUMENT_ID = '$idOfDocument' 
                                       AND status_of_invitation = 'accepted';")){
     if($resultAccessDoc->num_rows === 0){
-        header('Location:../write.php');
+        // Getting all team ids that can edit the document
+        $resultTeamsThatEditDoc = $conn->query("SELECT TEAM_ID FROM team_edits_document WHERE DOCUMENT_ID='$idOfDocument';");
+        // If there are teams that can edit the document
+        if ($resultTeamsThatEditDoc->num_rows > 0) {
+            $personEditDoc = false;
+
+            // Checking if person is member of a team that can edit the document
+            while ($rowTeamEditDoc = $resultTeamsThatEditDoc->fetch_assoc()) {
+                $idOfTeamThatEdits = $rowTeamEditDoc['TEAM_ID'];
+                $checkIfUserIsInTeam = $conn->query("SELECT * FROM person_is_in_team WHERE PERSON_ID='$idOfPerson' 
+                                  AND TEAM_ID='$idOfTeamThatEdits' AND status_of_invitation='accepted'");
+                if ($checkIfUserIsInTeam->num_rows > 0) {
+                    $personEditDoc = true;
+                }
+            }
+
+            // If person is not member of some team that can edit the document we redirect the user to the write page
+            if (!$personEditDoc) {
+                header('Location:../write.php');
+            }
+        } else {
+            header('Location:../write.php');
+        }
     }
 }else{
     header("Location:../write.php");
@@ -961,6 +983,21 @@ if (isset($_POST["editDialog"])) {
         header("Refresh:0"); // if query is executed successfully we refresh the page
     } else {
         echo "<script>alert('Error: cannot update dialog')</script>";
+    }
+}
+
+/**
+* Actions when user deletes a dialog
+ */
+if (isset($_POST["deleteDialog"])) {
+    $idOfDialogToDel = $_POST["keyIdDialog"];
+
+    $queryToDeleteDialog = "DELETE FROM game_dialog WHERE ID='$idOfDialogToDel';";
+
+    if ($conn->query($queryToDeleteDialog)) {
+        header("Refresh:0"); // if query is executed successfully we refresh the page
+    } else {
+        echo "<script>alert('Error: cannot delete dialog')</script>";
     }
 }
 
@@ -1954,11 +1991,7 @@ echo "<div id=\"dialogs-add-characters$idOfDialog\" class=\"w3-modal w3-padding-
 
 
 <!--- The form of game elements where user can add characters, objects, etc -->
-<form class="w3-container w3-border w3-hover-shadow w3-padding-16 formWorldBuilding" method="post"
-      action="">
-    <label for="story">Describe the story of the game</label>
-    <textarea class="w3-input w3-border w3-margin-top" rows="2" type="text" id="story" name="story"><?php if(isset($gameStoryValue)) echo $gameStoryValue; ?></textarea><br>
-
+<div class="w3-container w3-border w3-hover-shadow w3-padding-16 formWorldBuilding">
     <label for="characters">Add characters of the game</label>
     <button onclick="showElement('characters-modal')" class="w3-button w3-circle w3-border
     w3-border-blue w3-hover-blue w3-margin-left transmission" id="characters" type="button" name="characters">
@@ -1984,10 +2017,10 @@ echo "<div id=\"dialogs-add-characters$idOfDialog\" class=\"w3-modal w3-padding-
 
                 echo "<tr><td>" . $nameCharLoad . "</td><td>" . $rowLoadChar["type_char"] .
                     "</td><td><button class=\"w3-button w3-border transmission\" type=\"button\" onclick=\"showElement('characters-modal-edit$idOfCharLoad')\">
-                     <i class=\"fa fa-edit\"></i></button></td>" . "<td><button class=\"w3-button w3-border transmission\" 
+                     <i class=\"fa fa-edit\"></i></button></td>" . "<td><form method=\"post\" action=\"\"><button class=\"w3-button w3-border transmission\" 
                           onclick=\"return confirm('Are you sure that you want to delete the character $nameCharLoad')\" type=\"submit\"
                                     name=\"deleteCharacter\"><i class=\"fa fa-trash\"></i></button></td>
-                                    <input type=\"hidden\"  name=\"keyIdChar\" value=\"$idOfCharLoad\" /></tr>";
+                                    <input type=\"hidden\"  name=\"keyIdChar\" value=\"$idOfCharLoad\" /></form></tr>";
             }
         ?>
     </table><br>
@@ -2016,10 +2049,10 @@ echo "<div id=\"dialogs-add-characters$idOfDialog\" class=\"w3-modal w3-padding-
 
             echo "<tr><td>" . $nameObjLoad . "</td><td>" . $rowLoadObj["type_obj"] .
                 "</td><td><button class=\"w3-button w3-border transmission\" type=\"button\" onclick=\"showElement('objects-modal-edit$idOfObjLoad')\">
-                     <i class=\"fa fa-edit\"></i></button></td>" . "<td><button class=\"w3-button w3-border transmission\" 
+                     <i class=\"fa fa-edit\"></i></button></td>" . "<td><form method=\"post\" action=\"\"><button class=\"w3-button w3-border transmission\" 
                           onclick=\"return confirm('Are you sure that you want to delete the object $nameObjLoad')\" type=\"submit\"
                                     name=\"deleteObject\"><i class=\"fa fa-trash\"></i></button></td>
-                                    <input type=\"hidden\"  name=\"keyIdObj\" value=\"$idOfObjLoad\" /></tr>";
+                                    <input type=\"hidden\"  name=\"keyIdObj\" value=\"$idOfObjLoad\" /></form></tr>";
         }
         ?>
     </table><br>
@@ -2051,10 +2084,10 @@ echo "<div id=\"dialogs-add-characters$idOfDialog\" class=\"w3-modal w3-padding-
             echo "<tr><td>" . $nameLocLoad . "</td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('locations-modal-edit$idOfLocLoad')\"><i class=\"fa fa-edit\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('locations-add-characters$idOfLocLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
-                    onclick=\"showElement('locations-add-objects$idOfLocLoad')\"><i class=\"fa fa-plus\"></i></button></td>" . "<td><button class=\"w3-button
+                    onclick=\"showElement('locations-add-objects$idOfLocLoad')\"><i class=\"fa fa-plus\"></i></button></td>" . "<td><form method=\"post\" action=\"\"><button class=\"w3-button
                     w3-border transmission\" onclick=\"return confirm('Are you sure that you want to delete the location $nameLocLoad')\" type=\"submit\"
                     name=\"deleteLocation\"><i class=\"fa fa-trash\"></i></button></td><input type=\"hidden\"  name=\"keyIdLoc\"
-                    value=\"$idOfLocLoad\" /></tr>";
+                    value=\"$idOfLocLoad\" /></form></tr>";
         }
         ?>
     </table><br>
@@ -2084,10 +2117,10 @@ echo "<div id=\"dialogs-add-characters$idOfDialog\" class=\"w3-modal w3-padding-
 
             echo "<tr><td>" . $nameDialogLoad . "</td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('dialogs-modal-edit$idOfDialogLoad')\"><i class=\"fa fa-edit\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
-                    onclick=\"showElement('dialogs-add-characters$idOfDialogLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button
+                    onclick=\"showElement('dialogs-add-characters$idOfDialogLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><form method=\"post\" action=\"\"><button class=\"w3-button
                     w3-border transmission\" onclick=\"return confirm('Are you sure that you want to delete the dialog $nameDialogLoad')\" type=\"submit\"
-                    name=\"deleteDialog\"><i class=\"fa fa-trash\"></i></button></td><input type=\"hidden\"  name=\"keyIdDialog\"
-                    value=\"$idOfDialogLoad\" /></tr>";
+                    name=\"deleteDialog\"><i class=\"fa fa-trash\"></i></button></td><input type=\"hidden\" name=\"keyIdDialog\"
+                    value=\"$idOfDialogLoad\" /></form></tr>";
         }
         ?>
     </table><br>
@@ -2120,10 +2153,10 @@ echo "<div id=\"dialogs-add-characters$idOfDialog\" class=\"w3-modal w3-padding-
                      <i class=\"fa fa-edit\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('scenes-add-characters$idOfSceneLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('scenes-add-objects$idOfSceneLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
-                    onclick=\"showElement('scenes-add-locations$idOfSceneLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" 
+                    onclick=\"showElement('scenes-add-locations$idOfSceneLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><form method=\"post\" action=\"\"><button class=\"w3-button w3-border transmission\" 
                           onclick=\"return confirm('Are you sure that you want to delete the scene $nameSceneLoad')\" type=\"submit\"
                                     name=\"deleteScene\"><i class=\"fa fa-trash\"></i></button></td>
-                                    <input type=\"hidden\"  name=\"keyIdScene\" value=\"$idOfSceneLoad\" /></tr>";
+                                    <input type=\"hidden\"  name=\"keyIdScene\" value=\"$idOfSceneLoad\" /></form></tr>";
         }
         ?>
     </table><br>
@@ -2156,35 +2189,40 @@ echo "<div id=\"dialogs-add-characters$idOfDialog\" class=\"w3-modal w3-padding-
                      <i class=\"fa fa-edit\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('objectives-add-characters$idOfObjectiveLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('objectives-add-objects$idOfObjectiveLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
-                    onclick=\"showElement('objectives-add-scenes$idOfObjectiveLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" 
+                    onclick=\"showElement('objectives-add-scenes$idOfObjectiveLoad')\"><i class=\"fa fa-plus\"></i></button></td><form method=\"post\" action=\"\"><td><button class=\"w3-button w3-border transmission\" 
                           onclick=\"return confirm('Are you sure that you want to delete the objective $titleObjectiveLoad')\" type=\"submit\"
                                     name=\"deleteObjective\"><i class=\"fa fa-trash\"></i></button></td>
-                                    <input type=\"hidden\"  name=\"keyIdObjective\" value=\"$idOfObjectiveLoad\" /></tr>";
+                                    <input type=\"hidden\"  name=\"keyIdObjective\" value=\"$idOfObjectiveLoad\" /></form></tr>";
         }
         ?>
     </table><br>
 
-    <!--- A message to inform the user that updated the story of the game successfully -->
-    <div class="w3-panel w3-green" <?php if($successUpdateStory) {
-        echo 'style="display: block"';
-    }else{
-        echo 'style="display: none"';
-    }?>>
-        <p>You have successfully updated the story of the game!</p>
-    </div>
-
-    <!--- A message to inform the user that there was an error and didn't update the story of the game -->
-    <div class="w3-panel w3-red" <?php if($somethingWrongStory) {
-        echo 'style="display: block"';
-    }else{
-        echo 'style="display: none"';
-    }?>>
-        <p>Something went wrong. Unable to update the story of the game.</p>
-    </div>
-
     <!--- Submit button for the form -->
-    <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue transmission" type="submit" name="mainSubmit" value="Submit">
-</form>
+    <form method="post" action="">
+        <label for="story">Describe the story of the game</label>
+        <textarea class="w3-input w3-border w3-margin-top" rows="2" type="text" id="story" name="story"><?php if(isset($gameStoryValue)) echo $gameStoryValue; ?></textarea><br>
+
+        <!--- A message to inform the user that updated the story of the game successfully -->
+        <div class="w3-panel w3-green" <?php if($successUpdateStory) {
+            echo 'style="display: block"';
+        }else{
+            echo 'style="display: none"';
+        }?>>
+            <p>You have successfully updated the story of the game!</p>
+        </div>
+
+        <!--- A message to inform the user that there was an error and didn't update the story of the game -->
+        <div class="w3-panel w3-red" <?php if($somethingWrongStory) {
+            echo 'style="display: block"';
+        }else{
+            echo 'style="display: none"';
+        }?>>
+            <p>Something went wrong. Unable to update the story of the game.</p>
+        </div>
+
+        <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue transmission" type="submit" name="mainSubmit" value="Submit">
+    </form>
+</div>
 
 <!--- A connection to assets of world building that says that the user can continue with editing the assets -->
 <div class="w3-container continueAssets">

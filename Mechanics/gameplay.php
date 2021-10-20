@@ -35,7 +35,29 @@ $nameOfDoc = $rowDocName["name"];
 if($resultAccessDoc = $conn->query("SELECT * from person_edits_document WHERE PERSON_ID = '$idOfPerson' AND DOCUMENT_ID = '$idOfDocument' 
                                       AND status_of_invitation = 'accepted';")){
     if($resultAccessDoc->num_rows === 0){
-        header('Location:../write.php');
+        // Getting all team ids that can edit the document
+        $resultTeamsThatEditDoc = $conn->query("SELECT TEAM_ID FROM team_edits_document WHERE DOCUMENT_ID='$idOfDocument';");
+        // If there are teams that can edit the document
+        if ($resultTeamsThatEditDoc->num_rows > 0) {
+            $personEditDoc = false;
+
+            // Checking if person is member of a team that can edit the document
+            while ($rowTeamEditDoc = $resultTeamsThatEditDoc->fetch_assoc()) {
+                $idOfTeamThatEdits = $rowTeamEditDoc['TEAM_ID'];
+                $checkIfUserIsInTeam = $conn->query("SELECT * FROM person_is_in_team WHERE PERSON_ID='$idOfPerson' 
+                                  AND TEAM_ID='$idOfTeamThatEdits' AND status_of_invitation='accepted'");
+                if ($checkIfUserIsInTeam->num_rows > 0) {
+                    $personEditDoc = true;
+                }
+            }
+
+            // If person is not member of some team that can edit the document we redirect the user to the write page
+            if (!$personEditDoc) {
+                header('Location:../write.php');
+            }
+        } else {
+            header('Location:../write.php');
+        }
     }
 }else{
     header("Location:../write.php");
@@ -117,7 +139,7 @@ function test_data($data)
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Explain Gameplay</title>
+	<title>Explain Gameplay Elements</title>
 	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" href="../Images/favicon-new.ico">
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -179,7 +201,7 @@ function test_data($data)
 	</div>
 
 	<div class="w3-container w3-blue panelInFormWorld">
-	    <h3 class="headerPanel">Explain Mechanics</h3>
+	    <h3 class="headerPanel">Explain Gameplay Elements</h3>
 	</div>
 
 
@@ -277,42 +299,45 @@ function test_data($data)
     	w3-border-blue w3-hover-blue w3-margin-left transmission" id="cutscenes" type="button" name="cutscenes">
         <i class="fa fa-plus"></i></button><br><br>
 
-        
+        <table class="w3-table w3-border w3-centered w3-striped w3-margin-top" id="tableLoadCutscenes">
+        <tr>
+            <th>Cutscene Name</th>
+            <th>Description</th>
+            <th>File</th>
+            <th>Delete</th>
+        </tr>
 
-	    <button type="button" class="collapsible">Cutscenes</button>
-		<div class="content">
-
-			<?php 
+        <?php 
             $queryLoadAllRulesV2= "SELECT * FROM cutscenes WHERE MECH_ID=$gameMechanicsId ORDER BY ID ASC;";
 
             $resultLoadAllRulesV2= mysqli_query($conn,$queryLoadAllRulesV2);
-
-           
 
             while ($rowLoadCutscene = $resultLoadAllRulesV2->fetch_assoc()) {
                 $idOfCutsceneLoad = $rowLoadCutscene["ID"];
                 $nameOfCutsceneLoad = $rowLoadCutscene["name"];
                 $cutsceneDescriptionLoad = $rowLoadCutscene["description"];
                 $idOfImage = $rowLoadCutscene["file_id"];
+                $imgFilenameCut = NULL;
 
                 if(isset($idOfImage)){
-		            $resultImage = $conn->query("SELECT filename FROM image WHERE ID='$idOfImage';");
+                    $resultImage = $conn->query("SELECT filename FROM image WHERE ID='$idOfImage';");
 
-		            if($rowImage = $resultImage->fetch_assoc()){
-		                $imgFilenameCut = $rowImage["filename"];
-		            }
-		        }
-                
+                    if($rowImage = $resultImage->fetch_assoc()){
+                        $imgFilenameCut = $rowImage["filename"];
+                    }
+                }
 
-                // code...?>
-                <p class="rule Rcontainer"><?php echo $nameOfCutsceneLoad;?> : <?php echo $cutsceneDescriptionLoad; '-' ?> <a href="/ImagesFromUsers-GDD/<?php $nameOfDoc?> /WorldBuilding/Locations/<?php $imgFilenameCut ?>" download>Download</a>
-                          
+                echo "<tr><td>" . $nameOfCutsceneLoad . "</td><td>" . $cutsceneDescriptionLoad .
+                "</td><td><a href='/ImagesFromUsers-GDD/. $nameOfDoc ./WorldBuilding/Locations/. $imgFilenameCut .' download>Download</a></td>" . "<td><form method=\"post\" action=\"\"><button class=\"w3-button w3-border transmission\" 
+                          onclick=\"return confirm('Are you sure that you want to delete the rule $nameOfCutsceneLoad')\" type=\"submit\"
+                                    name=\"deleteCutscene\"><i class=\"fa fa-trash\"></i></button></td>
+                                    <input type=\"hidden\"  name=\"keyIdCutscene\" value=\"$idOfCutsceneLoad\" /></form></tr>";
 
+            }
+        ?>
+        </table><br>
 
-           <?php }
-
-
-        ?></div><br><br>
+	    
 			<p class="rule Rcontainer">Intro: <a href="../Images/ratfren.jpg" download>Download</a></p>
 	    	<p class="rule Rcontainer">Outro: <a href="../Images/ratfren.jpg" download>Download</a></p>
 
