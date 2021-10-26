@@ -199,8 +199,8 @@ function test_data($data)
     <div class="w3-dropdown-hover w3-right">
         <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
-            <a href="profile.php" class="w3-bar-item w3-button">Settings</a>
-            <a href="logout.php" class="w3-bar-item w3-button">Logout</a>
+            <a href="profile.php" class="w3-bar-item w3-button">Settings <i class="fa fa-cog"></i></a>
+            <a href="logout.php" class="w3-bar-item w3-button">Logout <i class="fa fa-sign-out"></i></a>
         </div>
     </div>
 </div>
@@ -214,8 +214,8 @@ function test_data($data)
     <div class="w3-dropdown-hover w3-right">
         <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
-            <a href="profile.php" class="w3-bar-item w3-button">Settings</a>
-            <a href="logout.php" class="w3-bar-item w3-button">Logout</a>
+            <a href="profile.php" class="w3-bar-item w3-button">Settings <i class="fa fa-cog"></i></a>
+            <a href="logout.php" class="w3-bar-item w3-button">Logout <i class="fa fa-sign-out"></i></a>
         </div>
     </div>
 </div>
@@ -301,7 +301,7 @@ function test_data($data)
                 $resultDocument = mysqli_query($con, $query);
                 if (mysqli_num_rows($resultDocument) == 1) {
                     $rowDocument = $resultDocument->fetch_assoc();
-
+                    $idOfDocument = $rowDocument['ID'];
                     ?>
                     <tr>
                         <td><?php echo $rowDocument["name"] ?></td>
@@ -336,13 +336,19 @@ function test_data($data)
                             </div>
                         </td>
                         <td>
+                            <?php
+                            $queryToFindIfUserIsAdmin = "SELECT isAdmin FROM person_edits_document WHERE PERSON_ID='$person_ID' 
+                                            AND DOCUMENT_ID='$idOfDocument' AND status_of_invitation='accepted' AND isAdmin='1';";
+                            $resultToFindIfUserIsAdmin = $con->query($queryToFindIfUserIsAdmin);
+                            ?>
                             <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                                 <button class="w3-button w3-round w3-border w3-border-black transmission"
                                     <?php
                                     $nameOfDocument = $rowDocument['name'];
                                     echo "onclick=\"return  confirm('Are you sure that you want to delete $nameOfDocument document?')\"";
                                     ?>
-                                        type="submit" name="deleteDocument"><i class="fa fa-trash"></i></button>
+                                        type="submit" name="deleteDocument" <?php if (mysqli_num_rows($resultToFindIfUserIsAdmin) === 0) echo "disabled" ?>
+                                ><i class="fa fa-trash"></i></button>
                                 <input type="hidden" name="keyIdDocument" value="<?php echo $rowDocument['ID']; ?>"/>
                             </form>
 

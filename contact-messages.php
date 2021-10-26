@@ -45,10 +45,10 @@ if($personIsAdminOfSite !== '1'){
     <a href="contact.php" class="w3-bar-item w3-button">Contact</a>
     <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
     <div class="w3-dropdown-hover w3-right">
-        <button class="w3-button"><b>Profile</b> <i class="fa fa-user-circle"></i></button>
+        <button class="w3-button w3-indigo"><b>Profile</b> <i class="fa fa-user-circle"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
-            <a href="profile.php" class="w3-bar-item w3-button">Settings</a>
-            <a href="logout.php" class="w3-bar-item w3-button">Logout</a>
+            <a href="profile.php" class="w3-bar-item w3-button">Settings <i class="fa fa-cog"></i></a>
+            <a href="logout.php" class="w3-bar-item w3-button">Logout <i class="fa fa-sign-out"></i></a>
         </div>
     </div>
 </div>
@@ -60,10 +60,10 @@ if($personIsAdminOfSite !== '1'){
     <a href="contact.php" class="w3-bar-item w3-button">Contact</a>
     <a href="#" class="w3-bar-item w3-button">Frequently Asked Questions</a>
     <div class="w3-dropdown-hover w3-right">
-        <button class="w3-button"><b>Profile</b> <i class="fa fa-user-circle"></i></button>
+        <button class="w3-button w3-indigo"><b>Profile</b> <i class="fa fa-user-circle"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
-            <a href="profile.php" class="w3-bar-item w3-button">Settings</a>
-            <a href="logout.php" class="w3-bar-item w3-button">Logout</a>
+            <a href="profile.php" class="w3-bar-item w3-button">Settings <i class="fa fa-cog"></i></a>
+            <a href="logout.php" class="w3-bar-item w3-button">Logout <i class="fa fa-sign-out"></i></a>
         </div>
     </div>
 </div>

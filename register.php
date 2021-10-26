@@ -53,11 +53,10 @@ if (isset($_POST['submit'])) {
     }
 }
 
-/*
+/**
  * Function to filter data.
  */
-function test_data($data)
-{
+function test_data($data) {
     return htmlspecialchars(stripslashes($data));
 }
 
@@ -114,22 +113,22 @@ $conn->close(); // closing the connection of database
         <!--- Label for input of name -->
         <label for="firstName">Name *</label>
         <!--- Required input text for name -->
-        <input class="w3-input w3-border" id="firstName" name="firstName" type="text" required><br>
+        <input class="w3-input w3-border" id="firstName" name="firstName" placeholder="Enter your name here" type="text" required><br>
 
         <!--- Label for input of surname -->
         <label for="lastName">Surname *</label>
         <!--- Required input text for surname  -->
-        <input class="w3-input w3-border" id="lastName" name="lastName" type="text" required><br>
+        <input class="w3-input w3-border" id="lastName" name="lastName" type="text" placeholder="Enter your surname here" required><br>
 
         <!--- Label for input of email -->
         <label for="email">Email *</label>
         <!--- Required input text for email -->
-        <input class="w3-input w3-border" id="email" name="email" type="email" required><br>
+        <input class="w3-input w3-border" id="email" name="email" type="email" placeholder="Enter your email here" required><br>
 
         <!--- Label for input of email -->
         <label for="password">Password *</label>
         <!--- Required input text for password -->
-        <input class="w3-input w3-border" id="password" name="password" type="password" required>
+        <input class="w3-input w3-border" id="password" name="password" type="password" placeholder="Enter your password here" required>
 
         <!--- Checkbox to show and hide password -->
         <input id="labelShow" class="w3-check" type="checkbox" onclick="showPassword('password')">

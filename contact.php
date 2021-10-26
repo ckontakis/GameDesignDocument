@@ -88,8 +88,8 @@ function test_data($data){
         echo "<div class=\"w3-dropdown-hover w3-right\">
         <button class=\"w3-button\">Profile <i class=\"fa fa-user-circle\"></i></button>
         <div class=\"w3-dropdown-content w3-bar-block w3-border\">
-            <a href=\"profile.php\" class=\"w3-bar-item w3-button\">Settings</a>
-            <a href=\"logout.php\" class=\"w3-bar-item w3-button\">Logout</a>
+            <a href=\"profile.php\" class=\"w3-bar-item w3-button\">Settings <i class=\"fa fa-cog\"></i></a>
+            <a href=\"logout.php\" class=\"w3-bar-item w3-button\">Logout <i class=\"fa fa-sign-out\"></i></a>
         </div>
     </div>";
     }else{
@@ -112,8 +112,8 @@ function test_data($data){
         echo "<div class=\"w3-dropdown-hover w3-right\">
         <button class=\"w3-button\">Profile <i class=\"fa fa-user-circle\"></i></button>
         <div class=\"w3-dropdown-content w3-bar-block w3-border\">
-            <a href=\"profile.php\" class=\"w3-bar-item w3-button\">Settings</a>
-            <a href=\"logout.php\" class=\"w3-bar-item w3-button\">Logout</a>
+            <a href=\"profile.php\" class=\"w3-bar-item w3-button\">Settings <i class=\"fa fa-cog\"></i></a>
+            <a href=\"logout.php\" class=\"w3-bar-item w3-button\">Logout <i class=\"fa fa-sign-out\"></i></a>
         </div>
     </div>";
     }else{
@@ -133,19 +133,20 @@ function test_data($data){
 
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" class="w3-container w3-padding-16 contactRegisterForm">
         <label for="firstName">Name *</label>
-        <input class="w3-input w3-border" id="firstName" name="firstName"
+        <input class="w3-input w3-border" id="firstName" name="firstName" placeholder="Enter your name here"
                value="<?php if(isset($namePrev)) echo $namePrev?>" type="text" required><br>
 
         <label for="lastName">Surname *</label>
-        <input class="w3-input w3-border" id="lastName" name="lastName" type="text"
+        <input class="w3-input w3-border" id="lastName" name="lastName" type="text" placeholder="Enter your surname here"
                value="<?php if(isset($surnamePrev)) echo $surnamePrev?>" required><br>
 
         <label for="email">Email *</label>
-        <input class="w3-input w3-border" id="email" name="email" type="email"
+        <input class="w3-input w3-border" id="email" name="email" type="email" placeholder="Enter your email here"
                value="<?php if(isset($emailPrev)) echo $emailPrev?>" required><br>
 
         <label for="message">Message *</label>
-        <textarea class="w3-input w3-border" rows="3" type="text" id="message" name="message" required></textarea><br>
+        <textarea class="w3-input w3-border" rows="3" type="text" id="message" name="message" placeholder="Enter your message here"
+                  required></textarea><br>
 
         <div class="w3-panel w3-green" <?php if($showDivSuccess === TRUE) {
             echo 'style="display: block"';

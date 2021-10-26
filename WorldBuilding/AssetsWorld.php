@@ -556,7 +556,7 @@ echo "<div id=\"music_tracks-add-music_kind$idOfMusicTrack\" class=\"w3-modal w3
 
     <form method="post" action="">
         <label for="musicDescription">Describe the music of the game</label>
-        <textarea class="w3-input w3-border w3-margin-top" rows="2" type="text" id="musicDescription"
+        <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="musicDescription"
                   name="musicDescription"><?php if(isset($descriptionOfMusicValue)) echo $descriptionOfMusicValue; ?></textarea><br>
 
         <!--- A message to inform the user that updated the music description of the game successfully -->

@@ -34,10 +34,32 @@ $nameOfDoc = $rowDocName["name"];
 if($resultAccessDoc = $conn->query("SELECT * from person_edits_document WHERE PERSON_ID = '$idOfPerson' AND DOCUMENT_ID = '$idOfDocument' 
                                       AND status_of_invitation = 'accepted';")){
     if($resultAccessDoc->num_rows === 0){
-        header('Location:./write.php');
+        // Getting all team ids that can edit the document
+        $resultTeamsThatEditDoc = $conn->query("SELECT TEAM_ID FROM team_edits_document WHERE DOCUMENT_ID='$idOfDocument';");
+        // If there are teams that can edit the document
+        if ($resultTeamsThatEditDoc->num_rows > 0) {
+            $personEditDoc = false;
+
+            // Checking if person is member of a team that can edit the document
+            while ($rowTeamEditDoc = $resultTeamsThatEditDoc->fetch_assoc()) {
+                $idOfTeamThatEdits = $rowTeamEditDoc['TEAM_ID'];
+                $checkIfUserIsInTeam = $conn->query("SELECT * FROM person_is_in_team WHERE PERSON_ID='$idOfPerson' 
+                                  AND TEAM_ID='$idOfTeamThatEdits' AND status_of_invitation='accepted'");
+                if ($checkIfUserIsInTeam->num_rows > 0) {
+                    $personEditDoc = true;
+                }
+            }
+
+            // If person is not member of some team that can edit the document we redirect the user to the write page
+            if (!$personEditDoc) {
+                header('Location:../write.php');
+            }
+        } else {
+            header('Location:../write.php');
+        }
     }
 }else{
-    header("Location:./write.php");
+    header("Location:../write.php");
 }
 
 /*
@@ -129,7 +151,7 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
     echo "<div class=\"w3-dropdown-hover w3-right\">
     <button class=\"w3-button\">Profile <i class=\"fa fa-user-circle\"></i></button>
     <div class=\"w3-dropdown-content w3-bar-block w3-border\">
-        <a href=\"profile.php\" class=\"w3-bar-item w3-button\">Settings</a>
+        <a href=\"profile.php\" class=\"w3-bar-item w3-button\">Settings <i class=\"fa fa-cog\"></i></a>
         <a href=\"logout.php\" class=\"w3-bar-item w3-button\">Logout</a>
     </div>
     </div>";
@@ -147,7 +169,7 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
     echo "<div class=\"w3-dropdown-hover w3-right\">
     <button class=\"w3-button\">Profile <i class=\"fa fa-user-circle\"></i></button>
     <div class=\"w3-dropdown-content w3-bar-block w3-border\">
-        <a href=\"profile.php\" class=\"w3-bar-item w3-button\">Settings</a>
+        <a href=\"profile.php\" class=\"w3-bar-item w3-button\">Settings <i class=\"fa fa-cog\"></i></a>
         <a href=\"logout.php\" class=\"w3-bar-item w3-button\">Logout</a>
     </div>
     </div>";

@@ -137,6 +137,8 @@ if (isset($_POST["saveCharacter"])) {
     $nameOfChar = test_data($_POST["charName"]); // getting the name of the character
     $charType = test_data($_POST["charType"]); // getting the type of the character
     $charDescription = test_data($_POST["charDescription"]); // getting the description of the character
+    $charState = test_data($_POST["charState"]); // getting the character's state
+    $charSpeed = test_data($_POST["charSpeed"]); // getting the character's speed
 
     $uploadedImage = false;
 
@@ -150,8 +152,8 @@ if (isset($_POST["saveCharacter"])) {
             $image_id = mysqli_insert_id($conn);
 
             // query to add a new character in game_character table  with image
-            $queryAddChar = "INSERT INTO game_character (GAME_ELEMENTS_ID, IMAGE_ID, name, type_char, describe_char) 
-                     VALUES ('$gameElementsId', '$image_id' ,'$nameOfChar', '$charType', '$charDescription');";
+            $queryAddChar = "INSERT INTO game_character (GAME_ELEMENTS_ID, IMAGE_ID, name, type_char, describe_char, state, speed) 
+                     VALUES ('$gameElementsId', '$image_id' ,'$nameOfChar', '$charType', '$charDescription', '$charState', '$charSpeed');";
 
             //executing the query
             if($conn->query($queryAddChar)){
@@ -164,8 +166,8 @@ if (isset($_POST["saveCharacter"])) {
         }
     }else{
         // query to add a new character in game_character table without image
-        $queryAddChar = "INSERT INTO game_character (GAME_ELEMENTS_ID, name, type_char, describe_char) 
-                     VALUES ('$gameElementsId' ,'$nameOfChar', '$charType', '$charDescription');";
+        $queryAddChar = "INSERT INTO game_character (GAME_ELEMENTS_ID, name, type_char, describe_char, state, speed) 
+                     VALUES ('$gameElementsId' ,'$nameOfChar', '$charType', '$charDescription', '$charState', '$charSpeed');";
 
         //executing the query
         if($conn->query($queryAddChar)){
@@ -184,6 +186,8 @@ if(isset($_POST["editCharacter"])){
     $nameOfChar = test_data($_POST["charName"]); // getting the name of the character
     $charType = test_data($_POST["charType"]); // getting the type of the character
     $charDescription = test_data($_POST["charDescription"]); // getting the description of the character
+    $charState = test_data($_POST["charState"]); // getting the character's state
+    $charSpeed = test_data($_POST["charSpeed"]); // getting the character's speed
 
     // If user submits a picture for the character
     if ($_FILES["imgCharEdit"]["name"] !== "") {
@@ -212,7 +216,7 @@ if(isset($_POST["editCharacter"])){
                         // query to update the filename of character's image
                         if ($conn->query("UPDATE image SET filename='$filename' WHERE ID='$idOfPictureToDel';")) {
                             // query to update other information of the character
-                            $queryUpdateChar = "UPDATE game_character SET name='$nameOfChar', type_char='$charType', describe_char='$charDescription' WHERE ID='$idOfChar';";
+                            $queryUpdateChar = "UPDATE game_character SET name='$nameOfChar', type_char='$charType', describe_char='$charDescription', state='$charState', speed='$charSpeed' WHERE ID='$idOfChar';";
 
                             //executing the query
                             if ($conn->query($queryUpdateChar)) {
@@ -240,7 +244,8 @@ if(isset($_POST["editCharacter"])){
         }
     } else {
         // query to update information about the character
-        $queryUpdateCharacter = "UPDATE game_character SET name='$nameOfChar', type_char='$charType', describe_char='$charDescription'
+        $queryUpdateCharacter = "UPDATE game_character SET name='$nameOfChar', type_char='$charType', 
+                          describe_char='$charDescription', state='$charState', speed='$charSpeed'
                              WHERE ID='$idOfChar';";
         if($conn->query($queryUpdateCharacter)){
             header("Refresh:0"); // if query is executed successfully we refresh the page
@@ -1110,7 +1115,7 @@ function test_data($data)
 
 <!--- Content of characters modal -->
 <div id="characters-modal" class="w3-modal">
-    <div class="w3-modal-content w3-animate-zoom">
+    <div class="w3-modal-content w3-animate-zoom w3-margin-bottom">
         <form method="post" action="" enctype="multipart/form-data" class="w3-container" style="text-align: center;">
                 <span onclick="hideElement('characters-modal')" class="w3-button w3-display-topright w3-hover-red">
                         <i class="fa fa-close"></i></span>
@@ -1129,6 +1134,12 @@ function test_data($data)
             <label for="charDescription<?php echo $gameElementsId; ?>">Describe the character</label>
             <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="charDescription<?php echo $gameElementsId; ?>"
                       name="charDescription"></textarea><br>
+            <label for="charState<?php echo $gameElementsId; ?>">Describe the character's state</label>
+            <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="charState<?php echo $gameElementsId; ?>"
+                      name="charState"></textarea><br>
+            <label for="charSpeed<?php echo $gameElementsId; ?>">Describe the character's speed</label>
+            <textarea class="w3-input w3-border w3-margin-top" rows="3" type="text" id="charSpeed<?php echo $gameElementsId; ?>"
+                      name="charSpeed"></textarea><br>
             <div class="w3-container w3-padding-16">
                 <button class="w3-button w3-green transmission" type="submit" name="saveCharacter">Save</button>
             </div>
@@ -1294,14 +1305,18 @@ function test_data($data)
         $nameOfChar = $rowLoadChar["name"];
         $typeOfChar = $rowLoadChar["type_char"];
         $charDescribe = $rowLoadChar["describe_char"];
+        $charState = $rowLoadChar["state"];
+        $charSpeed = $rowLoadChar["speed"];
         $idOfImage = $rowLoadChar["IMAGE_ID"];
 
-        if(isset($idOfImage)){
+        if (isset($idOfImage)){
             $resultImage = $conn->query("SELECT filename FROM image WHERE ID='$idOfImage';");
 
             if($rowImage = $resultImage->fetch_assoc()){
                 $imgFilenameChar = $rowImage["filename"];
             }
+        } else {
+            $imgFilenameChar = null;
         }
 
         echo "<div id=\"characters-modal-edit$idOfChar\" class=\"w3-modal w3-padding-16\">
@@ -1330,6 +1345,15 @@ function test_data($data)
             <label for=\"charDescriptionEdit$idOfChar\">Describe the character</label>
             <textarea class=\"w3-input w3-border w3-margin-top\" rows=\"3\" type=\"text\" id=\"charDescriptionEdit$idOfChar\"
                       name=\"charDescription\">$charDescribe</textarea><br>
+                      
+            <label for=\"charStateEdit$idOfChar\">Describe the character's state</label>
+            <textarea class=\"w3-input w3-border w3-margin-top\" rows=\"3\" type=\"text\" id=\"charStateEdit$idOfChar\"
+                      name=\"charState\">$charState</textarea><br>
+                      
+            <label for=\"charSpeedEdit$idOfChar\">Describe the character's speed</label>
+            <textarea class=\"w3-input w3-border w3-margin-top\" rows=\"3\" type=\"text\" id=\"charSpeedEdit$idOfChar\"
+                      name=\"charSpeed\">$charSpeed</textarea><br>  
+                              
             <div class=\"w3-container w3-padding-16\">
                 <button class=\"w3-button w3-green transmission\" type=\"submit\" name=\"editCharacter\">Save</button>
             </div>
@@ -1356,6 +1380,8 @@ while($rowLoadObj = $resultLoadAllObjects->fetch_assoc()){
         if($rowImage = $resultImage->fetch_assoc()){
             $imgFilenameObj = $rowImage["filename"];
         }
+    } else {
+        $imgFilenameObj = null;
     }
 
     echo "<div id=\"objects-modal-edit$idOfObj\" class=\"w3-modal w3-padding-16\">
@@ -1409,6 +1435,8 @@ while($rowLoadLoc = $resultLoadAllLocations->fetch_assoc()){
         if($rowImage = $resultImage->fetch_assoc()){
             $imgFilenameLoc = $rowImage["filename"];
         }
+    } else {
+        $imgFilenameLoc = null;
     }
 
     echo "<div id=\"locations-modal-edit$idOfLoc\" class=\"w3-modal w3-padding-16\">
