@@ -257,10 +257,10 @@ if(isset($_POST["summarySubmit"])){
 	<form action="" method="post" class="w3-container w3-border w3-hover-shadow w3-padding-16 formWorldBuilding" >
 
 		<label for="nameGame">Type the name of the game</label>
-    	<textarea class="w3-input w3-border w3-margin-top" rows="1" type="text" id="nameGame" name="nameGame"><?php if(isset($gameSummaryName)) echo $gameSummaryName; ?></textarea><br>
+    	<textarea class="w3-input w3-border w3-margin-top" rows="1" type="text" id="nameGame" placeholder="Type the name of the game.." name="nameGame"><?php if(isset($gameSummaryName)) echo $gameSummaryName; ?></textarea><br>
 
 	   	<label for="concept">Create Game Concept</label>
-	    <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="concept" name="concept"><?php if(isset($gameSummaryConcept)) echo $gameSummaryConcept; ?></textarea><br>
+	    <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="concept" placeholder="Type the concept of the game.." name="concept"><?php if(isset($gameSummaryConcept)) echo $gameSummaryConcept; ?></textarea><br>
         
         <label>Specify Game Genre</label><br>
 		<div class="w3-container">
@@ -270,8 +270,6 @@ if(isset($_POST["summarySubmit"])){
                 Choose one or more genres <i id="fontChoose" class="fa fa-plus"></i></button>
         </div>
 
-            <div class="w3-container w3-left-align w3-animate-opacity checkboxesPosition" id="checkGenre">
-
             <?php
             
                 $selectedGen[] = explode(',',$gameSummaryGenre);
@@ -279,7 +277,7 @@ if(isset($_POST["summarySubmit"])){
                         
             ?>
 		    
-
+		    <div class="w3-container w3-left-align w3-animate-opacity checkboxesPosition" id="checkGenre">
 		      <?php 
                 if(in_array("action",$value))echo '<input class="w3-check" type="checkbox" name="checkGenre[]" value="action" checked >'; else echo '<input class="w3-check" type="checkbox" name="checkGenre[]" value="action">';?>
               <label for="action">Action</label><br>
@@ -348,13 +346,12 @@ if(isset($_POST["summarySubmit"])){
 		      <!--<input id="other" class="w3-check" type="checkbox" onclick="showFunction('otherGen')" name=checkGenre[]>
               <label for="other">Other</label>
               <input id="otherGen" style="visibility: hidden" type="text" placeholder="Write a genre...">-->
-
+     		</div>
             <?php
             
             }
             
         ?>
-            </div>
     	</div><br/>
    
 
@@ -566,16 +563,16 @@ if(isset($_POST["summarySubmit"])){
     	</div><br/>
 
 	    <label for="settingGame">Create Setting</label>
-	    <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" id="settingGame" name="settingGame"><?php if(isset($gameSummarySetting)) echo $gameSummarySetting; ?></textarea><br>
+	    <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="2" type="text" placeholder="Type the setting of the game.." id="settingGame" name="settingGame"><?php if(isset($gameSummarySetting)) echo $gameSummarySetting; ?></textarea><br>
 
 	    <label for="programmingLang">What software was used to make this game</label>
-    	<textarea class="w3-input w3-border w3-margin-top" rows="2" type="text" id="programmingLang" name="programmingLang"><?php if(isset($gameSummarySoftware)) echo $gameSummarySoftware; ?></textarea><br>
+    	<textarea class="w3-input w3-border w3-margin-top" rows="2" type="text" placeholder="Type what programming languages/softwares were used in the game.." id="programmingLang" name="programmingLang"><?php if(isset($gameSummarySoftware)) echo $gameSummarySoftware; ?></textarea><br>
 
         <?php
             if(!isset($gameSummaryCode)){
                 ?>
                 <label for="myCode">Add Game Code Repository:</label>
-                <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="1" type="text" id="myCode" name="myCode"></textarea><br>
+                <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="1" type="text" placeholder="Type the link for the code repository of the game.." id="myCode" name="myCode"></textarea><br>
                 <?php
             }
             else{
