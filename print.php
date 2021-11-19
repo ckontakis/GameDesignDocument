@@ -127,6 +127,73 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
     }
 }
 
+/*
+ * Getting the id of Mechanics and  Physics to print the content of these sections to the page.
+ * If there is a problem with the execution of queries we redirect user to write page.
+ */
+
+// finding the id of mechanics table
+if($resultInfoMech = $conn->query("SELECT ID,combat,coop,difficulty from mechanics WHERE DOCUMENT_ID = '$idOfDocument';")){
+    if($resultInfoMech->num_rows === 1){
+        $rowInfoMech = $resultInfoMech->fetch_assoc();
+
+        if(isset($rowInfoMech['ID'])){
+            $mechanicsId = $rowInfoMech['ID'];
+            $mechanicsCombat=$rowInfoMech['combat'];
+            $mechanicsCoop=$rowInfoMech['coop'];
+            $mechanicsDifficulty=$rowInfoMech['difficulty'];
+            // finding the id of physics table
+            if($resultInfoPhysics = $conn->query("SELECT * FROM physics WHERE MECH_ID = '$mechanicsId';")){
+                if($resultInfoPhysics->num_rows === 1){
+                    $rowInfoPhysics = $resultInfoPhysics->fetch_assoc();
+
+                    if(isset($rowInfoPhysics['ID'])){
+                        $physicsId = $rowInfoPhysics['ID']; // setting the id of game elements
+                    }else{
+                        header("Location:../write.php");
+                    }
+
+                    if (isset($rowInfoPhysics['environment'])) {
+                        $physicsEnvironment = $rowInfoPhysics['environment'];
+                    }
+
+                    if (isset($rowInfoPhysics['weather'])) {
+                        $physicsWeather = $rowInfoPhysics['weather'];
+                    }
+                    if (isset($rowInfoPhysics['climate'])) {
+                        $physicsClimate = $rowInfoPhysics['climate'];
+                    }
+                    if (isset($rowInfoPhysics['humidity'])) {
+                        $physicsHumidity = $rowInfoPhysics['humidity'];
+                    }
+                    if (isset($rowInfoPhysics['gravity'])) {
+                        $physicsGravity = $rowInfoPhysics['gravity'];
+                    }
+                    if (isset($rowInfoPhysics['lethality'])) {
+                        $physicsLethality = $rowInfoPhysics['lethality'];
+                    }
+                    if (isset($rowInfoPhysics['simulations'])) {
+                        $physicsSimulations = $rowInfoPhysics['simulations'];
+                    }
+                    if (isset($rowInfoPhysics['particles'])) {
+                        $physicsParticles = $rowInfoPhysics['particles'];
+                    }
+                    if (isset($rowInfoPhysics['ragdoll'])) {
+                        $physicsRagdoll = $rowInfoPhysics['ragdoll'];
+                    }
+                }
+            }else{
+                header("Location:../write.php");
+            }
+
+        }else{
+            header("Location:../write.php");
+        }
+    }else{
+        header("Location:../write.php");
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -386,6 +453,545 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
 
     ?>
     <h3 class="sections">Mechanics</h3>
+    <h4 class="sections">Game Mechanics</h4>
+    <?php 
+    // Loading all rules to print them at the page.
+    $resultLoadAllRules = $conn->query("SELECT * FROM rules WHERE MECH_ID='$mechanicsId';");
+    if ($resultLoadAllRules->num_rows !== 0) {
+        echo "<div><p><b>Rules</b></p>";
+        while ($rowLoadRules = $resultLoadAllRules->fetch_assoc()) {
+            echo "<div class='elementsInList lastInfoInElements'>";
+            $nameOfRule = $rowLoadRules["name"];
+            $descriptionOfRule = $rowLoadRules["description"];
+
+            echo "<p><b>Name:</b> $nameOfRule</p>";
+            if (isset($descriptionOfRule) && $descriptionOfRule !== "") {
+                echo "<p><b>Description:</b> $descriptionOfRule</p>";
+            }
+
+            echo "</div>";
+        }
+        echo "</div>";
+    }
+    ?>
+
+    <?php
+    if (isset($mechanicsCombat) && $mechanicsCombat !== "") {
+        echo "<p><b>Description of combat mechanics:</b> $mechanicsCombat</p>";
+    }
+    ?>
+
+
+    <?php
+    // Loading all game physics to print them at the page.
+    $resultLoadAllPhysics = $conn->query("SELECT * FROM physics WHERE MECH_ID='$mechanicsId';");
+    if ($resultLoadAllPhysics->num_rows !== 0) {
+        echo "<div><p><b>Game Physics</b></p>";
+            echo "<div class='elementsInList lastInfoInElements'>";
+
+            // Printing the environment of the game
+            if (isset($physicsEnvironment) && $physicsEnvironment !== "") {
+                echo "<p><b>Environment:</b> ";
+                if ($physicsEnvironment === "normal") {
+                    echo "Normal";
+                } else if ($physicsEnvironment === "plains") {
+                    echo "Plains";
+                } else if ($physicsEnvironment === "mountainous") {
+                    echo "Mountainous";
+                } else if ($physicsEnvironment === "seaside") {
+                    echo "Seaside";
+                } else if ($physicsEnvironment === "city") {
+                    echo "City";
+                } else if ($physicsEnvironment === "countryside") {
+                    echo "Countryside";
+                } else if ($physicsEnvironment === "desert") {
+                    echo "Desert";
+                } else if ($physicsEnvironment === "icy") {
+                    echo "Icy";
+                } else if ($physicsEnvironment === "forest") {
+                    echo "Forest";
+                } else if ($physicsEnvironment === "island") {
+                    echo "Island";
+                } else if ($physicsEnvironment === "swamp") {
+                    echo "Swamp";
+                }
+
+                echo "</p>";
+            }
+
+            // Printing the weather of the game
+            if (isset($physicsWeather) && $physicsWeather !== "") {
+                echo "<p><b>Weather:</b> ";
+                if ($physicsWeather === "sunny") {
+                    echo "Sunny/Clear";
+                } else if ($physicsWeather === "partially") {
+                    echo "Partially Cloudy";
+                } else if ($physicsWeather === "cloudy") {
+                    echo "Cloudy";
+                } else if ($physicsWeather === "overcast") {
+                    echo "Overcast";
+                } else if ($physicsWeather === "rain") {
+                    echo "Rain";
+                } else if ($physicsWeather === "drizzle") {
+                    echo "Drizzle";
+                } else if ($physicsWeather === "snow") {
+                    echo "Snow";
+                } else if ($physicsWeather === "stormy") {
+                    echo "Stormy";
+                } else if ($physicsWeather === "tornadoes") {
+                    echo "Tornadoes";
+                } else if ($physicsWeather === "thundersnows") {
+                    echo "Thundersnows";
+                } else if ($physicsWeather === "fog") {
+                    echo "Fog";
+                } else if ($physicsWeather === "hurricanes") {
+                    echo "Hurricanes";
+                } else if ($physicsWeather === "sandstorms") {
+                    echo "Sandstorms";
+                }
+
+                echo "</p>";
+            }
+
+
+            // Printing the climate of the game
+            if (isset($physicsClimate) && $physicsClimate !== "") {
+                echo "<p><b>Climate:</b> ";
+                if ($physicsClimate === "tropical") {
+                    echo "Tropical";
+                } else if ($physicsClimate === "dry") {
+                    echo "Dry";
+                } else if ($physicsClimate === "temperate") {
+                    echo "Temperate";
+                } else if ($physicsClimate === "continental") {
+                    echo "Continental";
+                } else if ($physicsClimate === "polar") {
+                    echo "Polar";
+                } 
+
+                echo "</p>";
+            }
+
+            // Printing the humidity of the game
+            if (isset($physicsHumidity) && $physicsHumidity !== "") {
+                echo "<p><b>Humidity:</b> ";
+                if ($physicsHumidity === "high") {
+                    echo "High";
+                } else if ($physicsHumidity === "normal") {
+                    echo "Normal";
+                } else if ($physicsHumidity === "low") {
+                    echo "Low";
+                }
+
+                echo "</p>";
+            }
+
+
+            // Printing the gravity of the game
+            if (isset($physicsGravity) && $physicsGravity !== "") {
+                echo "<p><b>Gravity:</b> ";
+                if ($physicsGravity === "high") {
+                    echo "High";
+                } else if ($physicsGravity === "normal") {
+                    echo "Normal";
+                } else if ($physicsGravity === "low") {
+                    echo "Low";
+                }
+
+                echo "</p>";
+            }
+
+            // Printing the lethality of the game
+            if (isset($physicsLethality) && $physicsLethality !== "") {
+                echo "<p><b>Lethality:</b> ";
+                if ($physicsLethality === "high") {
+                    echo "High";
+                } else if ($physicsLethality === "normal") {
+                    echo "Normal";
+                } else if ($physicsLethality === "low") {
+                    echo "Low";
+                } else if ($physicsLethality === "none") {
+                    echo "None";
+                }
+
+                echo "</p>";
+            }
+
+            // Printing the simulations of the game
+            if (isset($physicsSimulations) && $physicsSimulations !== "") {
+                echo "<p><b>Simulations:</b> ";
+                if ($physicsSimulations === "rigid") {
+                    echo "Rigid body";
+                } else if ($physicsSimulations === "soft") {
+                    echo "Soft-body";
+                }
+
+                echo "</p>";
+            }
+
+            // Printing the particles of the game
+            if (isset($physicsParticles) && $physicsParticles !== "") {
+                echo "<p><b>Particles:</b> ";
+                if ($physicsParticles === "high") {
+                    echo "High density";
+                } else if ($physicsParticles === "normal") {
+                    echo "Normal density";
+                }else if ($physicsParticles === "low") {
+                    echo "low density";
+                }else if ($physicsParticles === "off") {
+                    echo "No particles";
+                }
+
+                echo "</p>";
+            }
+
+            // Printing the ragdoll of the game
+            if (isset($physicsRagdoll) && $physicsRagdoll !== "") {
+                echo "<p><b>Simulations:</b> ";
+                if ($physicsRagdoll === "on") {
+                    echo "On";
+                } else if ($physicsRagdoll === "off") {
+                    echo "Off";
+                }
+
+                echo "</p>";
+            }
+
+            echo "</div>";
+        echo "</div>";
+    }
+    ?>
+
+    <?php
+    if (isset($mechanicsCoop) && $mechanicsCoop !== "") {
+        echo "<p><b>Description of game co-op mechanics:</b> $mechanicsCoop</p>";
+    }
+    ?>
+
+    
+    <?php
+    // Printing the available difficulties of the game
+    if (isset($mechanicsDifficulty) && $mechanicsDifficulty !== "") {
+        $difficulty = explode(",", $mechanicsDifficulty);
+
+        echo "<p><b>Available game difficulties</b></p>";
+        echo "<ul>";
+        foreach ($difficulty as $difficulty) {
+            if ($difficulty === "easy") {
+                echo "<li>Easy</li>";
+            } else if ($difficulty === "normal") {
+                echo "<li>Normal</li>";
+            } else if ($difficulty === "hard") {
+                echo "<li>Hard</li>";
+            } else if ($difficulty === "extreme") {
+                echo "<li>Extreme</li>";
+            }
+
+            }
+        echo "</ul>";
+    }
+
+    ?>
+
+
+    <?php 
+    // Loading all controls to print them at the page.
+    $resultLoadAllControls = $conn->query("SELECT * FROM controls WHERE MECH_ID='$mechanicsId';");
+    if ($resultLoadAllControls->num_rows !== 0) {
+        echo "<div><p><b>Controls</b></p>";
+        while ($rowLoadControls = $resultLoadAllControls->fetch_assoc()) {
+            echo "<div class='elementsInList lastInfoInElements'>";
+            $nameOfControl = $rowLoadControls["button"];
+            $descriptionOfControl = $rowLoadControls["description"];
+
+            echo "<p><b>Name of button:</b> $nameOfControl</p>";
+            if (isset($descriptionOfControl) && $descriptionOfControl !== "") {
+                echo "<p><b>Description:</b> $descriptionOfControl</p>";
+            }
+
+            echo "</div>";
+        }
+        echo "</div>";
+    }
+    ?>
+
+    <?php 
+    // Loading all actions to print them at the page.
+    $resultLoadAllActions = $conn->query("SELECT * FROM actions WHERE MECH_ID='$mechanicsId';");
+    if ($resultLoadAllActions->num_rows !== 0) {
+        echo "<div><p><b>Actions</b></p>";
+        while ($rowLoadActions = $resultLoadAllActions->fetch_assoc()) {
+            echo "<div class='elementsInList lastInfoInElements'>";
+            $nameOfAction = $rowLoadActions["name"];
+            $descriptionOfAction = $rowLoadActions["description"];
+
+            echo "<p><b>Name of action:</b> $nameOfAction</p>";
+            if (isset($descriptionOfAction) && $descriptionOfAction !== "") {
+                echo "<p><b>Description:</b> $descriptionOfAction</p>";
+            }
+
+            echo "</div>";
+        }
+        echo "</div>";
+    }
+    ?>
+
+    <?php 
+    // Loading all skills to print them at the page.
+    $resultLoadAllSkills = $conn->query("SELECT * FROM skills WHERE MECH_ID='$mechanicsId';");
+    if ($resultLoadAllSkills->num_rows !== 0) {
+        echo "<div><p><b>Skills</b></p>";
+        while ($rowLoadSkills = $resultLoadAllSkills->fetch_assoc()) {
+            echo "<div class='elementsInList lastInfoInElements'>";
+            $nameOfSkill = $rowLoadSkills["name"];
+            $descriptionOfSkill = $rowLoadSkills["description"];
+
+            echo "<p><b>Name of skill:</b> $nameOfSkill</p>";
+            if (isset($descriptionOfSkill) && $descriptionOfSkill !== "") {
+                echo "<p><b>Skill Effect:</b> $descriptionOfSkill</p>";
+            }
+
+            echo "</div>";
+        }
+        echo "</div>";
+    }
+    ?>
+
+    <?php 
+    // Loading all abilities to print them at the page.
+    $resultLoadAllAbilities = $conn->query("SELECT * FROM abilities WHERE MECH_ID='$mechanicsId';");
+    if ($resultLoadAllAbilities->num_rows !== 0) {
+        echo "<div><p><b>Abilities</b></p>";
+        while ($rowLoadAbilities = $resultLoadAllAbilities->fetch_assoc()) {
+            echo "<div class='elementsInList lastInfoInElements'>";
+            $nameOfAbility = $rowLoadAbilities["name"];
+            $descriptionOfAbility = $rowLoadAbilities["description"];
+
+            echo "<p><b>Ability Name:</b> $nameOfAbility</p>";
+            if (isset($descriptionOfAbility) && $descriptionOfAbility !== "") {
+                echo "<p><b>Effect:</b> $descriptionOfAbility</p>";
+            }
+
+            echo "</div>";
+        }
+        echo "</div>";
+    }
+    ?>
+
+    
+    <h4 class="sections">Gameplay Elements</h4>
+
+    <?php
+    // Loading all cutscenes to print them at the page.
+    $resultLoadAllCutscene = $conn->query("SELECT * FROM cutscenes WHERE MECH_ID='$mechanicsId';");
+    if ($resultLoadAllCutscene->num_rows !== 0) {
+        echo "<div><p><b>Cutscenes</b></p>";
+        while ($rowLoadCut = $resultLoadAllCutscene->fetch_assoc()) {
+            echo "<div class='elementsInList lastInfoInElements'>";
+            $nameOfCut = $rowLoadCut["name"];
+            
+            $descriptionOfCut = $rowLoadCut["description"];
+            $imageIdOfCut = $rowLoadCut["file_id"];
+            $imgFilenameCut=NULL;
+
+            if(isset($imageIdOfCut)){
+                $resultFile = $conn->query("SELECT filename FROM image WHERE ID='$imageIdOfCut';");
+
+                if($rowFile = $resultFile->fetch_assoc()){
+                    $imgFilenameCut = $rowFile["filename"];
+                }
+            }
+
+            echo "<p><b>Name:</b> $nameOfCut</p>";
+            
+            if (isset($descriptionOfCut) && $descriptionOfCut !== "") {
+                echo "<p><b>Description:</b> $descriptionOfCut</p>";
+            }
+
+            if (isset($imgFilenameCut)) {
+                echo "<p><b>File</b></p><br>";
+                echo "<a href='/ImagesFromUsers-GDD/".$nameOfDoc."/Mechanics/Cutscenes/".$imgFilenameCut."' download>Download</a><br><br>";
+            }else{
+                echo "<p><b>File</b></p><br>";
+                echo "<p>No available file for this cutscene</p>";
+            }
+            echo "</div>";
+        }
+        echo "</div>";
+    }
+    ?>
+
+
+    <?php
+    // Loading all levels to print them at the page.
+    $resultLoadAllLevels = $conn->query("SELECT * FROM levels WHERE MECH_ID='$mechanicsId';");
+    if ($resultLoadAllLevels->num_rows !== 0) {
+        echo "<div><p><b>Levels</b></p>";
+        while ($rowLoadLvl = $resultLoadAllLevels->fetch_assoc()) {
+            echo "<div class='elementsInList lastInfoInElements'>";
+            $nameOfLvl = $rowLoadLvl["name"];
+            
+            $descriptionOfLvl = $rowLoadLvl["description"];
+            $preconditionOfLvl = $rowLoadLvl["precondition"];
+            $goalOfLvl = $rowLoadLvl["goal"];
+            $lvlUnlocks = $rowLoadLvl["unlocks"];
+            $imageIdOfLvl = $rowLoadLvl["image_id"];
+            $imgFilenameLvl=NULL;
+
+            if(isset($imageIdOfLvl)){
+                $resultFile = $conn->query("SELECT filename FROM image WHERE ID='$imageIdOfLvl';");
+
+                if($rowFile = $resultFile->fetch_assoc()){
+                    $imgFilenameLvl = $rowFile["filename"];
+                }
+            }
+
+            echo "<p><b>Name:</b> $nameOfLvl</p>";
+            
+            if (isset($descriptionOfLvl) && $descriptionOfLvl !== "") {
+                echo "<p><b>Description:</b> $descriptionOfLvl</p>";
+            }
+
+            if (isset($preconditionOfLvl) && $preconditionOfLvl !== "") {
+                echo "<p><b>Precondition to open level:</b> $preconditionOfLvl</p>";
+            }
+
+            if (isset($goalOfLvl) && $goalOfLvl !== "") {
+                echo "<p><b>Goal of level:</b> $goalOfLvl</p>";
+            }
+
+            if (isset($lvlUnlocks) && $lvlUnlocks !== "") {
+                echo "<p><b>Clearing level unlocks:</b> $lvlUnlocks</p>";
+            }
+
+
+            if (isset($imgFilenameLvl)) {
+                echo "<p><b>Image</b></p><br>";
+                echo "<img src='/ImagesFromUsers-GDD/".$nameOfDoc."/Mechanics/Levels/".$imgFilenameLvl."' 
+                      alt='Image of character $nameOfLvl' style='width: 33%; height: auto;'><br><br>";
+            }else{
+                echo "<p><b>Image</b></p><br>";
+                echo "<p>No available image for this level</p>";
+            }
+            echo "</div>";
+        }
+        echo "</div>";
+    }
+    ?>
+
+
+    <?php
+    // Loading all events to print them at the page.
+    $resultLoadAllEvents = $conn->query("SELECT * FROM events WHERE MECH_ID='$mechanicsId';");
+    if ($resultLoadAllEvents->num_rows !== 0) {
+        echo "<div><p><b>Events</b></p>";
+        while ($rowLoadEvent = $resultLoadAllEvents->fetch_assoc()) {
+            echo "<div class='elementsInList lastInfoInElements'>";
+            $nameOfEvent = $rowLoadEvent["name"];
+            
+            $descriptionOfEvent = $rowLoadEvent["description"];
+        
+            $typeOfEvent = $rowLoadEvent["type"];
+            $eventPrerequisite = $rowLoadEvent["prerequisite"];
+            $eventResult = $rowLoadEvent["result"];
+            
+
+            
+
+            echo "<p><b>Name:</b> $nameOfEvent</p>";
+            
+            if (isset($descriptionOfEvent) && $descriptionOfEvent !== "") {
+                echo "<p><b>Description:</b> $descriptionOfEvent</p>";
+            }
+
+            if (isset($typeOfEvent) && $typeOfEvent !== "") {
+                echo "<p><b>Type of event:</b> $typeOfEvent</p>";
+            }
+
+            if (isset($eventPrerequisite) && $eventPrerequisite !== "") {
+                echo "<p><b>Prerequisite to trigger event:</b> $eventPrerequisite</p>";
+            }
+
+            if (isset($eventResult) && $eventResult !== "") {
+                echo "<p><b>Finishing event awards/unlocks:</b> $eventResult</p>";
+            }
+
+            echo "</div>";
+        }
+        echo "</div>";
+    }
+    ?>
+
+
+
+    <?php
+    // Loading all menus to print them at the page.
+    $resultLoadAllMenu = $conn->query("SELECT * FROM menus WHERE MECH_ID='$mechanicsId' AND type='Menu' ;");
+    if ($resultLoadAllMenu->num_rows !== 0) {
+        echo "<div><p><b>Menus</b></p>";
+        while ($rowLoadMenu = $resultLoadAllMenu->fetch_assoc()) {
+            echo "<div class='elementsInList lastInfoInElements'>";
+            $nameOfMenu = $rowLoadMenu["name"];
+            $typeOfMenu = $rowLoadMenu["type"];
+            $descriptionOfMenu = $rowLoadMenu["description"];
+            $filenameOfMenu = $rowLoadMenu["filename"];
+            
+
+            echo "<p><b>Name:</b> $nameOfMenu</p>";
+            echo "<p><b>Type:</b> $typeOfMenu</p>";
+            
+            if (isset($descriptionOfMenu) && $descriptionOfMenu !== "") {
+                echo "<p><b>Description:</b> $descriptionOfMenu</p>";
+            }
+
+            if (isset($filenameOfMenu)) {
+                echo "<p><b>File</b></p><br>";
+                echo "<a href='/ImagesFromUsers-GDD/".$nameOfDoc."/Mechanics/Menus/".$filenameOfMenu."' download>Download</a><br><br>";
+            }else{
+                echo "<p><b>File</b></p><br>";
+                echo "<p>No available file for this menu</p>";
+            }
+            echo "</div>";
+        }
+        echo "</div>";
+    }
+    ?>
+
+    <?php
+    // Loading all menus to print them at the page.
+    $resultLoadAllMenu = $conn->query("SELECT * FROM menus WHERE MECH_ID='$mechanicsId' AND type='GUI' ;");
+    if ($resultLoadAllMenu->num_rows !== 0) {
+        echo "<div><p><b>GUIs</b></p>";
+        while ($rowLoadMenu = $resultLoadAllMenu->fetch_assoc()) {
+            echo "<div class='elementsInList lastInfoInElements'>";
+            $nameOfMenu = $rowLoadMenu["name"];
+            $typeOfMenu = $rowLoadMenu["type"];
+            $descriptionOfMenu = $rowLoadMenu["description"];
+            $filenameOfMenu = $rowLoadMenu["filename"];
+            
+
+            echo "<p><b>Name:</b> $nameOfMenu</p>";
+            echo "<p><b>Type:</b> $typeOfMenu</p>";
+            
+            if (isset($descriptionOfMenu) && $descriptionOfMenu !== "") {
+                echo "<p><b>Description:</b> $descriptionOfMenu</p>";
+            }
+
+            if (isset($filenameOfMenu)) {
+                echo "<p><b>File</b></p><br>";
+                echo "<a href='/ImagesFromUsers-GDD/".$nameOfDoc."/Mechanics/Menus/".$filenameOfMenu."' download>Download</a><br><br>";
+            }else{
+                echo "<p><b>File</b></p><br>";
+                echo "<p>No available file for this menu</p>";
+            }
+            echo "</div>";
+        }
+        echo "</div>";
+    }
+    ?>
+
+
+
     <h3 class="sections">World Building</h3>
     <h4 class="sections">Game Elements</h4>
     <?php
