@@ -1,7 +1,7 @@
 
 <div align="center">
   <a href="https://github.com/ckontakis/GameDesignDocument">
-    <img src="Images/logo.png" alt="Logo" width="1296" height="1500">
+    <img src="Images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">Game Design Document Maker</h3>
@@ -11,7 +11,7 @@
 
 <div align="center">
 <a href="http://ntsiouma.webpages.auth.gr/uniproject/index.php">
-    <img src="Images/website-screenshot.png" alt="Website's screenshot" width="1919" height="897">
+    <img src="Images/website-screenshot.png" alt="Website's screenshot" width="800" height="600">
   </a>
 </div>
 
