@@ -93,7 +93,6 @@ if (isset($_POST['saveInvitePerson'])) {
         echo "<script>alert('Invitation failed: The given email does not match with any user.')</script>";
     }
 
-
     // finding id of team
 
     $queryToFindTeam = "SELECT ID FROM team WHERE name = '$teamToInvite'";
@@ -113,7 +112,6 @@ if (isset($_POST['saveInvitePerson'])) {
             echo "<script>alert('Invitation failed: The user is already member of the team or is invited to become member of the team')</script>";
         }
     }
-
 
     $emailInviteLen = strlen($emailInvite) <= 200;
 
@@ -203,7 +201,7 @@ if(isset($_POST["buttonDeclineInviteDocument"])){
  */
 function test_data($data)
 {
-    return htmlspecialchars(stripslashes($data));
+    return htmlspecialchars(addslashes(stripslashes($data)));
 }
 
 ?>

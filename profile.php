@@ -80,7 +80,7 @@ if(isset($_POST['submit'])) {
  * Function to filter data.
  */
 function test_data($data){
-    return htmlspecialchars(stripslashes($data));
+    return htmlspecialchars(addslashes(stripslashes($data)));
 }
 
 

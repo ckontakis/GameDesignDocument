@@ -23,9 +23,10 @@ if(isset($_GET['id'])){
 /*
  * Getting the name of the document
  */
-$resultNameDoc = mysqli_query($conn, "SELECT name FROM document WHERE ID='$idOfDocument';");
+$resultNameDoc = mysqli_query($conn, "SELECT name, UMBRA_FILE_ID FROM document WHERE ID='$idOfDocument';");
 $rowDocName = $resultNameDoc->fetch_assoc();
 $nameOfDoc = $rowDocName["name"];
+$umbraFileId = $rowDocName["UMBRA_FILE_ID"];
 
 /*
  * Checking if user does not have access to the document that is typing at the url. If user does not have access
@@ -194,6 +195,22 @@ if($resultInfoMech = $conn->query("SELECT ID,combat,coop,difficulty from mechani
     }
 }
 
+$docRoot = $_SERVER["DOCUMENT_ROOT"]; // the path for the root of document
+
+if ($umbraFileId) {
+    $resultUmbraFilename = $conn->query("SELECT name FROM file WHERE ID = '$umbraFileId';");
+    $rowUmbraFilename = $resultUmbraFilename->fetch_assoc();
+    $umbraFilename = $rowUmbraFilename["name"];
+
+    if ($umbraFile = fopen("$docRoot/Files-GDD/$nameOfDoc/Umbra/$umbraFilename", "r")) {
+        $umbraFileText = fread($umbraFile, filesize("$docRoot/Files-GDD/$nameOfDoc/Umbra/$umbraFilename"));
+        setcookie("{$nameOfDoc}_gdd_umbra", $umbraFileText);
+        setcookie("current_gdd", '{"name":"' . $nameOfDoc . '"' . '}');
+    }
+
+    fclose($umbraFile);
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -202,13 +219,17 @@ if($resultInfoMech = $conn->query("SELECT ID,combat,coop,difficulty from mechani
     <title>Print - GDD Maker</title>
     <link rel="icon" href="Images/favicon-new.ico">
     <script src="JavaScript/Main.js"></script>
+
+    <script type="text/javascript" src="./Umbra/coreApp.js"></script>
+    <script type="text/javascript" src="./Umbra/tabManagment.js"></script>
+    <script type="text/javascript" src="./Umbra/vis.js"></script>
 </head>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="css/main.css">
 <link rel="stylesheet" href="css/print.css">
 
-<body>
+<body onload='<?php if (!$_COOKIE["{$nameOfDoc}_gdd_umbra"]) echo "loadUmbraFile();" ?> mainTab();'>
 <div class="w3-bar w3-blue showBar" id="bar">
     <a href="index.php" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
     <a href="write.php" class="w3-bar-item w3-button">Write GDD</a>
@@ -1000,7 +1021,7 @@ if($resultInfoMech = $conn->query("SELECT ID,combat,coop,difficulty from mechani
     }
     ?>
     <?php
-    // Loading all character to print them at the page.
+    // Loading all characters to print them at the page.
     $resultLoadAllCharacter = $conn->query("SELECT * FROM game_character WHERE GAME_ELEMENTS_ID='$gameElementsId';");
     if ($resultLoadAllCharacter->num_rows !== 0) {
         echo "<div><p><b>Characters</b></p>";
@@ -1017,6 +1038,8 @@ if($resultInfoMech = $conn->query("SELECT ID,combat,coop,difficulty from mechani
                 if($rowImage = $resultImage->fetch_assoc()){
                     $imgFilenameChar = $rowImage["filename"];
                 }
+            } else {
+                $imgFilenameChar = null;
             }
 
             echo "<p><b>Name:</b> $nameOfChar</p>";
@@ -1062,6 +1085,8 @@ if($resultInfoMech = $conn->query("SELECT ID,combat,coop,difficulty from mechani
                 if($rowImage = $resultImage->fetch_assoc()){
                     $imgFilenameObj = $rowImage["filename"];
                 }
+            } else {
+                $imgFilenameObj = null;
             }
 
             if (isset($imgFilenameObj)) {
@@ -1134,6 +1159,8 @@ if($resultInfoMech = $conn->query("SELECT ID,combat,coop,difficulty from mechani
                 if($rowImage = $resultImage->fetch_assoc()){
                     $imgFilenameLoc = $rowImage["filename"];
                 }
+            } else {
+                $imgFilenameLoc = null;
             }
 
             if (isset($imgFilenameLoc)) {
@@ -1393,5 +1420,20 @@ if($resultInfoMech = $conn->query("SELECT ID,combat,coop,difficulty from mechani
     }
     ?>
 </div>
+
+<h3 class="sections">Character Model</h3>
+
+<div style="text-align: center">
+    <object type="text/html" data="./Umbra/index.php" width="1400px" height="800px" style="border:2px solid black">
+    </object>
+</div>
+
+<h3 class="sections">Story Flow Chart</h3>
+
+<div style="text-align: center">
+    <object type="text/html" data="./Umbra/index.php" width="1400px" height="800px" style="border:2px solid black">
+    </object>
+</div>
+
 </body>
 </html>

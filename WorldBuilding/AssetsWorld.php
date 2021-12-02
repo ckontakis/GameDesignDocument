@@ -261,7 +261,7 @@ if (isset($_POST["delKindOfTrack"])) {
  */
 function test_data($data)
 {
-    return htmlspecialchars(stripslashes($data));
+    return htmlspecialchars(addslashes(stripslashes($data)));
 }
 
 
@@ -289,8 +289,8 @@ function test_data($data)
     <div class="w3-dropdown-hover w3-right">
         <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
-            <a href="../profile.php" class="w3-bar-item w3-button">Settings</a>
-            <a href="../logout.php" class="w3-bar-item w3-button">Logout</a>
+            <a href="../profile.php" class="w3-bar-item w3-button">Settings <i class="fa fa-cog"></i></a>
+            <a href="../logout.php" class="w3-bar-item w3-button">Logout <i class="fa fa-sign-out"></i></a>
         </div>
     </div>
 </div>
@@ -305,8 +305,8 @@ function test_data($data)
     <div class="w3-dropdown-hover w3-right">
         <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
-            <a href="../profile.php" class="w3-bar-item w3-button">Settings</a>
-            <a href="../logout.php" class="w3-bar-item w3-button">Logout</a>
+            <a href="../profile.php" class="w3-bar-item w3-button">Settings <i class="fa fa-cog\"></i></a>
+            <a href="../logout.php" class="w3-bar-item w3-button">Logout <i class="fa fa-sign-out"></i></a>
         </div>
     </div>
 </div>

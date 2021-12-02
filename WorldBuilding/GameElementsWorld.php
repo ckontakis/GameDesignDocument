@@ -107,7 +107,6 @@ if($resLoadStory->num_rows === 1){
     $gameStoryValue = $rowLoadStory['story_describe'];
 }
 
-
 /*
  * Actions when user submits the story of the game
  */
@@ -115,7 +114,7 @@ $successUpdateStory = false; // variable to show success message
 $somethingWrongStory = false; // variable to show failure message
 if(isset($_POST["mainSubmit"])){
     if(isset($gameElementsId)){
-        $describeStory = $_POST["story"]; // getting the text with post method
+        $describeStory = test_data($_POST["story"]); // getting the text with post method
         // query to update the database array
         $updateStoryQuery = "UPDATE game_elements SET story_describe='$describeStory' WHERE ID='$gameElementsId';";
 
@@ -675,8 +674,8 @@ if (isset($_POST["saveScene"])) {
  */
 if (isset($_POST["editScene"])) {
     $idOfScene = $_POST["keyIdScene"];
-    $nameOfScene = $_POST["sceneName"];
-    $descriptionOfScene = $_POST["sceneDescription"];
+    $nameOfScene = test_data($_POST["sceneName"]);
+    $descriptionOfScene = test_data($_POST["sceneDescription"]);
 
     $queryToEditScene = "UPDATE scene SET name='$nameOfScene', describe_scene='$descriptionOfScene' 
                          WHERE ID='$idOfScene'";
@@ -810,8 +809,8 @@ if (isset($_POST["delLocOfScene"])) {
  * Actions when user adds a new objective
  */
 if (isset($_POST["saveObjective"])) {
-    $titleOfObjective = $_POST["objTitle"];
-    $descriptionOfObjective = $_POST["objDescription"];
+    $titleOfObjective = test_data($_POST["objTitle"]);
+    $descriptionOfObjective = test_data($_POST["objDescription"]);
 
     $queryToAddObjective = "INSERT INTO game_objective (GAME_ELEMENTS_ID, title, description) 
                             VALUES ('$gameElementsId', '$titleOfObjective', '$descriptionOfObjective')";
@@ -841,8 +840,8 @@ if (isset($_POST["deleteObjective"])) {
  */
 if (isset($_POST["editObjective"])) {
     $idOfObjectiveToEdit = $_POST["keyIdObjective"];
-    $titleOfObjective = $_POST["objectiveTitle"];
-    $descriptionOfObjective = $_POST["objectiveDescription"];
+    $titleOfObjective = test_data($_POST["objectiveTitle"]);
+    $descriptionOfObjective = test_data($_POST["objectiveDescription"]);
 
     $queryToUpdateObjective = "UPDATE game_objective SET title='$titleOfObjective', description='$descriptionOfObjective'
                                WHERE ID='$idOfObjectiveToEdit';";
@@ -978,8 +977,8 @@ if (isset($_POST["saveDialog"])) {
  */
 if (isset($_POST["editDialog"])) {
     $idOfDialog = $_POST["keyIdDialog"];
-    $nameOfDialog = $_POST["dialogName"];
-    $textOfDialog = $_POST["dialogText"];
+    $nameOfDialog = test_data($_POST["dialogName"]);
+    $textOfDialog = test_data($_POST["dialogText"]);
     $talkerChar = $_POST["selectFromChar"];
 
     $queryToUpdateDialog = "UPDATE game_dialog SET name='$nameOfDialog', GAME_CHARACTER_TALKS='$talkerChar', text='$textOfDialog' WHERE ID='$idOfDialog';";
@@ -1047,7 +1046,7 @@ if (isset($_POST["delCharListensFromDialog"])) {
  */
 function test_data($data)
 {
-    return htmlspecialchars(stripslashes($data));
+    return htmlspecialchars(addslashes(stripslashes($data)));
 }
 ?>
 <!DOCTYPE html>
@@ -1075,8 +1074,8 @@ function test_data($data)
     <div class="w3-dropdown-hover w3-right">
         <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
-            <a href="../profile.php" class="w3-bar-item w3-button">Settings</a>
-            <a href="../logout.php" class="w3-bar-item w3-button">Logout</a>
+            <a href="../profile.php" class="w3-bar-item w3-button">Settings <i class="fa fa-cog"></i></a>
+            <a href="../logout.php" class="w3-bar-item w3-button">Logout <i class="fa fa-sign-out"></i></a>
         </div>
     </div>
 </div>
@@ -1091,8 +1090,8 @@ function test_data($data)
     <div class="w3-dropdown-hover w3-right">
         <button class="w3-button">Profile <i class="fa fa-user-circle"></i></button>
         <div class="w3-dropdown-content w3-bar-block w3-border">
-            <a href="../profile.php" class="w3-bar-item w3-button">Settings</a>
-            <a href="../logout.php" class="w3-bar-item w3-button">Logout</a>
+            <a href="../profile.php" class="w3-bar-item w3-button">Settings <i class=\"fa fa-cog\"></i></a>
+            <a href="../logout.php" class="w3-bar-item w3-button">Logout <i class=\"fa fa-sign-out\"></i></a>
         </div>
     </div>
 </div>
@@ -2042,11 +2041,12 @@ echo "<div id=\"dialogs-add-characters$idOfDialog\" class=\"w3-modal w3-padding-
             while($rowLoadChar = $resultLoadAllCharactersV2->fetch_assoc()){
                 $idOfCharLoad = $rowLoadChar["ID"];
                 $nameCharLoad = $rowLoadChar["name"];
+                $nameCharLoadForConfirm = addslashes($rowLoadChar["name"]);
 
                 echo "<tr><td>" . $nameCharLoad . "</td><td>" . $rowLoadChar["type_char"] .
                     "</td><td><button class=\"w3-button w3-border transmission\" type=\"button\" onclick=\"showElement('characters-modal-edit$idOfCharLoad')\">
                      <i class=\"fa fa-edit\"></i></button></td>" . "<td><form method=\"post\" action=\"\"><button class=\"w3-button w3-border transmission\" 
-                          onclick=\"return confirm('Are you sure that you want to delete the character $nameCharLoad')\" type=\"submit\"
+                          onclick=\"return confirm('Are you sure that you want to delete the character $nameCharLoadForConfirm')\" type=\"submit\"
                                     name=\"deleteCharacter\"><i class=\"fa fa-trash\"></i></button></td>
                                     <input type=\"hidden\"  name=\"keyIdChar\" value=\"$idOfCharLoad\" /></form></tr>";
             }
@@ -2074,11 +2074,12 @@ echo "<div id=\"dialogs-add-characters$idOfDialog\" class=\"w3-modal w3-padding-
         while($rowLoadObj = $resultLoadAllObjectsV2->fetch_assoc()){
             $idOfObjLoad = $rowLoadObj["ID"];
             $nameObjLoad = $rowLoadObj["name"];
+            $nameObjLoadForConfirm = addslashes($rowLoadObj["name"]);
 
             echo "<tr><td>" . $nameObjLoad . "</td><td>" . $rowLoadObj["type_obj"] .
                 "</td><td><button class=\"w3-button w3-border transmission\" type=\"button\" onclick=\"showElement('objects-modal-edit$idOfObjLoad')\">
                      <i class=\"fa fa-edit\"></i></button></td>" . "<td><form method=\"post\" action=\"\"><button class=\"w3-button w3-border transmission\" 
-                          onclick=\"return confirm('Are you sure that you want to delete the object $nameObjLoad')\" type=\"submit\"
+                          onclick=\"return confirm('Are you sure that you want to delete the object $nameObjLoadForConfirm')\" type=\"submit\"
                                     name=\"deleteObject\"><i class=\"fa fa-trash\"></i></button></td>
                                     <input type=\"hidden\"  name=\"keyIdObj\" value=\"$idOfObjLoad\" /></form></tr>";
         }
@@ -2108,12 +2109,13 @@ echo "<div id=\"dialogs-add-characters$idOfDialog\" class=\"w3-modal w3-padding-
         while($rowLoadLoc = $resultLoadAllLocationsV2->fetch_assoc()){
             $idOfLocLoad = $rowLoadLoc["ID"];
             $nameLocLoad = $rowLoadLoc["name"];
+            $nameLocLoadForConfirm = addslashes($rowLoadLoc["name"]);
 
             echo "<tr><td>" . $nameLocLoad . "</td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('locations-modal-edit$idOfLocLoad')\"><i class=\"fa fa-edit\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('locations-add-characters$idOfLocLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('locations-add-objects$idOfLocLoad')\"><i class=\"fa fa-plus\"></i></button></td>" . "<td><form method=\"post\" action=\"\"><button class=\"w3-button
-                    w3-border transmission\" onclick=\"return confirm('Are you sure that you want to delete the location $nameLocLoad')\" type=\"submit\"
+                    w3-border transmission\" onclick=\"return confirm('Are you sure that you want to delete the location $nameLocLoadForConfirm')\" type=\"submit\"
                     name=\"deleteLocation\"><i class=\"fa fa-trash\"></i></button></td><input type=\"hidden\"  name=\"keyIdLoc\"
                     value=\"$idOfLocLoad\" /></form></tr>";
         }
@@ -2142,11 +2144,12 @@ echo "<div id=\"dialogs-add-characters$idOfDialog\" class=\"w3-modal w3-padding-
         while($rowLoadDialog = $resultLoadAllDialogsV2->fetch_assoc()){
             $idOfDialogLoad = $rowLoadDialog["ID"];
             $nameDialogLoad = $rowLoadDialog["name"];
+            $nameDialogLoadForConfirm = addslashes($rowLoadDialog["name"]);
 
             echo "<tr><td>" . $nameDialogLoad . "</td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('dialogs-modal-edit$idOfDialogLoad')\"><i class=\"fa fa-edit\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('dialogs-add-characters$idOfDialogLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><form method=\"post\" action=\"\"><button class=\"w3-button
-                    w3-border transmission\" onclick=\"return confirm('Are you sure that you want to delete the dialog $nameDialogLoad')\" type=\"submit\"
+                    w3-border transmission\" onclick=\"return confirm('Are you sure that you want to delete the dialog $nameDialogLoadForConfirm')\" type=\"submit\"
                     name=\"deleteDialog\"><i class=\"fa fa-trash\"></i></button></td><input type=\"hidden\" name=\"keyIdDialog\"
                     value=\"$idOfDialogLoad\" /></form></tr>";
         }
@@ -2176,13 +2179,14 @@ echo "<div id=\"dialogs-add-characters$idOfDialog\" class=\"w3-modal w3-padding-
         while($rowLoadScene = $resultLoadAllScenesV2->fetch_assoc()){
             $idOfSceneLoad = $rowLoadScene["ID"];
             $nameSceneLoad = $rowLoadScene["name"];
+            $nameSceneLoadForConfirm = addslashes($rowLoadScene["name"]);
 
             echo "<tr><td>" . $nameSceneLoad . "</td><td><button class=\"w3-button w3-border transmission\" type=\"button\" onclick=\"showElement('scenes-modal-edit$idOfSceneLoad')\">
                      <i class=\"fa fa-edit\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('scenes-add-characters$idOfSceneLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('scenes-add-objects$idOfSceneLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('scenes-add-locations$idOfSceneLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><form method=\"post\" action=\"\"><button class=\"w3-button w3-border transmission\" 
-                          onclick=\"return confirm('Are you sure that you want to delete the scene $nameSceneLoad')\" type=\"submit\"
+                          onclick=\"return confirm('Are you sure that you want to delete the scene $nameSceneLoadForConfirm')\" type=\"submit\"
                                     name=\"deleteScene\"><i class=\"fa fa-trash\"></i></button></td>
                                     <input type=\"hidden\"  name=\"keyIdScene\" value=\"$idOfSceneLoad\" /></form></tr>";
         }
@@ -2212,13 +2216,14 @@ echo "<div id=\"dialogs-add-characters$idOfDialog\" class=\"w3-modal w3-padding-
         while($rowLoadObjective = $resultLoadAllObjectivesV2->fetch_assoc()){
             $idOfObjectiveLoad = $rowLoadObjective["ID"];
             $titleObjectiveLoad = $rowLoadObjective["title"];
+            $titleObjectiveLoadForConfirm = addslashes($rowLoadObjective["title"]);
 
             echo "<tr><td>" . $titleObjectiveLoad . "</td><td><button class=\"w3-button w3-border transmission\" type=\"button\" onclick=\"showElement('objectives-modal-edit$idOfObjectiveLoad')\">
                      <i class=\"fa fa-edit\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('objectives-add-characters$idOfObjectiveLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('objectives-add-objects$idOfObjectiveLoad')\"><i class=\"fa fa-plus\"></i></button></td><td><button class=\"w3-button w3-border transmission\" type=\"button\" 
                     onclick=\"showElement('objectives-add-scenes$idOfObjectiveLoad')\"><i class=\"fa fa-plus\"></i></button></td><form method=\"post\" action=\"\"><td><button class=\"w3-button w3-border transmission\" 
-                          onclick=\"return confirm('Are you sure that you want to delete the objective $titleObjectiveLoad')\" type=\"submit\"
+                          onclick=\"return confirm('Are you sure that you want to delete the objective $titleObjectiveLoadForConfirm')\" type=\"submit\"
                                     name=\"deleteObjective\"><i class=\"fa fa-trash\"></i></button></td>
                                     <input type=\"hidden\"  name=\"keyIdObjective\" value=\"$idOfObjectiveLoad\" /></form></tr>";
         }
