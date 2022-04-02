@@ -365,7 +365,7 @@ function test_data($data)
                                         <?php echo '<a href="WorldBuilding/GameElementsWorld.php?id=' . $rowDocument['ID'] . '" class="w3-bar-item w3-button w3-center transmission">Game Elements</a>'; ?>
                                         <?php echo '<a href="WorldBuilding/AssetsWorld.php?id=' . $rowDocument['ID'] . '" class="w3-bar-item w3-button w3-center transmission">Assets</a>'; ?>
                                     </div>
-                                    <?php echo '<a href="umbra.php?id=' . $rowDocument['ID'] . '" class="w3-bar-item w3-button w3-border-bottom w3-center transmission">Umbra</a>'; ?>
+                                    <?php echo '<a href="umbra.php?id=' . $rowDocument['ID'] . '" class="w3-bar-item w3-button w3-border-top w3-border-bottom w3-center transmission">Umbra</a>'; ?>
                                 </div>
                             </div>
                         </td>

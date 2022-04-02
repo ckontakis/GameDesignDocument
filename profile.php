@@ -64,7 +64,7 @@ if(isset($_POST['submit'])) {
             $prevSurname = $surname;
             if($updateEmail) $prevEmail = $email;
         }else{
-            $queryDuplicateEmail = "SELECT ID FROM Person WHERE email = '$email' AND ID <> '$idOfPerson';";
+            $queryDuplicateEmail = "SELECT ID FROM person WHERE email = '$email' AND ID <> '$idOfPerson';";
             $checkEmail = $conn->query($queryDuplicateEmail);
 
             if($checkEmail->num_rows === 1){ // checking if there is already an account with that email

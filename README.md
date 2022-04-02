@@ -1,7 +1,7 @@
 
 <div align="center">
   <a href="https://github.com/ckontakis/GameDesignDocument">
-    <img src="Images/logo.png" alt="Logo" width="100" height="100">
+    <img src="Images/logo.png" alt="Logo" width="95" height="100">
   </a>
 
 <h3 align="center">Game Design Document Maker</h3>

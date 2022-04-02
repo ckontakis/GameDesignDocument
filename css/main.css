@@ -205,6 +205,14 @@ Assets
      margin-bottom: 1%;
 }
 
+.hideContent {
+     display: none;
+}
+
+.showContent {
+     display: block;
+}
+
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 991px) {
      .showSideBar{

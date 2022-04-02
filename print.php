@@ -5,7 +5,7 @@ $conn = $_SESSION["conn"];
 
 // If user is not logged in then we redirect user to login page
 if(!isset($_SESSION['logged_in'])){
-    header("Location:../login.php");
+    header("Location: login.php");
 }
 
 $idOfPerson = $_SESSION['id']; // getting the id of user if is logged in
@@ -17,7 +17,7 @@ $idOfPerson = $_SESSION['id']; // getting the id of user if is logged in
 if(isset($_GET['id'])){
     $idOfDocument = $_GET['id']; // gets id of document
 }else{
-    header("Location:../write.php"); // redirects user to write page
+    header("Location: write.php"); // redirects user to write page
 }
 
 /*
@@ -53,14 +53,14 @@ if($resultAccessDoc = $conn->query("SELECT * from person_edits_document WHERE PE
 
             // If person is not member of some team that can edit the document we redirect the user to the write page
             if (!$personEditDoc) {
-                header('Location:../write.php');
+                header('Location: write.php');
             }
         } else {
-            header('Location:../write.php');
+            header('Location: write.php');
         }
     }
 }else{
-    header("Location:../write.php");
+    header("Location: write.php");
 }
 
 /*
@@ -71,7 +71,7 @@ if ($resultIdSummary->num_rows === 1) {
     $rowIdSummary = $resultIdSummary->fetch_assoc();
     $summaryId = $rowIdSummary["ID"];
 } else {
-    header("Location:../write.php");
+    header("Location: write.php");
 }
 
 /*
@@ -94,7 +94,7 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
                     if(isset($rowInfoGameElements['ID'])){
                         $gameElementsId = $rowInfoGameElements['ID']; // setting the id of game elements
                     }else{
-                        header("Location:../write.php");
+                        header("Location: write.php");
                     }
 
                     if (isset($rowInfoGameElements['story_describe'])) {
@@ -102,7 +102,7 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
                     }
                 }
             }else{
-                header("Location:../write.php");
+                header("Location: write.php");
             }
 
             // finding the id of assets table
@@ -114,17 +114,17 @@ if($resultInfoWorld = $conn->query("SELECT ID from world_building WHERE DOCUMENT
                         $assetsId = $rowInfoAssets['ID']; // setting the id of assets
                         $descriptionOfMusicAssets = $rowInfoAssets["describe_music"];
                     }else{
-                        header("Location:../write.php");
+                        header("Location: write.php");
                     }
                 }
             }else{
-                header("Location:../write.php");
+                header("Location: write.php");
             }
         }else{
-            header("Location:../write.php");
+            header("Location: write.php");
         }
     }else{
-        header("Location:../write.php");
+        header("Location: write.php");
     }
 }
 
@@ -151,7 +151,7 @@ if($resultInfoMech = $conn->query("SELECT ID,combat,coop,difficulty from mechani
                     if(isset($rowInfoPhysics['ID'])){
                         $physicsId = $rowInfoPhysics['ID']; // setting the id of game elements
                     }else{
-                        header("Location:../write.php");
+                        header("Location: write.php");
                     }
 
                     if (isset($rowInfoPhysics['environment'])) {
@@ -184,32 +184,18 @@ if($resultInfoMech = $conn->query("SELECT ID,combat,coop,difficulty from mechani
                     }
                 }
             }else{
-                header("Location:../write.php");
+                header("Location: write.php");
             }
 
         }else{
-            header("Location:../write.php");
+            header("Location: write.php");
         }
     }else{
-        header("Location:../write.php");
+        header("Location: write.php");
     }
 }
 
 $docRoot = $_SERVER["DOCUMENT_ROOT"]; // the path for the root of document
-
-if ($umbraFileId) {
-    $resultUmbraFilename = $conn->query("SELECT name FROM file WHERE ID = '$umbraFileId';");
-    $rowUmbraFilename = $resultUmbraFilename->fetch_assoc();
-    $umbraFilename = $rowUmbraFilename["name"];
-
-    if ($umbraFile = fopen("$docRoot/Files-GDD/$nameOfDoc/Umbra/$umbraFilename", "r")) {
-        $umbraFileText = fread($umbraFile, filesize("$docRoot/Files-GDD/$nameOfDoc/Umbra/$umbraFilename"));
-        setcookie("{$nameOfDoc}_gdd_umbra", $umbraFileText);
-        setcookie("current_gdd", '{"name":"' . $nameOfDoc . '"' . '}');
-    }
-
-    fclose($umbraFile);
-}
 
 ?>
 <!DOCTYPE html>
@@ -229,7 +215,7 @@ if ($umbraFileId) {
 <link rel="stylesheet" href="css/main.css">
 <link rel="stylesheet" href="css/print.css">
 
-<body onload='<?php if (!$_COOKIE["{$nameOfDoc}_gdd_umbra"]) echo "loadUmbraFile();" ?> mainTab();'>
+<body>
 <div class="w3-bar w3-blue showBar" id="bar">
     <a href="index.php" class="w3-bar-item w3-button"><img src="Images/favicon-new.ico" alt="logo"> Start Page</a>
     <a href="write.php" class="w3-bar-item w3-button">Write GDD</a>
@@ -507,7 +493,7 @@ if ($umbraFileId) {
     // Loading all game physics to print them at the page.
     $resultLoadAllPhysics = $conn->query("SELECT * FROM physics WHERE MECH_ID='$mechanicsId';");
     if ($resultLoadAllPhysics->num_rows !== 0) {
-        echo "<div><p><b>Game Physics</b></p>";
+        echo "<div><h4 class='sections'>Game Physics</h4>";
             echo "<div class='elementsInList lastInfoInElements'>";
 
             // Printing the environment of the game
@@ -1198,7 +1184,7 @@ if ($umbraFileId) {
             echo "<p><b>Character that says the dialogue text:</b> $nameOfCharTalks</p>";
 
             // Loading all listeners of the dialogue
-            $resultListenersOfDialogue = $conn->query("SELECT * FROM character_dialogs_character WHERE CHARACTER_TALKS_ID='$gameCharTalksId';");
+            $resultListenersOfDialogue = $conn->query("SELECT * FROM character_dialogs_character WHERE CHARACTER_TALKS_ID='$gameCharTalksId' AND DIALOG_ID='$idOfDialog';");
 
             if ($resultListenersOfDialogue->num_rows !== 0) {
                 echo "<p><b>Characters that listen the dialogue</b></p>";
@@ -1424,15 +1410,15 @@ if ($umbraFileId) {
 <h3 class="sections">Character Model</h3>
 
 <div style="text-align: center">
-    <object type="text/html" data="./Umbra/index.php" width="1400px" height="800px" style="border:2px solid black">
-    </object>
+<object type="text/html" data="./Umbra/index.php" width="1400px" height="800px" style="border:2px solid black">
+</object>
 </div>
 
 <h3 class="sections">Story Flow Chart</h3>
 
 <div style="text-align: center">
-    <object type="text/html" data="./Umbra/index.php" width="1400px" height="800px" style="border:2px solid black">
-    </object>
+<object type="text/html" data="./Umbra/index.php" width="1400px" height="800px" style="border:2px solid black">
+</object>
 </div>
 
 </body>
