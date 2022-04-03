@@ -143,12 +143,7 @@ if(isset($_POST["summarySubmit"])){
         }
         
         
-        $describeAudience = $_POST["targetAudience"]; 
-        //$describeSystem = (array)$_POST["checkSystem"]; 
-        //$chkSys=implode(',',$describeSystem);
-        //$describeType = (array)$_POST["checkType"];
-        //$chkT=implode(',',$describeType);
-
+        $describeAudience = $_POST["targetAudience"];
         $describeSetting = $_POST["settingGame"]; 
         $describeSoftware = $_POST["programmingLang"]; 
         
@@ -335,11 +330,6 @@ if(isset($_POST["summarySubmit"])){
               <?php 
                 if(in_array("other",$value))echo '<input class="w3-check" type="checkbox" name="checkGenre[]" value="other" checked >'; else echo '<input class="w3-check" type="checkbox" name="checkGenre[]" value="other">';?>
               <label for="other">Other</label><br>
-
-
-		      <!--<input id="other" class="w3-check" type="checkbox" onclick="showFunction('otherGen')" name=checkGenre[]>
-              <label for="other">Other</label>
-              <input id="otherGen" style="visibility: hidden" type="text" placeholder="Write a genre...">-->
      		</div>
             <?php
             
@@ -429,15 +419,9 @@ if(isset($_POST["summarySubmit"])){
             if(in_array("other",$value))echo '<input class="w3-check" type="checkbox" name="checkSystem[]" value="other" checked >'; else echo '<input class="w3-check" type="checkbox" name="checkSystem[]" value="other">'; ?>
             <label for="other">Other</label><br>
 
-            <!--<input id="otherSystem" class="w3-check" type="checkbox" onclick="showFunction('otherSys')" name=checkSystem[]>
-            <label for="otherSystem">Other</label>
-            <input id="otherSys" style="visibility: hidden" type="text" placeholder="Write a system...">-->
-
      		</div>
             <?php
-            
             }
-            
         ?>
     	</div><br/>
 
@@ -456,10 +440,7 @@ if(isset($_POST["summarySubmit"])){
                         
         ?>
         <div class="w3-container w3-left-align w3-animate-opacity checkboxesPosition" id="checkType">
-		    
-		    <!--<select id="gameType" name="gameType[]" multiple class="form-control" >-->
 
-		      <!--<input id="beatemup" class="w3-check" type="checkbox" value="beatemup" name=checkType[]>-->
               <?php 
               if(in_array("beatemup",$value))echo '<input class="w3-check" type="checkbox" name="checkType[]" value="beatemup" checked >'; else echo '<input class="w3-check" type="checkbox" name="checkType[]" value="beatemup">';?>
               <label for="beatemup">Beat-em Up</label><br>
@@ -543,10 +524,6 @@ if(isset($_POST["summarySubmit"])){
               <?php 
               if(in_array("other",$value))echo '<input class="w3-check" type="checkbox" name="checkType[]" value="other" checked >'; else echo '<input class="w3-check" type="checkbox" name="checkType[]" value="other">';?>
               <label for="other">Other</label><br>
-
-		      <!--<input id="otherType" class="w3-check" type="checkbox" onclick="showFunction('otherT')" name=checkType[]>
-              <label for="otherType">Other</label>
-              <input id="otherT" style="visibility: hidden" type="text" placeholder="Write a system...">-->
      		</div>
 
              <?php
@@ -562,22 +539,8 @@ if(isset($_POST["summarySubmit"])){
 	    <label for="programmingLang">What software was used to make this game</label>
     	<textarea class="w3-input w3-border w3-margin-top" rows="2" type="text" placeholder="Type what programming languages/softwares were used in the game.." id="programmingLang" name="programmingLang"><?php if(isset($gameSummarySoftware)) echo $gameSummarySoftware; ?></textarea><br>
 
-        <?php
-            if(!isset($gameSummaryCode)){
-                ?>
-                <label for="myCode">Add Game Code Repository:</label>
-                <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="1" type="text" placeholder="Type the link for the code repository of the game.." id="myCode" name="myCode"></textarea><br>
-                <?php
-            }
-            else{
-                ?>
-                <label for="myCode">Game Code Link:</label>
-                <a id="myCode" name="myCode" href="<?php echo $gameSummaryCode; ?>"><?php echo $gameSummaryCode; ?></a>
-                <br><br>
-                <?php
-            }
-
-        ?>
+        <label for="myCode">Game Code Link</label>
+        <textarea class="w3-input w3-border w3-margin-top" style="resize: none" rows="1" type="text" placeholder="Type the link for the code repository of the game.." id="myCode" name="myCode"><?php if (isset($gameSummaryCode)) echo $gameSummaryCode; ?></textarea><br>
 	    
 
 	    <input class="w3-btn w3-round w3-border w3-border-blue w3-hover-blue transmission" type="submit" name="summarySubmit" value="Submit">
